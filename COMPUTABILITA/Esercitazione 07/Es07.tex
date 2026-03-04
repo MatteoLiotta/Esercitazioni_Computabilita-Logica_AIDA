@@ -1,0 +1,131 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.5cm, bottom=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{makeidx}
+\usepackage[most]{tcolorbox}
+\newtcolorbox{osservazioni}{
+  colback=gray!8,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\footnotesize,
+  left=2mm, right=2mm, top=2mm, bottom=2mm,
+  before skip=7pt,   % niente spazio prima
+  after skip=15pt     % niente spazio dopo
+}
+\newtcolorbox{osservazioni2}{
+  colback=gray!8,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\small,
+  left=5mm, right=5mm, top=3mm, bottom=3mm,
+  before skip=0pt,   % niente spazio prima
+  after skip=30pt     % niente spazio dopo
+}
+\pagestyle{fancy}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+\pagestyle{fancy}
+
+\usepackage{makeidx}
+
+%%%%%%%%%%%%%%%%%%%
+\newcommand{\EsercitazioneNum}{07}
+\newcommand{\Data}{23/10/2025}
+\newcommand{\DocType}{Esercitazione} % o "Eserciziario"
+\newcommand{\FullTitle}{\DocType\ \EsercitazioneNum}
+
+\newcommand{\Header}{
+\noindent
+  \small \textbf{Computabilità, Complessità e Logica - a.a. 2025/26} \hfill \textbf{\FullTitle} \\[0.2cm]
+  \scriptsize Matteo Liotta, \texttt{matteo.liotta@studenti.units.it} \hfill \Data \\[0.2cm]
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}} \\[0.3cm]}
+
+\newcommand{\NewPageHeader}{
+  \vfill
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  \newpage
+  {\Header}
+}
+%%%%%%%%%%%%%%%%%%%
+
+% Numero di pagina in basso al centro
+\fancyhf{}
+\fancyfoot[C] \thepage
+\renewcommand{\footrulewidth}{0pt} % niente linea in basso
+\renewcommand{\headrulewidth}{0pt} % niente linea in alto
+
+\begin{document}
+
+\footnotesize  % font generale più piccolo
+\Header\\[0.7cm]
+
+
+%%%%%%%%%%%%%%%% FOGLIO 2
+
+
+%% INDEX
+\addcontentsline{toc}{section}{Esercitazione 07: \textit{Macchine di Turing}}
+
+%%
+\noindent\Large \textbf{Esercitazione 07}: \textit{Macchine di Turing}\\[0cm]
+%\\[0.4cm]i
+
+\begin{osservazioni}
+    \textbf{\textit{Nota}}. Sono indicati in \textcolor{blue}{\textit{blu}} gli esercizi che non saranno trattati durante l'esercitazione, bensì lasciati come strumento aggiuntivo di esercitazione individuale. Resta comunque assoluta disponibilità per la loro risoluzione negli incontri successivi, qualora necessario.
+\end{osservazioni}
+
+{\normalsize
+\begin{itemize}[label=, leftmargin=0pt]
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 47.} 
+    %%
+    \item \textbf{Esercizio 47 (*)}\\ Sia $L$ linguaggio regolare su $\Sigma=\{a,b\}$, tale per cui 
+    {\begin{center}
+        $L = \{ w \in \Sigma^* \mid w = a^nb^n,\ \ \  n\geq0 \}$
+    \end{center}} 
+    Si rappresenti la macchina di Turing tale da riconoscere il linguaggio $L$.\\[0.1cm]
+
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 48.} 
+    %%
+    \item \textbf{Esercizio 48. (**)}\\ Sia $L$ linguaggio su $\Sigma=\{a,b,c\}$, tale per cui 
+    {\begin{center}
+        $L = \{ w \in \Sigma^* \mid w = a^{n_1}b^{n_2}c^{n_3}, n_3 = n_1+n_2, \ \ \ n_1,n_2\geq1\}$
+    \end{center}} 
+    Si rappresenti la macchina di Turing tale da riconoscere il linguaggio $L$.\\[0.1cm]
+    
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 49.} 
+    %%
+    \item \textbf{Esercizio 49. (***)}\\ Si scriva una macchina di Turing $M$ che avendo una stringa $w$ in $\Sigma=\{0, 1\}^*$ termina lasciando sul nastro la stringa $w\# w'$ dove $w'$ è la rappresentazione binaria della lunghezza di $w$.\\[0.1cm]
+
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 50.} 
+    %%
+    \item \textcolor{blue}{\textbf{Esercizio 50. (*)}}\\ Sia $L$ linguaggio su $\Sigma=\{a,b,c\}$, tale per cui 
+    {\begin{center}
+        $L = \{ w \in \Sigma^* \mid w = a^{n_1}b^{n_2}c^{n_3}, n_3 = n_1\times n_2, \ \ \ n_1,n_2\geq 0\}$
+    \end{center}} 
+    Si rappresenti la macchina di Turing tale da riconoscere il linguaggio $L$.\\[0.1cm]
+
+    
+
+    
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 51.} 
+    %%
+    \item \textbf{Esercizio 51. (**)}\\ Si descriva ad alto livello una macchina di Turing $M$ che riceve in ingresso la codifica di altre due macchine di Turing (deterministiche) $M_1$ e $M_2$ e una parola $w$. Tale macchina $M$ deve accettare l'input che riceve sul nastro se la macchina  $M_1$ accetta $w$ in un numero inferiore di passi rispetto a $M_2$.
+\end{itemize}
+\vfill
+\noindent\makebox[\linewidth]{\rule{\linewidth}{0.1pt}}
+\end{document}

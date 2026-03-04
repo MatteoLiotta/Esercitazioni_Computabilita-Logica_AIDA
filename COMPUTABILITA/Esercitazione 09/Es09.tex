@@ -1,0 +1,146 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.5cm, bottom=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage[table]{xcolor}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{makeidx}
+\usepackage[most]{tcolorbox}
+\newtcolorbox{osservazioni}{
+  colback=gray!8,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\footnotesize,
+  left=2mm, right=2mm, top=2mm, bottom=2mm,
+  before skip=7pt,   % niente spazio prima
+  after skip=15pt     % niente spazio dopo
+}
+\newtcolorbox{osservazioni2}{
+  colback=gray!8,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\small,
+  left=5mm, right=5mm, top=3mm, bottom=3mm,
+  before skip=0pt,   % niente spazio prima
+  after skip=30pt     % niente spazio dopo
+}
+\pagestyle{fancy}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+\pagestyle{fancy}
+
+\usepackage{makeidx}
+
+%%%%%%%%%%%%%%%%%%%
+\newcommand{\EsercitazioneNum}{09}
+\newcommand{\Data}{04/11/2025}
+\newcommand{\DocType}{Esercitazione} % o "Eserciziario"
+\newcommand{\FullTitle}{\DocType\ \EsercitazioneNum}
+
+\newcommand{\Header}{
+\noindent
+  \small \textbf{Computabilità, Complessità e Logica - a.a. 2025/26} \hfill \textbf{\FullTitle} \\[0.2cm]
+  \scriptsize Matteo Liotta, \texttt{matteo.liotta@studenti.units.it} \hfill \Data \\[0.2cm]
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}} \\[0.3cm]}
+
+\newcommand{\NewPageHeader}{
+  \vfill
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  \newpage
+  {\Header}
+}
+%%%%%%%%%%%%%%%%%%%
+
+% Numero di pagina in basso al centro
+\fancyhf{}
+\fancyfoot[C] \thepage
+\renewcommand{\footrulewidth}{0pt} % niente linea in basso
+\renewcommand{\headrulewidth}{0pt} % niente linea in alto
+
+\begin{document}
+
+\footnotesize  % font generale più piccolo
+\Header\\[0.7cm]
+
+
+%%%%%%%%%%%%%%%% FOGLIO 2
+
+
+%% INDEX
+\addcontentsline{toc}{section}{Esercitazione 07: \textit{Macchine di Turing}}
+
+\noindent\Large \textbf{Esercitazione 9}: \textit{Macchine di Turing (cont'd)}
+\begin{osservazioni}
+    \textbf{\textit{Nota}}. Sono indicati in \textcolor{blue}{\textit{blu}} gli esercizi che non saranno trattati durante l'esercitazione, bensì lasciati come strumento aggiuntivo di esercitazione individuale. Resta comunque assoluta disponibilità per la loro risoluzione negli incontri successivi, qualora necessario.
+\end{osservazioni}
+
+{\normalsize
+\begin{itemize}[label=, leftmargin=0pt]
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 52.} 
+    %%
+    \item \textbf{Esercizio 52 (*)}\\ Sia $L$ linguaggio su $\Sigma=\{a,b\}$ (cfr. \textit{approfondimento 02}), tale per cui:
+    {\begin{center}
+        $L=\{w\#w'| w,w'\in\Sigma^*, \quad \exists i \in \mathbf{N} \quad t.c.\quad  w(i)=w'(i)\ \}$
+    \end{center}} 
+    Si rappresenti la macchina di Turing tale da riconoscere il linguaggio $L$.\\[0.1cm]
+
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 53.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 53.} (*)}\\ Sia $L$ linguaggio su $\Sigma=\{a,b,c\}$, tale per cui 
+    {\begin{center}
+        $L = \{ x\#y \mid x,y\in\Sigma^*\quad e \quad x \text{ prefisso di }y\}$
+    \end{center}}
+    Si rappresenti la macchina di Turing tale da riconoscere il linguaggio $L$.\\[0.1cm]
+
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 54.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 54.} (*)}\\ Sia $L$ linguaggio su $\Sigma=\{a,b,c\}$, tale per cui 
+    {\begin{center}
+        $L = \{ x\#y \mid x,y\in\Sigma^*\quad e \quad x \text{ sottostringa di }y\}$
+    \end{center}}
+    Si rappresenti la macchina di Turing tale da riconoscere il linguaggio $L$.\\[0.1cm]
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 55.} 
+    %%
+    \item \textbf{\textcolor{orange}{Esercizio 55.} (***)}\\ 
+    Si considerino le seguenti identificazioni, considerando il seguente alfabeto $\{0,1\}$ e simboli ausiliari $\{\$_1,\$_2,\$_c,\#_1,\#_2,\sqcup\}$:
+    \begin{itemize}[label=\textbullet]
+        \item \texttt{00} $\equiv$ \texttt{IF} $\quad \mid \quad $ \texttt{01} $\equiv$ \texttt{ELSE}
+        \item \texttt{0} $\equiv$ \texttt{$\leq$} $\quad \mid \quad $ \texttt{1} $\equiv$ \texttt{$>$}
+        \item \texttt{10} $\equiv$ \texttt{AND} $\quad \mid \quad $ \texttt{1} $\equiv$ \texttt{OR (element-wise)}
+    \end{itemize}
+    Dove sono presenti le seguenti regole sintattiche:
+    \begin{itemize}[label=\textbullet]
+        \item Ogni operazione di controllo con if richiede l'indicazione del termine di paragone voluto, i termini da confrontare, correttamente separati:\\ \texttt{IF [binary num 1]  [binary num 2] CONFRONTO THEN [what to do]} $\equiv$ 
+        \texttt{IF$\$_1x\$_2y\$_cc\#_1command\#_2$} \\{$x,y\in\Sigma^*$}
+        \item Si definisce l'operazione alternativa, posta dopo la codifica del THEN dell'IF:\\ \texttt{ELSE [what to do]} $\equiv$ \texttt{ELSE$\#_1command\#_2$}
+        \item Mentre, con operazioni (then), in questo caso si sono considerate somme e sottrazioni elementwise degi termini:\\ \texttt{OPERATION [binary num 1] [binary num 2]} $\equiv$ 
+        \texttt{OP$\$_1x\$_2y\#_2 \quad x,y\in\Sigma^*$}
+        
+    \end{itemize}
+    Si scriva una macchina di Turing che, ricevendo in input una stringa del programma (vedi esempio), ritorni sul nastro il risultato finale dell'(ultima) operazione
+
+\item \textit{e.g.} \textit{Se 010 $>$ 001 allora effettuane l'AND}: \begin{itemize} \item \texttt{INPUT: 00$\$_1$010$\$_2$001$\$_c$1$\#_1$10$\$_1$010$\$_2$001$\#_2$} \item \texttt{OUTPUT: 011} \end{itemize}
+
+
+
+
+
+
+
+\vfill
+\noindent\makebox[\linewidth]{\rule{\linewidth}{0.1pt}}
+
+
+
+\end{document}

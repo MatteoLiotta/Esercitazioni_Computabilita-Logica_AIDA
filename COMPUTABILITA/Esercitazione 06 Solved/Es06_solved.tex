@@ -1,0 +1,269 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.5cm, bottom=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{makeidx}
+\usepackage[most]{tcolorbox}
+\newtcolorbox{osservazioni}{
+  colback=gray!8,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\footnotesize,
+  left=2mm, right=2mm, top=2mm, bottom=2mm,
+  before skip=7pt,   % niente spazio prima
+  after skip=15pt     % niente spazio dopo
+}
+\newtcolorbox{osservazioni2}{
+  colback=gray!8,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\small,
+  left=5mm, right=5mm, top=3mm, bottom=3mm,
+  before skip=0pt,   % niente spazio prima
+  after skip=30pt     % niente spazio dopo
+}
+\pagestyle{fancy}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+\pagestyle{fancy}
+
+\usepackage{makeidx}
+
+%%%%%%%%%%%%%%%%%%%
+\newcommand{\EsercitazioneNum}{04}
+\newcommand{\Data}{14/10/2025}
+\newcommand{\DocType}{Esercitazione} % o "Eserciziario"
+\newcommand{\FullTitle}{\DocType\ \EsercitazioneNum}
+
+\newcommand{\Header}{
+\noindent
+  \small \textbf{Computabilità, Complessità e Logica - a.a. 2025/26} \hfill \textbf{\FullTitle} \\[0.2cm]
+  \scriptsize Matteo Liotta, \texttt{matteo.liotta@studenti.units.it} \hfill \Data \\[0.2cm]
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}} \\[0.3cm]}
+
+\newcommand{\NewPageHeader}{
+  \vfill
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  \newpage
+  {\Header}
+}
+%%%%%%%%%%%%%%%%%%%
+
+% Numero di pagina in basso al centro
+\fancyhf{}
+\fancyfoot[C] \thepage
+\renewcommand{\footrulewidth}{0pt} % niente linea in basso
+\renewcommand{\headrulewidth}{0pt} % niente linea in alto
+
+\begin{document}
+
+\footnotesize  % font generale più piccolo
+\Header\\[0.7cm]
+
+
+%%%%%%%%%%%%%%%% FOGLIO 6
+
+%% INDEX
+\addcontentsline{toc}{section}{Esercitazione 06: \textit{Automi a Pila e Grammatiche Libere dal contesto}} 
+%%
+\noindent\Large \textbf{Esercitazione 06}: \textit{Automi a Pila e Grammatiche Libere dal contesto}
+\begin{osservazioni}
+    \textbf{\textit{Nota}}. Sono indicati in \textcolor{blue}{\textit{blu}} gli esercizi che non saranno trattati durante l'esercitazione, bensì lasciati come strumento aggiuntivo di esercitazione individuale. Resta comunque assoluta disponibilità per la loro risoluzione negli incontri successivi, qualora necessario.
+\end{osservazioni}
+
+{\normalsize
+\begin{itemize}[label=, leftmargin=0pt]
+
+\item \underline{\textit{\textbf{Costruzione di automi a pila da linguaggio context free}}}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 42.} 
+    %%
+    \item  \textbf{Esercizio 42. (**)}\\ 
+    Sia $L$ linguaggio regolare su $\Sigma=\{a,b\}$, tale per cui 
+    {\begin{center}
+        $L = \{ w\in \Sigma^* \mid w=w_1.a.w_2,\quad w_1, w_2\in \Sigma^+\}$\\
+    \end{center}}
+    Si rappresenti la grammatica libera dal contesto che generi tale linguaggio.\\
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}} \\
+    L'idea consiste nel costruire a partire dal centro ed aggiungendo termini arbitrari a destra e a sinistra a ogni passo di sostituzione: in questo modo possiamo garantire la presenza del termine $a\in\Sigma$ in posizione centrale di $w$.\\
+    Una grammatica può essere la seguente:\\
+    
+    \texttt{S $\rightarrow$ A}\\
+    \texttt{A $\rightarrow$ BaB}\\
+    \texttt{B $\rightarrow$ BC | a | b } $\leftarrow$ \textit{la difficoltà sta nell'obbligo di almeno un termine (poiché $\Sigma^+$)}
+    \texttt{C $\rightarrow$ CC | a | b | $\epsilon$}
+    
+    \end{osservazioni}
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 43.} 
+    %%
+    \item  \textbf{Esercizio 43. (*)}\\ 
+    Sia $L$ linguaggio c.f. su $\Sigma=\{a,b\}$, tale per cui 
+    {\begin{center}
+        $L = \{ w\in \Sigma^* \mid w=a^nb^n,\quad n\geq1\}$\\
+    \end{center}}
+    Si rappresenti la grammatica libera dal contesto che generi tale linguaggio.
+    
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}} \\
+    Una grammatica può essere la seguente:\\
+    
+    \texttt{S $\rightarrow$ A}\\
+    \texttt{B $\rightarrow$ aAb  | $\epsilon$}
+    \end{osservazioni}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 44.} 
+    %%
+    \item \textcolor{black}{\textbf{Esercizio 44. (***)}\\ }
+    Sia $L$ linguaggio c.f. su $\Sigma=\{a,b\}$, tale per cui 
+    {\begin{center}
+        $L = \{ w\in \Sigma^* \mid \#a = \#b >1\ \  \text{\ in\ }w \}$\\
+    \end{center}} 
+    Si rappresenti la grammatica libera dal contesto che generi tale linguaggio.
+
+    
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}} \\
+    In questo esercizio non abbiamo più esigenza di costruire dal centro. Come chiaro da un altro esercizio su questo linguaggio (automi a pila), si può usare una idea basata sulla gestione dei debiti nei confronti di lettere di $\Sigma$. 
+    Allora:
+    \begin{enumerate}
+        \item Avremo una situazione in cui sapremo valere la parità del numero di $a$ e $b$
+        \item Possiamo introdurre un debito che dovrà essere saldato o potenzialmente aumentato
+    \end{enumerate}
+    
+    Una grammatica compatibile con questa idea può essere la seguente:\\
+    
+    \texttt{S $\rightarrow$ P}\\
+    \texttt{P $\rightarrow$ $\epsilon$ | aB | bA}\\
+    \texttt{A $\rightarrow$ aP | bAA | $\epsilon$}\\
+    \texttt{B $\rightarrow$ bP | aBB | $\epsilon$}
+    
+    
+    \end{osservazioni}
+
+    \NewPageHeader
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 45.} 
+    %%
+    \textcolor{orange}{\item \textbf{Esercizio 45. }}\textbf{(**)}\\ 
+    Sia $L$ linguaggio c.f. su $\Sigma=\{0,1\}$, tale per cui 
+
+    {
+  \small
+    \begin{center}
+    \begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+        \node[state, initial, initial text=] (q0)   {$q_0$};
+        \node[state] (q1) [right=of q0] {$q_1$};
+        \node[state] (q2) [right=of q1] {$q_2$};
+        \node[state] (q3) [right=of q2] {$q_3$};
+        \node[state] (q4) [right=of q3] {$q_4$};
+        \node[state] (q5) [right=of q4] {$q_5$};
+        \node[state] (q6) [right=of q5] {$q_6$};
+        \node[state, accepting] (q7) [right=of q6] {$q_7$};
+
+
+
+
+        
+        \path[->]
+        (q0) edge  node {$\epsilon, \epsilon, \$$} (q1)
+        (q1) edge node {$0, \epsilon, \epsilon$} (q2)
+        (q2) edge node {$1,\epsilon, \text{I}$} (q3)
+        (q3) edge node {$0,\epsilon, \epsilon$} (q4)
+        (q4) edge [bend left] node {$1,\epsilon, \text{I}$} (q5)
+        (q5) edge [bend left] node {$0,\epsilon, \epsilon$} (q4)
+        (q5) edge node {$0, \text{I}, \epsilon$} (q6)
+        (q6) edge [loop above] node {$0, \text{I}, \epsilon$} (q6)
+        (q6) edge node {$\epsilon,\$, \epsilon$} (q7);
+             
+             
+             
+         
+    \end{tikzpicture}
+    \end{center}
+    }
+
+    Si scriva una grammatica context free equivalente all'automa a pila considerato.
+
+    \begin{osservazioni}
+    
+    \underline{\textit{Soluzione.}} \\
+    In questo genere di esercizi è utile dapprima ricostruire il linguaggio accettato dall'automa. Ogni parola inizia con $0101$, può essere effettuato un numero pari ad $n\geq0$ di (01) e poi vengono letti $n+2$ zeri. Quindi:
+    $$L=\{ w\in\Sigma^*\mid w=(01)^2(01)^n0^{n+2}=(01)^2(01)^n0^{n}00\ \}$$
+    Si noti l'importanza della riscrittura della formula: a questo punto è più semplice passare alla costruzione della grammatica. Infatti:
+    \begin{itemize}
+        \item Possiamo obbligare la scrittura iniziale de $0101$;
+        \item Possiamo inserirvi dopo (via costruzione) $01$ ad ogni sostituzione;
+        \item Poiché ad ogni $01$ corrisponde anche un nuovo $0$ di fondo, possiamo usare la riscrittura di variabile con 01 a sinistra e 0 a destra, rispetto alla variabile stessa;
+        \item Poiché mancherebbero due zeri, al posto di $\epsilon$ la sostituzione finale avverrà proprio con $00$.
+    \end{itemize}
+
+    Allora, la grammatica sarà la seguente:\\
+
+    \texttt{S $\rightarrow$ A}\\
+    \texttt{A $\rightarrow$ 0101B}\\
+    \texttt{B $\rightarrow$ 01B0 | 00} $\quad \longleftarrow$ \textit{00 al posto di $\epsilon$ per garantire il $+$2}
+    \end{osservazioni}
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 46.} 
+    %%
+    \textcolor{orange}{\item \textbf{Esercizio 46. }}\textbf{(**)}\\ 
+    Sia $L$ linguaggio c.f. su $\Sigma=\{0,1\}$, tale per cui 
+
+    {
+  \small
+    \begin{center}
+    \begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+        
+        \node[state, initial, initial text=] (q0)   {$q_0$};
+        \node[state] (q1) [below right=4of q0] {$q_1$};
+        \node[state] (q2) [above=1.4of q1] {$q_2$};             
+        \node[state] (q3) [above=1.4of q2] {$q_3$};     
+        \node[state] (q4) [right=3of q3] {$q_4$};     
+
+
+        \path[->]
+        (q0) edge [bend right] node {$\epsilon, \epsilon,\$$} (q1)
+        (q1) edge [loop right] node {$c,\epsilon,C$} (q1)
+        (q1) edge [bend right, right] node {$b,C,\epsilon$} (q2)
+        (q2) edge [bend right, right] node {$a,C,\epsilon$} (q3)
+        (q2) edge [loop right] node {$b,C,\epsilon$} (q2)
+        (q3) edge [loop left] node {$a,C,\epsilon$} (q3)
+        (q3) edge node {$\epsilon,\$, \epsilon$} (q4);
+        
+    \end{tikzpicture}
+    \end{center}
+    }
+    
+    Si scriva una grammatica context free equivalente all'automa a pila considerato.
+
+    
+\begin{osservazioni}
+    
+    \underline{\textit{Soluzione.}} \\
+    In questo genere di esercizi è utile dapprima ricostruire il linguaggio accettato dall'automa. In questo caso:
+    
+    $$L=\{ w\in\Sigma^*\mid w=c^nb^{n_1}a^{n_2}, n=n_1+n_2, \quad n_1, n_2\geq1\ \}$$
+    
+    A questo punto è più semplice passare alla costruzione della grammatica:\\
+
+    \texttt{S $\rightarrow$ BA}\\
+    \texttt{B $\rightarrow$ cBb | cb} $\quad \longleftarrow$ \textit{quando aggiungo una $c$, aggiungo una b } \\
+    \texttt{A $\rightarrow$ cBa | ca}  $\quad \longleftarrow$ \textit{quando aggiungo una $c$, aggiungo una a }
+    \end{osservazioni}
+    
+\end{itemize}
+}
+\vfill
+\noindent\makebox[\linewidth]{\rule{\linewidth}{0.1pt}}
+\end{document}
