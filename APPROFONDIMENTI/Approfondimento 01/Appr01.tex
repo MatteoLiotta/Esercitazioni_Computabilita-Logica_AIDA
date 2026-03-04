@@ -1,0 +1,564 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.5cm, bottom=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+\pagestyle{fancy}
+\setlength{\parindent}{0pt}
+\usepackage[most]{tcolorbox}
+
+\newtcolorbox{osservazioni}{
+  colback=gray!8,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\small,
+  left=5mm, right=5mm, top=3mm, bottom=3mm,
+  before skip=5pt,   % niente spazio prima
+  after skip=5pt     % niente spazio dopo
+}
+\pagestyle{fancy}
+
+
+%%%%%%%%%%%%%%%%%%%
+\newcommand{\EsercitazioneNum}{01}
+\newcommand{\Data}{03/10/2025}
+%%%%%%%%%%%%%%%%%%%
+
+% Numero di pagina in basso al centro
+\fancyhf{}
+\fancyfoot[C] \thepage
+\renewcommand{\footrulewidth}{0pt} % niente linea in basso
+\renewcommand{\headrulewidth}{0pt} % niente linea in alto
+
+\begin{document}
+\footnotesize  % font generale più piccolo
+
+\noindent
+\small \textbf{Computabilità, Complessità e Logica - a.a. 2025/26} \hfill \textbf{Approfondimento \EsercitazioneNum} \\[0.2cm]
+\scriptsize Matteo Liotta, \texttt{matteo.liotta@studenti.units.it} \hfill \Data \\[0.2cm]
+
+\noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}} \\[1cm]
+
+
+\noindent\Large \textbf{Approfondimento \EsercitazioneNum}: \textit{Non determinismo e "scommesse"}\\[0cm]
+%\\[0.4cm]
+
+\small
+
+\underline{\textbf{Introduzione al problema}}\\[0.3cm]
+Introducendo gli automi non deterministici, si è proposto a lezione un esempio tale da mostrare il vantaggio derivato dall'impiego del non determinismo, in termini di complessità di scrittura dell'automa che riconosca un linguaggio desiderato.
+
+Si può considerare dunque il seguente lunguaggio su $\Sigma=\{a,b,c\}$, in cui è evidente tale comportamento:
+
+$$L_n=\{w\#w'| w,w'\in\Sigma^*, \quad \exists x\in \Sigma \quad t.c.\quad  x\in w'\ e\ x\in w\}$$\\[0.01cm]
+Questo linguaggio è tale da contenere qualsiasi parola della forma $$w\#w'$$ in cui ambo le parti $w$ e $w'$ contengano \textbf{almeno un simbolo} $x\in \Sigma$ in comune. Consideriamo per semplicità il caso in cui $$|\Sigma|=n=3$$
+
+\underline{\textbf{Caso deterministico}}\\[0.3cm]
+Come visto durante una esercitazione (cfr. 01), ogni stato di un automa regolare può essere utilizzato in modo da rappresentare conoscenza intorno alla situazione corrente; in questo caso, possiamo utilizzare ogni stato in modo da evidenziare se alcune lettere sono state incontrate all'interno di una parola: 
+
+\begin{itemize}
+    \item $aabbaba\# \rightarrow \{a,b\} $, in quanto vengono letti entrambi i simboli $a$ e $b$, almeno una volta
+    \item $a \rightarrow \{a\}$
+    \item $ab \rightarrow \{a,b\}$
+\end{itemize}
+È dunque possibile iniziare con $n$ transizioni dallo stato iniziale, una per simbolo di $\Sigma$, così da raggiungere gli stati che rappresentano l'insieme dei simboli letti almeno una volta, della forma $\{a\}, \{b\} $ o $\{c\}$.
+
+\begin{osservazioni}
+    \textit{\textbf{Nota}}. \textit{Si noti come non è richiesta alcuna capacità di "contare" all'automa, bensì memorizzare se è avvenuta \underline{almeno una} occorrenza di un simbolo all'interno di una parola}. Quando considereremo la lettura di $w'$, sbasterà osservare se almeno una delle lettere presenti -almeno una volta- in $w$ vengono trovate.
+\end{osservazioni}
+A questo punto, dato $$\Sigma=\{a,b,c\}$$ possiamo considerare, da uno stato iniziale, \textbf{tre percorsi}, uno relativo alla lettura di ciascuna lettera di $\Sigma$. 
+
+{
+\small
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    \node[state, initial, initial text=] (init)   {$\emptyset$};
+    \node[state, right=of init] (b) {$\{b\}$};
+    \node[state, above=1.5cm of b] (a) {$\{a\}$};
+    \node[state, below=1.5cm of b] (c) {$\{c\}$};
+
+    \path[->]
+    (init) edge node {a} (a)
+    (init) edge node {b} (b)
+    (init) edge node {c} (c);
+    
+\end{tikzpicture}
+\end{center}
+}
+
+Ogni stato raggiunto memorizza l'informazione relativa alla lettura del corrispondente simbolo. Poiché di questi non è necessario memorizzare ulteriori occorrenze, possiamo introdurre dei loop per garantire generalità:
+
+\vfill
+    \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+    \newpage
+    {\noindent
+    \small \textbf{Computabilità, Complessità e Logica - a.a. 2025/26} \hfill \textbf{Approfondimento \EsercitazioneNum} \\[0.2cm]
+    \scriptsize Matteo Liotta, \texttt{matteo.liotta@studenti.units.it} \hfill \Data \\[0.2cm]
+    \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}} \\[0.3cm]}
+
+{
+\small
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    \node[state, initial, initial text=] (init)   {$\emptyset$};
+    \node[state, right=of init] (b) {$\{b\}$};
+    \node[state, above=1.5cm of b] (a) {$\{a\}$};
+    \node[state, below=1.5cm of b] (c) {$\{c\}$};
+
+    \path[->]
+    (init) edge node {a} (a)
+    (init) edge node {b} (b)
+    (init) edge node {c} (c)
+    (a) edge [loop left, looseness=3] node {a} (a)
+    (c) edge [loop left, looseness=3] node {c} (c)
+    (b) edge[loop above, looseness=3] node {b} (b);
+    
+\end{tikzpicture}
+\end{center}
+}
+
+In ciascun caso, ora, possiamo procedere e aspettarci eventualmente la lettura di altri termini di $\Sigma$ non ancora incontrati, come $b$ e $c$ nel caso di avvenuta lettura di sole $a$. Questo può, in linea generale, portarci ad aspettarci  stati quali tutte le combinazioni possibili di elementi di $\Sigma$:$$\{a\}, \{b\}, \{c\}, \{a,b\}, \{b,c\}, \{a,c\}, \{a,b,c\}$$
+Quindi, l'automa può essere aggiornato introducendo:
+
+{
+\small
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    \node[state, initial, initial text=] (init) {$\emptyset$};
+    \node[state, right=of init] (b) {$\{b\}$};
+    \node[state, above=of b] (a) {$\{a\}$};
+    \node[state, below=of b] (c) {$\{c\}$};
+    
+    \node[state, right=of a] (ab) {$\{a,b\}$};
+    \node[state, right=of b] (bc) {$\{b,c\}$};
+    \node[state, right=of c] (ac) {$\{a,c\}$};
+
+    \node[state, right=of bc] (abc) {$\{a,b,c\}$};
+    
+    \path[->]
+    (init) edge node {a} (a)
+    (init) edge node {b} (b)
+    (init) edge node {c} (c)
+    (a) edge [loop left, looseness=3] node {a} (a)
+        edge node {b} (ab)
+        edge [bend left=3] node {c} (ac)
+    (c) edge [loop left, looseness=3] node {c} (c)
+        edge node {b} (bc)
+        edge [bend right] node {a} (ac)
+    (b) edge[loop above, looseness=3] node {b} (b)
+        edge [bend right] node {a} (ab)
+        edge [bend right] node {c} (bc)
+    
+
+    (ab) edge [loop above, looseness=3] node {a,b} (ab)
+         edge node {c} (abc)
+    (bc) edge [loop above, looseness=3] node {b,c} (bc)
+    edge node {a} (abc)
+    (ac) edge[loop above, looseness=3] node {a,c} (ac)
+    edge node {b} (abc);
+    
+\end{tikzpicture}
+\end{center}
+}
+
+La prima parte è completata: osservata la componente $w$ di $w\#w'$ ci aspettiamo di riuscire ad identificare quali sono le lettere di $\Sigma$ presenti in $w$. Dopo la lettura a partire da ogni possibile posizione (stato) del termine $\#$, possiamo identificare un nodo per ciascuna delle situazioni, preparandoci alla lettura dei termini di $w'$:
+
+{
+\small
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    \node[state, initial, initial text=] (init) {$\emptyset$};
+    \node[state, right=of init] (b) {$\{b\}$};
+    \node[state, above=of b] (a) {$\{a\}$};
+    \node[state, below=of b] (c) {$\{c\}$};
+    
+    \node[state, right=of a] (ab) {$\{a,b\}$};
+    \node[state, right=of b] (bc) {$\{b,c\}$};
+    \node[state, right=of c] (ac) {$\{a,c\}$};
+
+    \node[state, right=of bc] (abc) {$\{a,b,c\}$};
+
+    % nuovi stati a destra di `abc` (etichette con '#', nomi interni senza '#')
+    \node[state, right=of abc, yshift=+4.2cm, fill = blue!5] (ahash) {$\mathrm{a\#}$};
+    \node[state, right=of abc, yshift=+3cm, fill = blue!5] (abhash) {$\mathrm{ab\#}$};
+    \node[state, right=of abc, yshift=+1.5cm, fill = blue!5] (abchash) {$\mathrm{abc\#}$};
+    \node[state, right=of abc, yshift=0cm, fill = blue!5] (bhash) {$\mathrm{b\#}$};
+    \node[state, right=of abc, yshift=-1.5cm, fill = blue!5] (bchash) {$\mathrm{bc\#}$};
+    \node[state, right=of abc, yshift=-3cm, fill = blue!5] (achash) {$\mathrm{ac\#}$};
+    \node[state, right=of abc, yshift=-4.2cm, fill = blue!5] (chash) {$\mathrm{c\#}$};
+
+    \path[->]
+    (init) edge node {a} (a)
+           edge node {b} (b)
+           edge node {c} (c)
+    (a) edge [loop left, looseness=3] node {a} (a)
+        edge node {b} (ab)
+        edge [bend left=3] node {c} (ac)
+    (c) edge [loop left, looseness=3] node {c} (c)
+        edge node {b} (bc)
+        edge [bend right] node {a} (ac)
+    (b) edge[loop above, looseness=3] node {b} (b)
+        edge [bend right] node {a} (ab)
+        edge [bend right] node {c} (bc)
+    (ab) edge [loop above, looseness=3] node {a,b} (ab)
+         edge node {c} (abc)
+    (bc) edge [loop above, looseness=3] node {b,c} (bc)
+         edge node {a} (abc)
+    (ac) edge[loop above, looseness=3] node {a,c} (ac)
+         edge node {b} (abc)
+    % archi blu etichettati '#' verso i nuovi stati
+    (a)   edge[draw=blue, text=blue] node {$\#$} (ahash)
+    (ab)  edge[draw=blue, text=blue] node {$\#$} (abhash)
+    (abc) edge[draw=blue, text=blue] node {$\#$} (abchash)
+    (b)   edge[draw=blue, text=blue, bend left] node {$\#$} (bhash)
+    (ac)  edge[draw=blue, text=blue] node {$\#$} (achash)
+    (bc)  edge[draw=blue, text=blue, bend right] node {$\#$} (bchash)
+    (c)   edge[draw=blue, text=blue] node {$\#$} (chash);
+    ;
+\end{tikzpicture}
+\end{center}
+}
+
+
+   \vfill
+    \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+    \newpage
+    {\noindent
+    \small \textbf{Computabilità, Complessità e Logica - a.a. 2025/26} \hfill \textbf{Approfondimento \EsercitazioneNum} \\[0.2cm]
+    \scriptsize Matteo Liotta, \texttt{matteo.liotta@studenti.units.it} \hfill \Data \\[0.2cm]
+    \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}} \\[0.3cm]}
+
+
+
+Ricordando che per le parole $w$ e $w'$ è sufficiente condividere \textbf{almeno un simbolo} e dal momento che ogni stato azzurro rappresenta intrinsecamente la conoscenza raccolta a seguito alla lettura di $w$, sarà sufficiente leggere una di quelle lettere indicate nello stato per raggiungere l'accettazione -mentre le altre lettere manterranno invariato lo stato. Possiamo concludere la scrittura deterministica dell'automa con la seguente rappresentazione:
+
+{
+\small
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    \node[state, initial, initial text=] (init) {$\emptyset$};
+    \node[state, right=of init] (b) {$\{b\}$};
+    \node[state, above=of b] (a) {$\{a\}$};
+    \node[state, below=of b] (c) {$\{c\}$};
+    
+    \node[state, right=of a] (ab) {$\{a,b\}$};
+    \node[state, right=of b] (bc) {$\{b,c\}$};
+    \node[state, right=of c] (ac) {$\{a,c\}$};
+
+    \node[state, right=of bc] (abc) {$\{a,b,c\}$};
+
+    % nuovi stati a destra di `abc` (etichette con '#', nomi interni senza '#')
+    \node[state, right=of abc, yshift=+4.6cm, fill = blue!5] (ahash) {$\mathrm{a\#}$};
+    \node[state, right=of abc, yshift=+3cm, fill = blue!5] (abhash) {$\mathrm{ab\#}$};
+    \node[state, right=of abc, yshift=+1.5cm, fill = blue!5] (abchash) {$\mathrm{abc\#}$};
+    \node[state, right=of abc, yshift=-0.1cm, fill = blue!5] (bhash) {$\mathrm{b\#}$};
+    \node[state, right=of abc, yshift=-1.5cm, fill = blue!5] (bchash) {$\mathrm{bc\#}$};
+    \node[state, right=of abc, yshift=-3cm, fill = blue!5] (achash) {$\mathrm{ac\#}$};
+    \node[state, right=of abc, yshift=-4.6cm, fill = blue!5] (chash) {$\mathrm{c\#}$};
+    \node[state, right=6of bhash, fill=red!5] (accept) {$accept$};
+
+    \path[->]
+    (init) edge node {a} (a)
+           edge node {b} (b)
+           edge node {c} (c)
+    (a) edge [loop left, looseness=3] node {a} (a)
+        edge node {b} (ab)
+        edge [bend left=3] node {c} (ac)
+    (c) edge [loop left, looseness=3] node {c} (c)
+        edge node {b} (bc)
+        edge [bend right] node {a} (ac)
+    (b) edge[loop above, looseness=3] node {b} (b)
+        edge [bend right] node {a} (ab)
+        edge [bend right] node {c} (bc)
+    (ab) edge [loop above, looseness=3] node {a,b} (ab)
+         edge node {c} (abc)
+    (bc) edge [loop above, looseness=3] node {b,c} (bc)
+         edge node {a} (abc)
+    (ac) edge[loop above, looseness=3] node {a,c} (ac)
+         edge node {b} (abc)
+    % archi blu etichettati '#' verso i nuovi stati
+    (a)   edge[draw=blue, text=blue, bend left] node {$\#$} (ahash)
+    (ab)  edge[draw=blue, text=blue, bend left] node {$\#$} (abhash)
+    (abc) edge[draw=blue, text=blue] node {$\#$} (abchash)
+    (b)   edge[draw=blue, text=blue, bend left] node {$\#$} (bhash)
+    (ac)  edge[draw=blue, text=blue] node {$\#$} (achash)
+    (bc)  edge[draw=blue, text=blue, bend right] node {$\#$} (bchash)
+    (c)   edge[draw=blue, text=blue, bend right] node {$\#$} (chash)
+
+    (ahash) edge[draw=red, text=red, bend left] node {$a$} (accept)
+            edge [loop above, looseness=3] node {b,c} (ahash)
+    (abhash) edge[draw=red, text=red, bend left] node {$c$} (accept)
+            edge [loop above, looseness=3] node {c} (abhash)
+    (abchash) edge[draw=red, text=red] node {$a,b,c$} (accept)
+
+    (bhash) edge[draw=red, text=red] node {$b$} (accept)
+            edge [loop above, looseness=3] node {a,c} (bhash)
+    (achash) edge[draw=red, text=red, bend right] node {$a,c$} (accept)
+            edge [loop above, looseness=3] node {b} (achash)
+    (bchash) edge[draw=red, text=red] node {$b$} (accept)
+            edge [loop above, looseness=3] node {a} (bchash)
+    (chash) edge[draw=red, text=red, bend right] node {$c$} (accept)
+            edge [loop above, looseness=3] node {a,b} (chash);
+
+    
+    
+    ;
+\end{tikzpicture}
+\end{center}
+}
+
+Questo conclude la rappresentazione dell'automa deterministico per il linguaggio indicato.\\[0.3cm]
+
+\underline{\textbf{Caso non deterministico}}\\[0.3cm]
+Ricordando che per definizione una parola viene riconosciuta da un automa ND se ammette almeno una computazione accettante, questo permette di considerare una serie di percorsi indipendenti: possiamo \textbf{inizialmente fissare} il termine che ci \textit{aspettiamo} essere in comune tra $w$ e $w'$, attraverso differenti percorsi. Tale scelta sarà effettuata non deterministicamente impiegando $\epsilon$-transizioni: l'automa inizierà con il \textit{guess}, accompagnato da una scelta non deterministica, con lo scopo di dare origine a $n$ percorsi indipendenti semplici, ciascuno volto a verificare l'\textbf{esito} di ogni scommessa.
+\\\\
+Considerando lo stato iniziale, da $q_0$ vogliamo rendere raggiungibile ciascuno uno dei seguenti:
+\begin{itemize}
+    \item $S_{x=a}$: stato in cui si scommette che sarà $x=a\in\Sigma$ l'elemento comune tra le parole $w$ e $w'$
+    \item $S_{x=b}$: stato in cui si scommette che sarà $x=b\in\Sigma$ l'elemento comune tra le parole $w$ e $w'$
+    \item $S_{x=c}$: stato in cui si scommette che sarà $x=c\in\Sigma$ l'elemento comune tra le parole $w$ e $w'$
+\end{itemize}
+
+{
+\small
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    \node[state, initial, initial text=] (init)   {$\emptyset$};
+    \node[state, right=of init] (Sb) {$S_{x=b}$};
+    \node[state, above=1.1cm of b] (Sa) {$S_{x=a}$};
+    \node[state, below=1.1cm of b] (Sc) {$S_{x=c}$};
+
+    \path[->]
+    (init) edge node {$\epsilon$} (Sa)
+    (init) edge node {$\epsilon$} (Sb)
+    (init) edge node {$\epsilon$} (Sc);
+    
+\end{tikzpicture}
+\end{center}
+}
+
+   \vfill
+    \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+    \newpage
+    {\noindent
+    \small \textbf{Computabilità, Complessità e Logica - a.a. 2025/26} \hfill \textbf{Approfondimento \EsercitazioneNum} \\[0.2cm]
+    \scriptsize Matteo Liotta, \texttt{matteo.liotta@studenti.units.it} \hfill \Data \\[0.2cm]
+    \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}} \\[0.3cm]}
+
+
+In ciascun ramo raggiungibile (per quanto indipendente), si effettua una scommessa sulla lettera $x$ che ci si aspetta essere l'occorrenza comune in $w$ e $w'$. Due sono le possibilità dunque, raggiunto un ramo:
+\begin{itemize}
+\item Viene effettivamente letta subito la lettera $x$
+\item Non viene letta $x$ e si leggono le altre $x'\in\Sigma_{/x}$, attendendo l'eventuale arrivo della lettura di $x$ su cui si ha scommesso.
+\end{itemize}
+Qualora la lettura della lettera $x$ avvenisse effettivamente, sarebbe possibile avanzare a uno stato in cui è contenuta implicitamente consapevolezza sull'aver ottenuto il simbolo $x$ nella parola $w$. 
+
+{
+\small
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    \node[state, initial, initial text=] (init)   {$\emptyset$};
+    \node[state, right=of init] (Sb) {$S_{x=b}$};
+    \node[state, above=2cm of b] (Sa) {$S_{x=a}$};
+    \node[state, below=2cm of b] (Sc) {$S_{x=c}$};
+    
+    \node[state, right=2cm of Sa] (Wa) {$W_{x=a}$};
+    \node[state, right=2cm of Sb] (Wb) {$W_{x=b}$};
+    \node[state, right=2cm of Sc] (Wc) {$W_{x=c}$};
+
+    \path[->]
+    (init) edge node {$\epsilon$} (Sa)
+    (init) edge node {$\epsilon$} (Sb)
+    (init) edge node {$\epsilon$} (Sc)
+    (Sa) edge node {$a$} (Wa)
+         edge [loop above, looseness=3] node {$b,c$} (Sa)
+    (Sb) edge node {$b$} (Wb)
+         edge [loop above, looseness=3] node {$a,c$} (Sb)
+    (Sc) edge node {$c$} (Wc)
+         edge [loop above, looseness=3] node {$a,b$} (Sc);
+    
+\end{tikzpicture}
+\end{center}
+}
+
+A questo punto, è necessaria la lettura del termine $\#$:
+
+{
+\small
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    \node[state, initial, initial text=] (init)   {$\emptyset$};
+    \node[state, right=of init] (Sb) {$S_{x=b}$};
+    \node[state, above=2cm of b] (Sa) {$S_{x=a}$};
+    \node[state, below=2cm of b] (Sc) {$S_{x=c}$};
+    
+    \node[state, right=2cm of Sa] (Wa) {$W_{x=a}$};
+    \node[state, right=2cm of Sb] (Wb) {$W_{x=b}$};
+    \node[state, right=2cm of Sc] (Wc) {$W_{x=c}$};
+
+    \node[state, right=2cm of Wa] (Ha) {$W_{\#_{x=a}}$};
+    \node[state, right=2cm of Wb] (Hb) {$W_{\#_{x=b}}$};
+    \node[state, right=2cm of Wc] (Hc) {$W_{\#_{x=c}}$};
+    
+
+    \path[->]
+    (init) edge node {$\epsilon$} (Sa)
+    (init) edge node {$\epsilon$} (Sb)
+    (init) edge node {$\epsilon$} (Sc)
+    (Sa) edge node {$a$} (Wa)
+         edge [loop above, looseness=3] node {$b,c$} (Sa)
+    (Sb) edge node {$b$} (Wb)
+         edge [loop above, looseness=3] node {$a,c$} (Sb)
+    (Sc) edge node {$c$} (Wc)
+         edge [loop above, looseness=3] node {$a,b$} (Sc)
+    
+    (Wa) edge node {$\#$} (Ha)
+         edge [loop above, looseness=3] node {$a,b,c$} (Wa)
+    (Wb) edge node {$\#$} (Hb)
+         edge [loop above, looseness=3] node {$a,b,c$} (Wb)
+    (Wc) edge node {$\#$} (Hc)
+         edge [loop above, looseness=3] node {$a,b,c$} (Wc);
+    
+\end{tikzpicture}
+\end{center}
+}
+
+Se dunque si ha raggiunto uno stato $W_{\#_{x=...}}$ significa che la il simbolo $x$ è stato trovato nella parola $w$ e si è ora in attesa della lettura della seconda parola $w'$. Se $x$ su cui si ha inizialmente scommesso viene letto in $w'$, allora sarà possibile continuare verso lo stato finale:
+
+{
+\small
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    \node[state, initial, initial text=] (init)   {$\emptyset$};
+    \node[state, right=of init] (Sb) {$S_{x=b}$};
+    \node[state, above=2cm of b] (Sa) {$S_{x=a}$};
+    \node[state, below=2cm of b] (Sc) {$S_{x=c}$};
+    
+    \node[state, right=2cm of Sa] (Wa) {$W_{x=a}$};
+    \node[state, right=2cm of Sb] (Wb) {$W_{x=b}$};
+    \node[state, right=2cm of Sc] (Wc) {$W_{x=c}$};
+
+    \node[state, right=2cm of Wa] (Ha) {$W_{\#_{x=a}}$};
+    \node[state, right=2cm of Wb] (Hb) {$W_{\#_{x=b}}$};
+    \node[state, right=2cm of Wc] (Hc) {$W_{\#_{x=c}}$};
+
+    \node[state, right=2cm of Ha, accepting] (OKa) {${x=a}$};
+    \node[state, right=2cm of Hb, accepting] (OKb) {${x=b}$};
+    \node[state, right=2cm of Hc, accepting] (OKc) {${x=c}$};
+    
+
+    \path[->]
+    (init) edge node {$\epsilon$} (Sa)
+    (init) edge node {$\epsilon$} (Sb)
+    (init) edge node {$\epsilon$} (Sc)
+    (Sa) edge node {$a$} (Wa)
+         edge [loop above, looseness=3] node {$b,c$} (Sa)
+    (Sb) edge node {$b$} (Wb)
+         edge [loop above, looseness=3] node {$a,c$} (Sb)
+    (Sc) edge node {$c$} (Wc)
+         edge [loop above, looseness=3] node {$a,b$} (Sc)
+    
+    (Wa) edge node {$\#$} (Ha)
+         edge [loop above, looseness=3] node {$a,b,c$} (Wa)
+    (Wb) edge node {$\#$} (Hb)
+         edge [loop above, looseness=3] node {$a,b,c$} (Wb)
+    (Wc) edge node {$\#$} (Hc)
+         edge [loop above, looseness=3] node {$a,b,c$} (Wc)
+
+    (Ha) edge node {$a$} (OKa)
+         edge [loop above, looseness=3] node {$a,b,c$} (Ha)
+    (Hb) edge node {$b$} (OKb)
+         edge [loop above, looseness=3] node {$a,b,c$} (Hb)
+    (Hc) edge node {$c$} (OKc)
+         edge [loop above, looseness=3] node {$a,b,c$} (Hc);
+    
+\end{tikzpicture}
+\end{center}
+}
+
+   \vfill
+    \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+    \newpage
+    {\noindent
+    \small \textbf{Computabilità, Complessità e Logica - a.a. 2025/26} \hfill \textbf{Approfondimento \EsercitazioneNum} \\[0.2cm]
+    \scriptsize Matteo Liotta, \texttt{matteo.liotta@studenti.units.it} \hfill \Data \\[0.2cm]
+    \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}} \\[0.3cm]}
+ 
+Questo conclude dunque la realizzazione dell'automa non deterministico che riconosca il linguaggio $L$. 
+\\\\
+
+L'intuizione vista a lezione alla base della "\textit{scommessa}" non deterministica si può ora astrarre con più facilità dall'esempio: poiché in un automa non deterministico si definisce accettata una parola tale da generare una computazione accettante su almeno uno dei "rami", possiamo considerare $n$ rami separati, paralleli, in cui sicuramente almeno uno porterà ad accettazione se verificate le condizioni del linguaggio. \\ 
+Per quanto abituati a considerare un singolo valore $x$ per volta, in realtà nel momento in cui stiamo considerando la computazione su
+
+
+{
+\small
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    \node[state, initial, initial text=] (init)   {$\emptyset$};
+    \node[state, right=of init] (Sb) {$S_{x=b}$};
+    \node[state, above=2cm of b] (Sa) {$S_{x=a}$};
+    \node[state, below=2cm of b] (Sc) {$S_{x=c}$};
+    
+    \node[state, right=2cm of Sa] (Wa) {$W_{x=a}$};
+    \node[state, right=2cm of Sb] (Wb) {$W_{x=b}$};
+    \node[state, right=2cm of Sc] (Wc) {$W_{x=c}$};
+
+    \node[state, right=2cm of Wa] (Ha) {$W_{\#_{x=a}}$};
+    \node[state, right=2cm of Wb] (Hb) {$W_{\#_{x=b}}$};
+    \node[state, right=2cm of Wc] (Hc) {$W_{\#_{x=c}}$};
+
+    \node[state, right=2cm of Ha, accepting] (OKa) {${x=a}$};
+    \node[state, right=2cm of Hb, accepting] (OKb) {${x=b}$};
+    \node[state, right=2cm of Hc, accepting] (OKc) {${x=c}$};
+    
+
+    \path[->]
+    (init) edge node {$\epsilon$} (Sa)
+    (init) edge node {$\epsilon$} (Sb)
+    (init) edge node {$\epsilon$} (Sc)
+    (Sa) edge node {$a$} (Wa)
+         edge [loop above, looseness=3] node {$b,c$} (Sa)
+    (Sb) edge node {$b$} (Wb)
+         edge [loop above, looseness=3] node {$a,c$} (Sb)
+    (Sc) edge node {$c$} (Wc)
+         edge [loop above, looseness=3] node {$a,b$} (Sc)
+    
+    (Wa) edge node {$\#$} (Ha)
+         edge [loop above, looseness=3] node {$a,b,c$} (Wa)
+    (Wb) edge node {$\#$} (Hb)
+         edge [loop above, looseness=3] node {$a,b,c$} (Wb)
+    (Wc) edge node {$\#$} (Hc)
+         edge [loop above, looseness=3] node {$a,b,c$} (Wc)
+
+    (Ha) edge node {$a$} (OKa)
+         edge [loop above, looseness=3] node {$a,b,c$} (Ha)
+    (Hb) edge node {$b$} (OKb)
+         edge [loop above, looseness=3] node {$a,b,c$} (Hb)
+    (Hc) edge node {$c$} (OKc)
+         edge [loop above, looseness=3] node {$a,b,c$} (Hc);
+    
+\end{tikzpicture}
+\end{center}
+}
+
+tutti ed $n$ i processi coesistono paralleli. \\\\Infine, poiché esistono $n$ rami paralleli, ognuno specializzato per una singola lettera, siamo certi che una parola in cui $w$ e $w'$ condividono $x\in\Sigma$ saranno accettate.
+%nel momento in cui ci interrogheremo sulla possibilità di riconoscere quella parola da parte di un automa ND, dobbiamo considerare il comportamento su ciascuno dei percorsi che esso ammette; se presente uno tale da portare alla accettazione, allora la parola sarà nel linguaggio di interesse.
+
+La differenza e il vantaggio risiedono dunque nella possibilità di considerare $n$ possibilità e scommesse (raggiungibili non-deterministicamente) che verifichino indipendentemente ciascuna possibilità, attraverso strutture più semplici.\\
+
+Risulta allora evidente come la scrittura non deterministica sia più compatta rispetto alla precedente, in termini di cardinalità dell'insieme degli stati richiesti. 
+
+
+\vfill
+\noindent\makebox[\linewidth]{\rule{\linewidth}{0.1pt}}
+
+\end{document}

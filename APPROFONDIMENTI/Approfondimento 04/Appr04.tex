@@ -1,0 +1,723 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.5cm, bottom=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage[normalem]{ulem}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{array} % Serve per centrare il testo nelle colonne X
+\usepackage[table]{xcolor}
+\usepackage{makeidx}
+\usepackage[most]{tcolorbox}
+\setlength{\parindent}{0pt}
+\newtcolorbox{osservazioni}{
+  colback=gray!8,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\footnotesize,
+  left=2mm, right=2mm, top=2mm, bottom=2mm,
+  before skip=7pt,   % niente spazio prima
+  after skip=15pt     % niente spazio dopo
+}
+\newtcolorbox{osservazioni2}{
+  colback=ForestGreen!4,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\footnotesize,
+  left=2mm, right=2mm, top=2mm, bottom=2mm,
+  before skip=7pt,   % niente spazio prima
+  after skip=15pt     % niente spazio dopo
+}
+\pagestyle{fancy}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+\pagestyle{fancy}
+
+\usepackage{makeidx}
+
+%%%%%%%%%%%%%%%%%%%
+\newcommand{\DocType}{Esercitazione} % o "Eserciziario"
+\newcommand{\FullTitle}{\DocType\ \EsercitazioneNum}
+
+\newcommand{\Header}{
+\noindent
+  \small \textbf{Computabilità, Complessità e Logica - a.a. 2025/26} \hfill \textbf{\FullTitle} \\[0.2cm]
+  \scriptsize Matteo Liotta, \texttt{matteo.liotta@studenti.units.it} \hfill \Data \\[0.2cm]
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}} \\[0.3cm]}
+
+\newcommand{\NewPageHeader}{
+  \vfill
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  \newpage
+  {\Header}
+}
+%%%%%%%%%%%%%%%%%%%
+\newcommand{\EsercitazioneNum}{04}
+\newcommand{\Data}{16/12/2025}
+%%%%%%%%%%%%%%%%%%%
+
+% Numero di pagina in basso al centro
+\fancyhf{}
+\fancyfoot[C] \thepage
+\renewcommand{\footrulewidth}{0pt} % niente linea in basso
+\renewcommand{\headrulewidth}{0pt} % niente linea in alto
+
+\begin{document}
+\footnotesize  % font generale più piccolo
+
+\noindent
+\small \textbf{Computabilità, Complessità e Logica - a.a. 2025/26} \hfill \textbf{Approfondimento \EsercitazioneNum} \\[0.2cm]
+\scriptsize Matteo Liotta, \texttt{matteo.liotta@studenti.units.it} \hfill \Data \\[0.2cm]
+
+\noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}} \\[1cm]
+
+
+\noindent\Large \textbf{Approfondimento \EsercitazioneNum}: \textit{Identificazione di una refutazione}\\[0.1cm]
+%\\[0.4cm]
+
+
+
+\small
+
+\underline{\textbf{Introduzione}}\\
+
+Abbiamo introdotto la logica proposizionale (variabili su dominio booleano) per parlare, di fatto, della loro soddisfacibilità. Tutta la teoria che ha preceduto la trattazione degli algoritmi di soddisfacibilità, dunque, era volta alla riscrittura delle formule booleane in una via compatibile con tali algoritmi: dalla riscrittura in CNF, al formato di clausole.
+
+$$\phi_{originale}\overset{\equiv}{\longrightarrow}\phi_{CNF}\overset{\approx}{\longrightarrow}S$$
+
+Proprio a partire da una formula in formato di clausole possiamo utilizzare un algoritmo in grado di fornire la risposta alla domanda di interesse relativa alla soddisfacibilità. Il fatto di rilievo è inoltre che, in questo caso, la risposta con tali algoritmi può essere sia \textbf{affermativa}, testimoniando la soddisfacibilità, sia \textbf{negativa}, indicando l'insoddisfacibilità della formula. 
+
+$$\phi_{originale}\overset{\equiv}{\longrightarrow}\phi_{CNF}\overset{\approx}{\longrightarrow}S\longrightarrow\bigg\{\begin{array}{cc}
+    \text{Sat},\alpha &  \\
+    \text{Insat} & 
+\end{array}$$
+
+Il passaggio perà dalla logica proposizionale alla logica dei predicati, con la conseguente separazione tra caratterizzazioni -predicati- ed elementi del dominio $x\in D$, ha portato con sé diverse necessità di rielaborazione delle formule per poter trattare la soddisfacibilità. Il percorso si è strutturato infatti diversamente: altri sono qui i passi necessari, come la riscrittura della formula in forma prenessa, la skolemizzazione e la riscrittura finale in formato di clausole.
+
+$$\phi_{originale}\overset{\equiv}{\longrightarrow}\phi_{prenessa}\overset{\approx}{\longrightarrow}\phi_{skolemizzata}\overset{\equiv}{\longrightarrow}S$$
+
+Arrivando però alla riscrittura della formula in formato di clausole, non possiamo comunque estendere gli ottimi risultati della logica proposizionale. Infatti, in molti casi -quando la formula non è chiusa e compaiono effettivamente delle variabili libere-, non possiamo aspettarci di sapere se una formula è soddisfacibile o insoddisfacibile con lo stesso metodo. \\
+Supponiamo per esempio di avere a disposizione una formula chiaramente insoddisfacibile,: 
+$$\forall x\forall y. \bigg(P(x)\ \land \lnot P(x)\bigg)$$
+che in forma di clausole è riscrivibile come:
+
+$$\{P(x)\},\ \{\lnot P(x)\}$$\\
+Possiamo renderci conto che in questo caso la formula è insoddisfacibile, perché per ogni elemento stiamo chedendo che esso appartenga e non appartenga allo stesso tempo allo stesso sottoinsieme (ricorda: i predicati sono sottoinsiemi del dominio). Abbandonando l'esempio specifico e ritornando a un caso generale, non possiamo dire allo stesso modo che una formula è soddisfacibile usando DP.\\
+
+La differenza sta nel fatto che nel caso della logica proposizionale possiamo provare ogni assegnazione delle variabili tramite metodi di forza bruta e interrogare la soddisfacibilità, mentre qui, invece, come possiamo essere sicuri di aver osservato che per ogni modello $M=(D,I)$ una formula non ammette soddisfacibilità? Semplicemente, si possono studiare le \textit{incongruenze logiche proprie all'interno della formula}, ma non  andare alla ricerca del modello che la verifica: un metodo algoritmico rischierebbe di impiegare un tempo infinito per la ricerca. \\
+
+Quindi, non possiamo affidarci a un sat-solver per trovare un modello -per quanto semplice-:
+\begin{itemize}
+    \item Se scommettiamo che la formula non ammetta alcun modello, possiamo in tempo finito osservare le incongruenze tra \textit{informazioni a priori} (clausole chiuse) e informazioni deducibili dalle informazioni a priori e le regole del sistema (tramite groundizzazione)
+    \item Allo stesso modo, per trovare algoritmicamente un modello, dovremmo provare una infinità di possibili assegnazioni $D$ e $I$, potenzialmente allontanandoci a tempo infinito dalla soluzione. 
+\end{itemize}
+Per quanto per noi immediato provare per la formula:
+
+$$\forall x\exists y. \bigg(P(x)\lor Q(y)\bigg) \land\bigg(\lnot P(x)\lor \lnot Q(y\bigg)\approx\{P(x),Q(f(x)))\},\ \{\lnot P(x),\lnot Q(f(x))\}$$\\
+\NewPageHeader
+che un modello può essere:
+\begin{itemize}
+    \item $D=\mathbf{N}$
+    \item $I\ s.t.\ P^I =\{x\in D\mid x\  pari\},\ Q^I =\{x\in D\mid x\  dispari\}$
+\end{itemize}
+non è altrettanto immediato per un algoritmo.\\
+
+Questa dunque l'idea della differenza per il caso della logica dei predicati: possiamo provare i risultati, ma in modo differente rispetto alla logica proposizionale.
+
+$$\phi_{originale}\overset{\equiv}{\longrightarrow} \phi_{prenessa} \overset{\approx}{\longrightarrow}
+\phi_{skolemizzata}\overset{\equiv}{\longrightarrow}S
+\bigg\{
+\begin{array}{cc}
+    \text{Soddisfacibile: trovando un modello} &  \\
+    \text{Insoddisfacibile: con groundizzazione e DP} & 
+\end{array}$$
+
+Questo complica leggermente il processo, ma le idee alla base della identificazione di una refutazione rimangono le stesse: se in grado di ottenere due risultati contrastanti che devono coesistere, non può che essere una formula insoddisfacibile. Per provarlo, potremo fare riferimento all'insieme di Herbrand di un insieme di clausole $S$, ottenuto come dominio sintattico a partire da una costante (eventualmente introdotta di ufficio) e le applicazioni dei funzionali su questa e loro stesse. 
+Per l'ultima formula:
+
+$$H=\{a,f(a),f^2(a),...,f^i(a),...\}\quad\quad\quad f^i(\cdot)=f(f(f(...(\ f(\cdot)\ ))))$$\\
+Se ricordiamo, nel momento in cui siamo arrivati a scrivere una formula in formato di clausola:
+\begin{itemize}
+    \item Se una variabile è quantificata esistenzialmente: sostituiamo la variabile in ogni sua occorrenza con una nuova costante;
+    \item Se essa (la medesima) preceduta da un quantificatore universale: sostituiamo con una funzione su tale variabile universalmente quantificata.
+    \item Se una variabile è quantificata universalmente: resta libera
+\end{itemize}
+Quindi, ogni variabile che compare nell'insieme di clausole era idealmente preceduta da un quantificatore universale e può essere sostituita con ogni elemento del dominio -indipendentemente da quale esso sia-. \\ 
+Vedremo nel seguente esercizio risolto come alla base di questo sia proprio sviluppato il ragionamento: possiamo provare, a partire da informazioni note (clausole chiuse) a istanziare altre variabili con elementi del dominio di Herbrand per ottenere una incongruenza, interna alla formula. Ragionare proprio su elementi presenti nella formula, senza perdita di generalità è la chiave della prova dell'insoddisfacibilità.\\[0.1cm]
+
+
+\underline{\textbf{Esercizio e risoluzione}}
+
+\begin{osservazioni}
+%% INDEX
+
+    \underline{\textbf{Es.}}
+    Si consideri il seguente insieme di clausole, con $a$ simbolo di costante:
+    $$\{P(x), D(x)\}, \{\lnot P(x), \lnot D(x)\}, \{\lnot P(x), D(succ(x))\}, \{\lnot D(x), P(succ(x))\},$$
+    $$\{\lnot P(x), \lnot P(y), P(+(x, y))\}, \{\lnot D(x), \lnot D(y), P(+(x, y))\},$$
+    $$\{\lnot D(x), \lnot P(y), D(+(x, y))\}, \{\lnot P(x), \lnot D(y), D(+(x, y))\}$$
+    $$\{P(0)\}, \{D(+(0, succ(succ(0))))\}$$
+
+    Dove $x$ e $y$ sono variabili, $0$ simbolo di costante, $P$ e $D$ predicati, $succ$ e $+$ dei simboli di funzione.
+    \begin{enumerate}
+        \item Si definisca l'universo di Herbrand per l'insieme di clausole;
+        \item Si trovi una refutazione per l'insieme di clausole.\\[0.1pt]
+    \end{enumerate}
+
+\end{osservazioni}
+
+\underline{\textit{Soluzione.}}\\
+Si considera l'insieme di clausole proposto, $S$. Possiamo dividere tale insieme in due sottoinsiemi, tali da distinguere clausole chiuse e clausole con variabili libere. Infatti:
+\begin{itemize}
+    \item $S_c = \{P(0)\}, \ \{D+(0,succ^2(0))\}$, è un insieme di clausole che \textit{veicolano una conoscenza a priori sul sistema}, come l'informazione che $0$ gode di P.
+    \item $S_l=S/S_c$ sono tutte le altre clausole, che, essendo libere, sono per natura \textit{applicabili ad ogni elemento del dominio di interesse}. Esse rappresentano, se vogliamo, delle regole interne al sistema che lo descrivono in una via generale.
+\end{itemize}
+
+Faremo riferimento a tali insiemi rispettivamente, per semplicità, come \textit{informazioni a priori} e \textit{regole del problema}. \\ Sappiamo inoltre che in questo esercizio l'insieme di Herbrand ammette come elementi non solo $0$ e le applicazioni $succ^i(0)$, ma anche tutte le eventuali applicazioni del funzionale di somma $+(\cdot,\cdot)$. Come noto dalla teoria, possiamo istanziare -ossia groundizzare- una specifica regola -clausola- con un elemento di quel dominio. Apparterranno allora all'insieme di clausole ground tutte quelle clausole così ottenute.\\
+
+\NewPageHeader
+Per chiarezza, groundizzare significa che data una clausola come:
+$$\{P(x),D(x)\}$$ 
+poiché essa deve valere per ogni elemento $x$, deve allora poter valere, senza perdita di generalità \textit{per una specifica scelta di $x$ appartenente al dominio di Herbrand} (che ha una natura sintattica).
+Ecco allora che possiamo scegliere di introdurre nel nostro problema quante clausole vogliamo, groundizzando:
+
+$$\{P(x|_0),D(x|_0)\} = \{P(0),D(0)\},\quad 0\in H$$\\
+L'insieme di clausole può essere ampliato senza perdita di generalità con ogni clausola chiusa ottenuta \textbf{con ogni elemento dell'insieme di Herbrand}. Esse saranno contenute all'interno de
+$$S|_{H'}\equiv\text{insieme delle clausole groundizzate}$$
+Ovviamente, per quanto si possa, \textbf{non è necessariamente vero che avere una clausola chiusa di questa forma sia di aiuto per la produzione di una refutazione}. Infatti, potremmo ottenere una infinità di clausole groundizzate, ma \textbf{solo poche dall'effettiva utilità}. Allora, ricorderemo che la groundizzazione sarà utilizzata solo al fine di raggiungere un obiettivo: \textbf{una incongruenza}. L'obiettivo sarà di utilizzare elementi noti a priori per conseguire, grazie anche a clausole groundizzate, una incongruenza \textbf{intrinseca} del problema corrente. L'intrinsecità dell'incongruenza deriverà proprio dal non aver introdotto nulla che alterasse la formula stessa.\\
+
+Possiamo quindi passare alla risoluzione dell'esercizio, distinguendo, come anticipato, tra diverse tipologie di clausole. L'insieme di clausole di partenza è dunque il seguente:
+
+
+\begin{table}[h]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\{P(0)\}, \ \{D+(0,succ^2(0))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},$\newline
+            $\{\lnot D(x), P(succ(x))\},\quad \{\lnot P(x), \lnot P(y), P(+(x, y))\},$\newline
+            $\{\lnot D(x), \lnot D(y), P(+(x, y))\},\quad \{\lnot D(x), \lnot P(y), D(+(x, y))\},$\newline
+            $\{\lnot P(x), \lnot D(y),\quad D(+(x, y))\}$ 
+            \\
+        \hline
+        Clausole Ground & $\emptyset$ \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+Ecco dunque che possiamo avere una intuizione di dove potrebbe nascere una contraddizione: il problema attesta tramite la clausola $\{D+(0,succ^2(0))\}$ una informazione su un elemento del dominio. Se vogliamo interpretare questa clausola, potremmo farlo con la parità e la disparità -che sembra adattarsi all'esempio, considerate le proprietà generali: in tal caso, sarebbe come affermare la disparità di $2$. \\ Ci aspettiamo che, se le regole della parità e loro estensioni sono corrette, si possa dimostrare che $2$ è pari e dedurre anche incongruenza. Tutto si riduce a riuscire a trovare... 
+$$?\quad \{\lnot D+(0,succ^2(0))\}$$\\
+Iniziamo introducendo clausole ground, spiegando ogni volta perché. 
+Con l'obiettivo di provare la parità o disparità dei successori di zero, proviamo a istanziare dunque con $x=0$ la clausola:
+$$x=0\quad \quad \{\lnot P(x|_0), D(succ(x|_0))\}$$
+Dove quindi l'insieme di clausole diventerà:
+
+\begin{table}[h]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\{P(0)\}, \ \{D+(0,succ^2(0))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},$\newline
+            $\{\lnot D(x), P(succ(x))\},\quad \{\lnot P(x), \lnot P(y), P(+(x, y))\},$\newline
+            $\{\lnot D(x), \lnot D(y), P(+(x, y))\},\quad \{\lnot D(x), \lnot P(y), D(+(x, y))\},$\newline
+            $\{\lnot P(x), \lnot D(y),\quad D(+(x, y))\}$ 
+            \\
+        \hline
+        Clausole Ground & \textcolor{blue}{$\{\lnot P(0), D(succ(0))\}$} \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+Ricordiamo che, però, avendo questo insieme di clausole, stiamo dicendo che 
+$$\{P(0)\} \quad \quad \quad \{\lnot P(0), D(succ(0))\}$$
+devono coesistere (poiché legate da un and), ossia stiamo affermando che affermare che le condizioni di $P(0)\rightarrow D(succ(0))$ sono vere. Tipicamente, per una clausola 
+$$\{\lnot P(0), D(succ(0))\}$$
+
+\NewPageHeader
+
+questo implica che il primo letterale non ha influenza: 
+$$F\lor X\equiv X$$
+cioé tutta l'attenzione è lasciata all'altro letterale, l'unico che ha il "potere" di rendere vera quella clausola in cui compare.
+
+Allora, se così, possiamo dire che questo è qualcosa che si \textbf{\textit{semplifica}} in...
+
+$$\{P(0)\} \quad\quad \{\lnot P(0), D(succ(0))\} \quad\quad \Rightarrow \quad\quad \{P(0)\}\ \quad\quad\{D(succ(0))\}$$\\
+...una clausola unitaria. Non si tratta di altro che una clausola groundizzata che però è stata semplificata grazie alle informazioni del sistema inizialmente note. Allora il nostro insieme di clausole diventa:
+
+\begin{table}[h]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & \textcolor{ForestGreen}{$\{P(0)\}$}, $\ \{D+(0,succ^2(0))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},$ \newline
+            
+            $\{\lnot D(x), P(succ(x))\},\quad \{\lnot P(x), \lnot P(y), P(+(x, y))\},$\newline
+            
+            $\{\lnot D(x), \lnot D(y), P(+(x, y))\},\quad \{\lnot D(x), \lnot P(y), D(+(x, y))\},$ \newline
+            
+            $\{\lnot P(x), \lnot D(y),\quad D(+(x, y))\}$ 
+            \\
+        \hline
+        Clausole Ground & \textcolor{blue}{$\{$ \textcolor{ForestGreen}{\sout{$\lnot P(0)$}}, $D(succ(0))\}$} \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+Ossia, non altro che:
+
+\begin{table}[h]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\{P(0)\}, \ \{D+(0,succ^2(0))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},$\newline
+            $\{\lnot D(x), P(succ(x))\},\quad \{\lnot P(x), \lnot P(y), P(+(x, y))\},$\newline
+            $\{\lnot D(x), \lnot D(y), P(+(x, y))\},\quad \{\lnot D(x), \lnot P(y), D(+(x, y))\},$\newline
+            $\{\lnot P(x), \lnot D(y),\quad D(+(x, y))\}$ 
+            \\
+        \hline
+        Clausole Ground & \textcolor{blue}{$\{D(succ(0))\}$} \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+Quindi, \textbf{abbiamo ampliato sì il nostro insieme di clausole con una clausola a due letterali ground}, ma \textbf{grazie alle informazioni che avevamo a priori} (una clausola chiusa unitaria) \textbf{abbiamo ulteriormente semplificato, fino a ottenere una nuova clausola unitaria, che rappresenta una informazione aggiuntiva}, bensì coerente. Sostanzialmente non abbiamo fatto altro che dire:
+\begin{center}
+    \textit{Se è vero che $0$ gode di $P$ ed è vero che $P(x)\rightarrow D(succ(x))$ allora è necessario che $succ(0)$ goda di $D$}
+\end{center}
+Che in altre parole...
+\begin{center}
+    \textit{Se è vero che $0$ è pari ed è vero che il successore di un numero pari è dispari, allora $1$ }(=$succ(0)$)\textit{ dovrà essere dispari}
+\end{center}
+Non abbiamo detto nulla che facesse perdere al nostro lavoro di generalità: tutto segue direttamente dalle assunzioni già contenute in $S$ e dalle regole di $S$ stesso! Possiamo procedere allo stesso modo, introducendo la clausola ground: $$x=succ(0)\quad\quad\{\lnot D(x|_{succ(0)}), P(succ(x|_{succ(0)}))\}$$
+nell'insieme di clausole.
+
+\begin{table}[h]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\{P(0)\}, \ \{D+(0,succ^2(0))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},$\newline
+            $\{\lnot D(x), P(succ(x))\},\quad \{\lnot P(x), \lnot P(y), P(+(x, y))\},$\newline
+            $\{\lnot D(x), \lnot D(y), P(+(x, y))\},\quad \{\lnot D(x), \lnot P(y), D(+(x, y))\},$\newline
+            $\{\lnot P(x), \lnot D(y),\quad D(+(x, y))\}$ 
+            \\
+        \hline
+        Clausole Ground & \textcolor{black}{$\{D(succ(0))\}\quad$}\textcolor{blue}{$\{\lnot D(succ(0)),P(succ^2(0))\}$} \\
+        \hline
+    \end{tabularx}
+\end{table}
+Che, come prima, può essere semplificato, dato che possediamo l'informazione che 
+$$\{D(succ(0))\}$$
+\NewPageHeader
+
+\begin{table}[h]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\{P(0)\}, \ \{D+(0,succ^2(0))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},$\newline
+            $\{\lnot D(x), P(succ(x))\},\quad \{\lnot P(x), \lnot P(y), P(+(x, y))\},$\newline
+            $\{\lnot D(x), \lnot D(y), P(+(x, y))\},\quad \{\lnot D(x), \lnot P(y), D(+(x, y))\},$\newline
+            $\{\lnot P(x), \lnot D(y),\quad D(+(x, y))\}$ 
+            \\
+        \hline
+        Clausole Ground & \textcolor{ForestGreen}{$\{D(succ(0))\}\quad$}\textcolor{blue}{$\{$\textcolor{ForestGreen}{\sout{$\lnot D(succ(0))$}}$,P(succ^2(0))\}$} \\
+        \hline
+    \end{tabularx}
+\end{table}
+Ossia:
+\begin{table}[h]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\{P(0)\}, \ \{D+(0,succ^2(0))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},$\newline
+            $\{\lnot D(x), P(succ(x))\},\quad \{\lnot P(x), \lnot P(y), P(+(x, y))\},$\newline
+            $\{\lnot D(x), \lnot D(y), P(+(x, y))\},\quad \{\lnot D(x), \lnot P(y), D(+(x, y))\},$\newline
+            $\{\lnot P(x), \lnot D(y),\quad D(+(x, y))\}$ 
+            \\
+        \hline
+        Clausole Ground & \textcolor{black}{$\{D(succ(0))\}\quad$}\textcolor{blue}{$\{P(succ^2(0))\}\quad$} \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+Il nostro insieme di clausole è stato allora esteso con due informazioni che, date quelle a priori e dedotte da esse, dovranno essere vere. Ma se ci facciamo caso, se sappiamo che allo stesso tempo devono essere vere sia la parità di $0$ che la parità di $succ^2(0)$, possiamo dire qualcosa sull somma di questi: è infatti presente una regola che permette di dedurre la parità della somma di due elementi pari.
+
+\begin{table}[h]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & \textcolor{blue}{$\{P(0)\}$}$, \ \{D+(0,succ^2(0))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},$\newline
+            $\{\lnot D(x), P(succ(x))\},\quad $\textcolor{red}{$\{\lnot P(x), \lnot P(y), P(+(x, y))\}$}$,$\newline
+            $\{\lnot D(x), \lnot D(y), P(+(x, y))\},\quad \{\lnot D(x), \lnot P(y), D(+(x, y))\},$\newline
+            $\{\lnot P(x), \lnot D(y),\quad D(+(x, y))\}$ 
+            \\
+        \hline
+        Clausole Ground & \textcolor{black}{$\{D(succ(0))\}\quad$}\textcolor{blue}{$\{P(succ^2(0))\}\quad$} \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+Quindi, potremmo pensare di aggiungere la clausola ground
+$$x=0,y=succ^2(0)\quad\quad\{\lnot P(x|_0), \lnot P(y|_{succ^2(0)}), P(+(x|_0, y|_{succ^2(0)}))\}$$
+
+che sarà quindi inserita nell'insieme di clausole:
+
+\begin{table}[H]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & \textcolor{black}{$\{P(0)\}$}$, \ \{D+(0,succ^2(0))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},$\newline
+            $\{\lnot D(x), P(succ(x))\},\quad $\textcolor{black}{$\{\lnot P(x), \lnot P(y), P(+(x, y))\}$}$,$\newline
+            $\{\lnot D(x), \lnot D(y), P(+(x, y))\},\quad \{\lnot D(x), \lnot P(y), D(+(x, y))\},$\newline
+            $\{\lnot P(x), \lnot D(y),\quad D(+(x, y))\}$ 
+            \\
+        \hline
+        Clausole Ground & \textcolor{black}{$\{D(succ(0))\}\quad$}\textcolor{black}{$\{P(succ^2(0))\}\quad$}
+        \textcolor{blue}{$\{\lnot P(0), \lnot P(succ^2(0)), P(+(0, succ^2(0)))\}$}
+        \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+Ma che ancora una volta può essere semplificata:
+
+\begin{table}[H]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & \textcolor{ForestGreen}{$\{P(0)\}$}$, \ \{D+(0,succ^2(0))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},$\newline
+            $\{\lnot D(x), P(succ(x))\},\quad $\textcolor{black}{$\{\lnot P(x), \lnot P(y), P(+(x, y))\}$}$,$\newline
+            $\{\lnot D(x), \lnot D(y), P(+(x, y))\},\quad \{\lnot D(x), \lnot P(y), D(+(x, y))\},$\newline
+            $\{\lnot P(x), \lnot D(y),\quad D(+(x, y))\}$ 
+            \\
+        \hline
+        Clausole Ground & \textcolor{black}{$\{D(succ(0))\}\quad$}\textcolor{ForestGreen}{$\{P(succ^2(0))\}\quad$}
+        \textcolor{blue}{$\{$\sout{\textcolor{ForestGreen}{$\lnot P(0)$}}$, $\sout{\textcolor{ForestGreen}{$\lnot P(succ^2(0))$}}$, P(+(0, succ^2(0)))\}$}
+        \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+\NewPageHeader
+
+Ottenendo infine:
+
+\begin{table}[h]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & \textcolor{black}{$\{P(0)\}$}$, \ \{D+(0,succ^2(0))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},$\newline
+            $\{\lnot D(x), P(succ(x))\},\quad $\textcolor{black}{$\{\lnot P(x), \lnot P(y), P(+(x, y))\}$}$,$\newline
+            $\{\lnot D(x), \lnot D(y), P(+(x, y))\},\quad \{\lnot D(x), \lnot P(y), D(+(x, y))\},$\newline
+            $\{\lnot P(x), \lnot D(y),\quad D(+(x, y))\}$ 
+            \\
+        \hline
+        Clausole Ground & \textcolor{black}{$\{D(succ(0))\}\quad$}\textcolor{black}{$\{P(succ^2(0))\}\quad$}
+        \textcolor{blue}{$\{P(+(0, succ^2(0)))\}$}
+        \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+Ecco dunque che abbiamo ottenuto che, secondo la logica del nostro problema il termine del dominio identificato da $$+(0, succ^2(0))$$
+deve necessariamente godere della proprietà $P$. Sappiamo però dalla clausola $\{\lnot P(x),\lnot D(x)\}$ che se un elemento è pari (gode di $P$) esso non è dispari (non gode di $D$) e viceversa. Istanziando allora proprio tale clausola, rendendola ground:
+$$x=+(0, succ^2(0))\quad\quad \{\lnot P(x),\lnot D(x)\}$$
+Si ottiene da aggiungere all'insieme di clausole, dopo la stessa semplificazione precedentemente svolta:
+$$\{\lnot D(+(0, succ^2(0)))\}$$
+Infatti, aggiungendo la clausola ground:
+\begin{table}[h]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & \textcolor{black}{$\{P(0)\}$}$, \ \{D+(0,succ^2(0))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},$\newline
+            $\{\lnot D(x), P(succ(x))\},\quad $\textcolor{black}{$\{\lnot P(x), \lnot P(y), P(+(x, y))\}$}$,$\newline
+            $\{\lnot D(x), \lnot D(y), P(+(x, y))\},\quad \{\lnot D(x), \lnot P(y), D(+(x, y))\},$\newline
+            $\{\lnot P(x), \lnot D(y),\quad D(+(x, y))\}$ 
+            \\
+        \hline
+        Clausole Ground & \textcolor{black}{$\{D(succ(0))\}\quad$}\textcolor{black}{$\{P(succ^2(0))\}\quad$}
+        \textcolor{black}{$\{P(+(0, succ^2(0)))\},\quad$}
+        \textcolor{blue}{$\{\lnot P(+(0, succ^2(0))),\lnot D(+(0, succ^2(0)))\}$}
+        \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+E semplificando grazie alle informazioni note:
+
+\begin{table}[h]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & \textcolor{black}{$\{P(0)\}$}$, \ \{D+(0,succ^2(0))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},$\newline
+            $\{\lnot D(x), P(succ(x))\},\quad $\textcolor{black}{$\{\lnot P(x), \lnot P(y), P(+(x, y))\}$}$,$\newline
+            $\{\lnot D(x), \lnot D(y), P(+(x, y))\},\quad \{\lnot D(x), \lnot P(y), D(+(x, y))\},$\newline
+            $\{\lnot P(x), \lnot D(y),\quad D(+(x, y))\}$ 
+            \\
+        \hline
+        Clausole Ground & \textcolor{black}{$\{D(succ(0))\}\quad$}\textcolor{black}{$\{P(succ^2(0))\}\quad$}
+        \textcolor{ForestGreen}{$\{P(+(0, succ^2(0)))\},\quad$}
+        \textcolor{blue}{$\{$\sout{\textcolor{ForestGreen}{$\lnot P(+(0, succ^2(0)))$}}$,\lnot D(+(0, succ^2(0)))\}$}
+        \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+L'insieme di clausole contiene ora due clausole che caratterizzano in maniera opposta un elemento del dominio:
+
+\begin{table}[H]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & \textcolor{black}{$\{P(0)\}$}$, \ $\textcolor{red}{$\{D+(0,succ^2(0))\}$} \\
+        \hline
+        Clausole Libere & 
+            $\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},$\newline
+            $\{\lnot D(x), P(succ(x))\},\quad $\textcolor{black}{$\{\lnot P(x), \lnot P(y), P(+(x, y))\}$}$,$\newline
+            $\{\lnot D(x), \lnot D(y), P(+(x, y))\},\quad \{\lnot D(x), \lnot P(y), D(+(x, y))\},$\newline
+            $\{\lnot P(x), \lnot D(y),\quad D(+(x, y))\}$ 
+            \\
+        \hline
+        Clausole Ground & \textcolor{black}{$\{D(succ(0))\}\quad$}\textcolor{black}{$\{P(succ^2(0))\}\quad$}
+        \textcolor{black}{$\{P(+(0, succ^2(0)))\},\quad$}
+        \textcolor{red}{$\{\lnot D(+(0, succ^2(0)))\}$}
+        \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+
+
+Questo, come sappiamo, dà luogo a una incongruenza, una condizione impossibile. Si ottiene dunque la clausola vuota, con la conseguente insoddisfacibilità dell'insieme di clausole.\\
+
+\NewPageHeader
+
+Ricapitoalndo, proprio perché:
+\begin{itemize}
+    \item Non è stato introdotto alcun termine che faccia perdere di generalità;
+    \item Sono state svolte semplificazioni ammesse da DP per clausole;
+    \item Perché dalla \textit{deduzione} -tramite priori+regole- si ottiene qualcosa che è in contraddizione con quanto affermato dalla formula.
+\end{itemize}
+si ottiene che la formula è tale da richiedere $D(+(0, succ^2(0))$, ma anche di essere in grado di generare secondo la sua logica il contrario: $D(+(0, succ^2(0))$. Nessun modello può ammettere un dominio e una interpretazione in cui un elemento $x$ del dominio è contemporaneamente appartenente a un sottoinsieme $D^I\subseteq dominio$ e al complementare $dominio/D^I\subseteq dominio$; per questo $S$ è insoddisfacibile.\\[0.1cm]
+
+
+\underline{\textbf{Come capire quali clausole groundizzare?}}\\
+
+La risoluzione proposta, richiedeva una leggera fiducia nei confronti dell'istanziazione delle clausole libere con termini dell'universo di Herbrand. L'attenzione infatti era posta più che sulla risoluzione in modo efficace, sul chiarire come si relazionasse la risoluzione tramite DP con l'insieme di clausole per la logica dei predicati: clausole, clausole chiuse, deduzione e semplificazione.
+Quando si affronta l'esercizio, però, può risultare meno chiaro quali siano le clausole inserire nell'insieme delle clausole ground, anche per via del fatto che alcune delle clausole sono per di più "inutili" per la prova della insoddisfacibilità in questione.\\
+
+Consideriamo allora nuovamente l'insieme di clausole considerato nell'esercizio precedente:
+
+\begin{table}[h]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\{P(0)\}, \ \{D+(0,succ^2(0))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},$\newline
+            $\{\lnot D(x), P(succ(x))\},\quad \{\lnot P(x), \lnot P(y), P(+(x, y))\},$\newline
+            $\{\lnot D(x), \lnot D(y), P(+(x, y))\},\quad \{\lnot D(x), \lnot P(y), D(+(x, y))\},$\newline
+            $\{\lnot P(x), \lnot D(y),\quad D(+(x, y))\}$ 
+            \\
+        \hline
+        Clausole Ground & $\emptyset$ \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+
+Non sempre si hanno a disposizione delle informazioni a priori sotto forma di clausole ground, ma in questo caso ne abbiamo due a disposizione. Inserire all'interno di un insieme di clausole una clausola \textbf{unitaria}, analogamente a quanto accadeva nella logica proposizionale, introduce una conoscenza che deve essere \textbf{necessariamente vera per il problema}:
+\begin{itemize}
+    \item Ogni clausola è legata alle altre con un simbolo di $\land$;
+    \item L'operatore $\land$ richiede che singolarmente ogni suo argomento sia soddisfatto, verificato.
+\end{itemize}
+Quindi, l'insieme di clausole può essere visto come un sistema di \textit{equazioni}: se stiamo imponendo una conoscenza della forma \\$x=4$, nel nostro problema quello è un requisito essenziale per soddisfare il problema, $x$ deve essere il numero $4$, \textbf{indipendentemente dalle altre equazioni}. Lo stesso vale qui, con un insieme di clausole, anche se ciò che cambia è solo il modo in cui si esprime un certo vincolo. \\
+Le clausole unitarie $\{P(0)\}, \ \{D(+(0,succ^2(0))\}$ allora chiedono:
+\begin{itemize}
+    \item Che l'elemento identificato dalla costante nel dominio, $0$, sia tale da godere della proprietà $P$, o, equivalentemente, di essere in quell'insieme.
+    \item Che lo stesso valga per l'elemento del dominio $(+(0,succ^2(0))$: esso deve essere necessariamente \textit{dispari} per il nostro sistema.
+\end{itemize}
+
+Avendo chiaro che una clausola unitaria introduce nel sistema una conoscenza \textbf{certa} nei confronti di un certo elemento del dominio, possiamo passare a comprendere come ricavare da essere \textbf{nuove} conoscenze certe.
+Consideriamo di prendere due clausole, ossia:
+\begin{enumerate}
+    \item $\{P(0)\}$
+    \item $\{\lnot P(x),D(succ(x))\}\equiv P(x)\rightarrow D(succ(x))$ 
+\end{enumerate}
+
+Possiamo vederlo intuitivamente come un sistema... in cui sappiamo che
+
+\begin{center}
+    \textit{Per ogni elemento del dominio vale che se esso pari, il suo successore è dispari}
+\end{center}
+
+ma anche che 
+
+\begin{center}
+    \textit{L'elemento $0$ è pari}
+\end{center}
+
+Unendo le due precedenti informazioni, sappiamo \textbf{per certo} che allora
+\begin{center}
+    \textit{Il successore di $0$ è dispari}
+\end{center}
+\NewPageHeader
+Perché sarebbe assolutamente una incongruenza tra l'informazione specifica (parità di zero), nota a priori, e le regole generali. Quindi, possiamo passare senza problemi all'introduzione di una nuova clausola senza necessariamente richiedere una semplificazione DP:
+
+\begin{table}[h]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\{P(0)\}, \ \{D(+(0,succ^2(0))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},$\newline
+            $\{\lnot D(x), P(succ(x))\},\quad \{\lnot P(x), \lnot P(y), P(+(x, y))\},$\newline
+            $\{\lnot D(x), \lnot D(y), P(+(x, y))\},\quad \{\lnot D(x), \lnot P(y), D(+(x, y))\},$\newline
+            $\{\lnot P(x), \lnot D(y),\quad D(+(x, y))\}$ 
+            \\
+        \hline
+        Clausole Ground & $\{D(succ(0))\}$ \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+\begin{osservazioni}
+    \textit{\textbf{Nota.}}\\
+    Il motivo formale dietro questo è il seguente: data una implicazione logica tra due formule
+    $$\phi_1\rightarrow \phi_2$$
+    ricordiamo dalla tabbella di verità che:
+    \begin{itemize}
+        \item Se $\phi_1$ falsa, allora il valore di verità di $\phi_2$ può essere vero o falso senza complicazioni;
+        \item Se $\phi_1$ vera, l'operatore sarà soddisfatto ("vero") solo nel caso in cui $\phi_2$ sia vero a sua volta.
+    \end{itemize}
+    Poiché noi sappiamo che $\phi_1$ qui deve essere necessariamente vero (poiché a priori sappiamo che $\{P(0)\}$, abbiamo necessariamente bisogno che $D(succ(0))$ sia vero come informazione a sé, svincolata dal valore di $P(0)$.
+\end{osservazioni}
+
+Ecco dunque che abbiamo due strumenti:
+\begin{itemize}
+    \item \textbf{Sappiamo che una clausola unitaria impone una conoscenza certa sul problema};
+    \item \textbf{Sappiamo che possiamo ottenere una clausola unitaria da una implicazione}, se \textbf{siamo certi della verità delle condizioni};\\
+\end{itemize}
+
+Ora, ritornando all'insieme di clausole, si propone un modo per provare l'insoddisfacibilità facendo uso di questi due aspetti. 
+\begin{enumerate}
+    \item  A partire da $S$ vogliamo una contraddizione;
+    \item  Intuitivamente, ci risulta sbagliato che il risultato della somma tra $0$ e $2$ sia $dispari$. Vogliamo provare quindi che $+(0,succ^2(0))$ non è dispari: \textbf{abbiamo bisogno della clausola unitaria}
+    $$\{\lnot D(+(0,succ^2(0))\}$$
+    che rappresenta questa informazione ma che purtroppo non possediamo;
+    \item Ci rendiamo conto che chiedere la non disparità è come chiedere la parità. Infatti, abbiamo a disposizione la clausola:
+    $$P(x)\rightarrow \lnot D(x)$$
+    che può essere piegata per il nostro problema corrente a 
+    $$P(+(0,succ^2(0)))\rightarrow D(+(0,succ^2(0)))$$
+    \item \textbf{Sapere vere le condizioni di una implicazione} ci permetterebbe di ottenere la clausola unitaria $\{\lnot D(+(0,succ^2(0))\}$, allora la nostra attenzione si sposta solamente a riuscire a dimostrare che \textbf{è vero che} $\{P(+(0,succ^2(0))\}$ (ossia rendere vera la condizione, così da ottenere la conseguenza come clausola unitaria).
+    \item Osserviamo la presenza della regola:
+    $$\bigg(P(x)\land P(y)\bigg)\rightarrow P(+(x,y))$$
+    Analogamente, se vogliamo la clausola unitaria per la parità della somma, dobbiamo essere certi che le condizioni siano soddisfatte. Riusciamo a essere certi che 
+    $P(0)$ e $P(succ^2(0))$? La prima informazione è già nota, quindi ci basterebbe ricavare è vero che $P(succ^2(0))$.
+    \item Possiamo, proprio grazie alle seguenti regole:
+    $$P(x)\rightarrow D(succ(x)) \Rightarrow P(0)\rightarrow D(succ(0))\Rightarrow D(succ(0))$$
+    $$D(x)\rightarrow P(succ(x)) \Rightarrow D(succ(0))\rightarrow P(succ^2(0))\Rightarrow D(succ(0))$$
+    \item Quindi, avendo soddisfatte le condizioni tutte, sappiamo che $\lnot D(+(0,succ^2(0)))$.
+\end{enumerate}
+
+\NewPageHeader
+
+L'idea della risoluzione è dunque potenzialmente ricorsiva, sfruttando l'aiuto delle conseguenze logiche come operatori.
+
+
+
+
+
+\vfill
+\noindent\makebox[\linewidth]{\rule{\linewidth}{0.1pt}}
+\end{document}
