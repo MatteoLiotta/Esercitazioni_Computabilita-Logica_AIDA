@@ -1,0 +1,218 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.5cm, bottom=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[table]{xcolor}
+\usepackage{makeidx}
+\usepackage[most]{tcolorbox}
+\newtcolorbox{osservazioni}{
+  colback=gray!8,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\footnotesize,
+  left=2mm, right=2mm, top=2mm, bottom=2mm,
+  before skip=7pt,   % niente spazio prima
+  after skip=15pt     % niente spazio dopo
+}
+\newtcolorbox{osservazioni2}{
+  colback=ForestGreen!4,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\footnotesize,
+  left=2mm, right=2mm, top=2mm, bottom=2mm,
+  before skip=7pt,   % niente spazio prima
+  after skip=15pt     % niente spazio dopo
+}
+\pagestyle{fancy}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+\pagestyle{fancy}
+
+\usepackage{makeidx}
+
+%%%%%%%%%%%%%%%%%%%
+\newcommand{\EsercitazioneNum}{13}
+\newcommand{\Data}{11/12/2025}
+\newcommand{\DocType}{Esercitazione} % o "Eserciziario"
+\newcommand{\FullTitle}{\DocType\ \EsercitazioneNum}
+
+\newcommand{\Header}{
+\noindent
+  \small \textbf{Computabilità, Complessità e Logica - a.a. 2025/26} \hfill \textbf{\FullTitle} \\[0.2cm]
+  \scriptsize Matteo Liotta, \texttt{matteo.liotta@studenti.units.it} \hfill \Data \\[0.2cm]
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}} \\[0.3cm]}
+
+\newcommand{\NewPageHeader}{
+  \vfill
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  \newpage
+  {\Header}
+}
+%%%%%%%%%%%%%%%%%%%
+
+% Numero di pagina in basso al centro
+\fancyhf{}
+\fancyfoot[C] \thepage
+\renewcommand{\footrulewidth}{0pt} % niente linea in basso
+\renewcommand{\headrulewidth}{0pt} % niente linea in alto
+
+\begin{document}
+
+\footnotesize  % font generale più piccolo
+\Header\\[0.7cm]
+
+
+%%%%%%%%%%%%%%%% FOGLIO 2
+
+    
+    %% INDEX
+    \addcontentsline{toc}{section}{Esercitazione 13: \textit{Universo di Herbrand e verifica della soddisfacibilità per LDP}}
+    
+    \noindent\Large \textbf{Esercitazione 13}: \textit{Universo di Herbrand e verifica della soddisfacibilità per LDP} 
+    \begin{osservazioni}
+        \textbf{\textit{Nota}}. Sono indicati in \textcolor{ForestGreen}{\textit{verde}} gli esercizi a sfondo teorico, proposti per rafforzare le idee alla base dei metodi utilizzati. Sono invece indicati in \textcolor{blue}{\textit{blu}} gli esercizi che non saranno trattati durante l'esercitazione, bensì lasciati come strumento aggiuntivo di esercitazione individuale. Resta comunque assoluta disponibilità per la loro risoluzione negli incontri successivi, qualora necessario. 
+    \end{osservazioni}
+    
+    {\normalsize
+    \begin{itemize}[label=, leftmargin=0pt]
+    
+    %\item \textbf{\underline{Formule booleane cont'd.}}
+
+    %% INDEX
+    %\addcontentsline{toc}{subsection}{Esercizio 4.}
+    %%
+    %\item \textbf{\textcolor{black}{Esercizio 4.} (**)}\\
+    %Si considerino le seguenti formule booleane:    
+    %    $$\Big(((A \rightarrow (B \land \lnot C)) \lor (\overline A \lor B)) \rightarrow (\lnot A \lor C)\Big) \lor (B \land \lnot A) $$
+    %    \noindent e
+    %    $$\phi_2 = \big((\lnot A \lor B) \land (\lnot C \lor B)\big) \rightarrow ((C \lor B) \land A)$$
+    
+    
+    %Si indichi, giustificando il motivo, se la prima è equivalente alla seconda.\\[0.2cm]
+
+    \item \textbf{\underline{Idenificazione di Modelli per la soddisfacibilità}}
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 33.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 33.} (**)} \\ 	
+    Si consideri il seguente insieme di clausole.
+    $$\forall x.\bigg[\bigg(Q_a(x) \rightarrow \exists y.\bigg(<(x,y)\land Q_b(y)\bigg)\bigg) \land \bigg( Q_b(x)\rightarrow \exists y.\bigg( <(x,y)\land Q_a(y) \bigg) \bigg)\bigg]$$
+    
+    \begin{enumerate}
+    \item Si trovi e definisca un modello che soddisfa la formula;
+    \item Si scriva la formula in forma normale prenessa;
+    \item Si scriva la formula in forma di clausole.\\[0.1cm]
+    \end{enumerate}
+
+    
+
+    
+    \item \textbf{\underline{Universo di Herbrand}}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 34.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 34.} (*)} \\ 	
+    Si consideri il seguente insieme di clausole.
+    $$ S = \{P(a)\},\ \{P(g(g(a))\},\ \{P(g(x)),\lnot P(x)\} $$
+    
+    Si definisca per l'insieme di clausole S l'universo di Herbrand.
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 35.} 
+    %%
+    \item \textbf{\textcolor{ForestGreen}{Esercizio 35.} (*)} \\ 	
+    Si consideri il seguente insieme di clausole.
+    $$ S = \{B(x,y)\},\ \{P(f(x)\},\ \{\lnot B(g(x),y)\} $$
+    
+    Si definisca per l'insieme di clausole S l'universo di Herbrand.
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 36.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 36.} (**)} \\ 	
+    Si consideri il seguente insieme di clausole
+    $$\{Q(x),\ P(x)\},\ 
+    \{\lnot Q(x),\ Q(succ_1(x)),\ Q(succ_2(x))\},\
+    \{\lnot P(x),\ P(succ_1(x)),\ P(succ_2(x))\},$$
+    $$\{\lnot P(succ_1(x)),\lnot P(succ_2(x))\},\
+    \{\lnot Q(succ_1(x)),\lnot Q(succ_2(x))\}
+    $$
+    \begin{enumerate}
+        \item Si definisca l'universo di Herbrand per l'insieme di clausole;
+        \item Si trovi un modello che soddisfa la formula.
+    \end{enumerate}
+    
+    %%% INDEX
+    %\addcontentsline{toc}{subsection}{Esercizio 36.} 
+    %%
+    %\item \textbf{\textcolor{blue}{Esercizio 36.} (**)} \\ 	
+    %Si consideri nuovamente l'esercizio 33. Dunque, si definisca per l'insieme %di clausole ottenuto da 
+    %$$\forall x.\bigg[Q_a(x) \rightarrow \exists y.\bigg(<(x,y)\land Q_b(y)\bigg)\bigg] \land \bigg[ Q_b(x)\rightarrow \exists y.\bigg( <(x,y)\land Q_a(y) \bigg) \bigg]$$
+    %l'universo di Herbrand associato.\\[0.1cm]
+
+    
+    \item \textbf{\underline{Identificazione di una refutazione per l'insoddisfacibilità}}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 37.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 37.} (**)} \\ 	
+    Si consideri il seguente insieme di clausole
+    $$
+    S=\{\lnot F(x,y), \lnot D(x), D(y)\},\ \{\lnot D(x), \lnot M(x)\},\ \{\lnot U(x),M(x)\},\ \{F(z,a)\},\ \{U(a)\},\ \{D(z)\}
+    $$
+    \begin{enumerate}
+        \item Si definisca l'universo di Herbrand per l'insieme di clausole;
+        \item Si trovi una refutazione per l'insieme di clausole.
+    \end{enumerate}
+
+    \NewPageHeader
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 38.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 38.} (**)} \\ 	
+    Si consideri nuovamente l'esercizio 33: se soddisfacibile si identifichi un modello per la formula, altrimenti si trovi una refutazione per l'insieme di clausole ricavato (cfr. es. 36)
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 39.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 39.} (***)} \\ 	
+    Si consideri il seguente insieme di clausole, con $a$ simbolo di costante:
+    $$\{<(x,succ(x)\},\ \{\lnot<(x,y),\ \lnot <(y,z), <(x,z)\},\ \{\lnot P(x),\ \lnot <(x,y),\lnot P(y)\},\ \{P(0)\},
+    \ \{P(succ^3(0))\}
+    $$
+    \begin{enumerate}
+        \item Si definisca l'universo di Herbrand per l'insieme di clausole;
+        \item Si trovi una refutazione per l'insieme di clausole.
+    \end{enumerate}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 40.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 40.} (**)} \\ 	
+    Si consideri il seguente insieme di clausole, con $a$ simbolo di costante:
+    $$\{P(x), D(x)\}, \{\lnot P(x), \lnot D(x)\}, \{\lnot P(x), D(succ(x))\}, \{\lnot D(x), P(succ(x))\},$$
+    $$\{\lnot P(x), \lnot P(y), P(+(x, y))\}, \{\lnot D(x), \lnot D(y), P(+(x, y))\},$$
+    $$\{\lnot D(x), \lnot P(y), D(+(x, y))\}, \{\lnot P(x), \lnot D(y), D(+(x, y))\}$$
+    $$\{P(0)\}, \{D(+(0, succ(succ(0))))\}$$
+
+    Dove $x$ e $y$ sono variabili, $0$ simbolo di costante, $P$ e $D$ predicati, $succ$ e $+$ dei simboli di funzione.
+    \begin{enumerate}
+        \item Si definisca l'universo di Herbrand per l'insieme di clausole;
+        \item Si trovi una refutazione per l'insieme di clausole.
+    \end{enumerate}
+    
+    
+ 
+\end{itemize}
+\vfill
+\noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{document}

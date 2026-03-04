@@ -2,11 +2,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[margin=1.5cm, bottom=2cm]{geometry}
 \usepackage{fancyhdr}
-\usepackage[dvipsnames]{xcolor}
 \usepackage{enumitem}
 \usepackage{xcolor}
-\usepackage[table]{xcolor}
-\setlength{\parindent}{0pt}
 \usepackage{makeidx}
 \usepackage[most]{tcolorbox}
 \newtcolorbox{osservazioni}{
@@ -20,14 +17,14 @@
   after skip=15pt     % niente spazio dopo
 }
 \newtcolorbox{osservazioni2}{
-  colback=ForestGreen!4,    % sfondo grigio chiaro
+  colback=gray!8,    % sfondo grigio chiaro
   colframe=white,      % nessun bordo
   arc=2mm,            % angoli smussati
   boxrule=0pt,        % spessore bordo 0
-  fontupper=\footnotesize,
-  left=2mm, right=2mm, top=2mm, bottom=2mm,
-  before skip=7pt,   % niente spazio prima
-  after skip=15pt     % niente spazio dopo
+  fontupper=\small,
+  left=5mm, right=5mm, top=3mm, bottom=3mm,
+  before skip=0pt,   % niente spazio prima
+  after skip=30pt     % niente spazio dopo
 }
 \pagestyle{fancy}
 \usepackage{tikz}
@@ -37,8 +34,8 @@
 \usepackage{makeidx}
 
 %%%%%%%%%%%%%%%%%%%
-\newcommand{\EsercitazioneNum}{14}
-\newcommand{\Data}{15/12/2025}
+\newcommand{\EsercitazioneNum}{08}
+\newcommand{\Data}{28/10/2025}
 \newcommand{\DocType}{Esercitazione} % o "Eserciziario"
 \newcommand{\FullTitle}{\DocType\ \EsercitazioneNum}
 
@@ -72,83 +69,95 @@
 
     
     %% INDEX
-    \addcontentsline{toc}{section}{Esercitazione 14: \textit{Universo di Herbrand e verifica della soddisfacibilità per LDP}}
+    \addcontentsline{toc}{section}{Esercitazione 08: \textit{Appello Computabilità, 28 febbraio 2025}}
     
-    \noindent\Large \textbf{Esercitazione 14}: \textit{Simulazione d'Esame (appello 13/02/2024)} 
+    \noindent\Large \textbf{Esercitazione 08}: \textit{Appello Computabilità, 28 febbraio 2025}
+    \begin{osservazioni}
+        \textbf{\textit{Nota}}. Sono indicati in \textcolor{blue}{\textit{blu}} gli esercizi che non saranno trattati durante l'esercitazione, bensì lasciati come strumento aggiuntivo di esercitazione individuale. Resta comunque assoluta disponibilità per la loro risoluzione negli incontri successivi, qualora necessario.
+    \end{osservazioni}
     
     {\normalsize
     \begin{itemize}[label=, leftmargin=0pt]
     
-    %\item \textbf{\underline{Formule booleane cont'd.}}
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 1.} 
+    %%
+    \item \textbf{Esercizio 1 (Punti 7)}\\ 	Dati i due automi in figura 
+    \begin{itemize} 
+        \item Si costruisca l'automa per l'intersezione dei due automi;
+        \item si costruisca l'automa per l'espressione regolare $((ab)^*\cdot (bc)^*)\cdot b^*$
+        \end{itemize}
+    
+    %\begin{figure}
+    \begin{center}
+
+    	\begin{tikzpicture}
+    		\node[state, initial, initial text =, fill = black!5] (A) {$s_0$};
+    		\node[state] (B) [above right=of A,fill = black!5] {$s_1$};
+    		\node[state] (C) [below right=of A,fill = black!5] {$s_2$};
+    		\node[state, accepting] (D) [below right=of B,fill = black!5] {$s_3$};
+    		
+    		\draw (A) edge[above, bend left] node{$a$} (B);
+    		\draw (B) edge[above] node{$b$} (D);
+    		\draw (A) edge[above, bend left] node{$b$} (C);
+    		\draw (C) edge[above] node{$a$} (D);
+    		\draw (B) edge[above, bend left] node{$b$} (A);
+    		\draw (C) edge[above, bend left] node{$a$} (A);
+    		\draw (D) edge[above, loop] node{$a,b$} (D);
+    	\end{tikzpicture}
+    %
+    	\begin{tikzpicture}
+        \node[state, initial, initial text =, fill = black!5] (A) {$g_0$};
+    	\node[state] (B) [above right=of A,fill = black!5] {$g_1$};
+    	\node[state, accepting,fill = black!5] (C) [below right=of A] {$g_2$};
+    %	\node[state, accepting] (D1) [right=of B] {$g_3$};
+    %	\node[state, accepting] (D2) [right=of C] {$g_4$};
+    %		
+    	\draw (A) edge[above, bend left] node{$a$} (B);
+    	\draw (B) edge[above, bend left] node{$b$} (C);
+    		\draw (B) edge[above, bend left] node{$b$} (A);
+    	\draw (A) edge[above, bend right] node{$b$} (C);
+    	\draw (C) edge[above, bend left] node{$a$} (B);
+    %	\draw (D1) edge[above, bend left] node{$a$} (B);
+    %	\draw (D2) edge[above, bend left] node{$b$} (C);
+    \end{tikzpicture}
+    %\end{figure}
+    \end{center}
+
+        
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 2.} 
+    %%
+    \item \textbf{Esercizio 2 (Punti 6)}\\
+    Si scriva una grammatica libera dal contesto che definisce il linguaggio delle parentesi tonde correttamente accoppiate come tradizionalmente si trovano nelle espressioni aritmetiche ad esempio: $(), ((())), (()()) (())(())(), etc$. 
 
     %% INDEX
-    %\addcontentsline{toc}{subsection}{Esercizio 4.}
+    \addcontentsline{toc}{subsection}{Esercizio 3.} 
     %%
-    %\item \textbf{\textcolor{black}{Esercizio 4.} (**)}\\
-    %Si considerino le seguenti formule booleane:    
-    %    $$\Big(((A \rightarrow (B \land \lnot C)) \lor (\overline A \lor B)) \rightarrow (\lnot A \lor C)\Big) \lor (B \land \lnot A) $$
-    %    \noindent e
-    %    $$\phi_2 = \big((\lnot A \lor B) \land (\lnot C \lor B)\big) \rightarrow ((C \lor B) \land A)$$
+    \item \textbf{Esercizio 3 (Punti 7)}\\
+    Si scriva un automa a pila che accetta il seguente linguaggio $\{w^1\sharp w^2 : w^1,w^2 \in \{a,b\}^+, \mbox{ o } |w^1|_a = 2|w^2|_a \mbox{ oppure } |w^1|_b = 2|w^2|_b\}$ (o doppio numero di a in $w^1$ rispetto a  $w^2$ oppure doppio numero di $b$).	
     
-    
-    %Si indichi, giustificando il motivo, se la prima è equivalente alla seconda.\\[0.2cm]
-
-    \item \textbf{\underline{Totale: 33 punti}}\\[0.1cm]
-    
-    %% INDEX
-    \addcontentsline{toc}{subsection}{Esercizio A1.} 
-    %%
-    \item \textbf{\textcolor{black}{Esercizio A1.} (6 punti)} \\ 	
-    Nelle due coppie di seguito, si dica se la seconda formula è conseguenza logica della prima
-    $$A\lor (B\rightarrow C) \quad \quad A\land B$$
-    $$ (\lnot A\lor B\lor C) \land (A\lor B)\quad \quad B\lor C$$
-    
-    %% INDEX
-    \addcontentsline{toc}{subsection}{Esercizio A2.} 
-    %%
-    \item \textbf{\textcolor{black}{Esercizio A2.} (7 punti)} \\ 	
-    Si consideri il seguente insieme di clausole e si usi l'algoritmo di Davis-Puttnam descrivendo i passi in dettaglio per mostrare l'eventuale soddisfacibilità. Se così, si indichi una valutazione. Dire se l'insieme di clausole soddisfa un formato speciale.
-    $$ S = \{\{\lnot P,Q\},\ \{\lnot P,R\}\},\ \{\lnot P,\lnot S\}\},\ \{R,S\},\ \{\lnot Q,\lnot R\},\ \{\lnot Q,S\}\}$$
-
-    
-    %% INDEX
-    \addcontentsline{toc}{subsection}{Esercizio A3.} 
-    %%
-    \item \textbf{\textcolor{black}{Esercizio A3.} (8 punti)} \\ 	
-    Si considerino gli alberi binari infiniti (ogni nodo ha un figlio destro e uno sinistro) etichettati su simboli proposizionali in $\Sigma$. Si consideri un simboli di predicato binario $A(x,y)$ che viene valutato a \textit{Vero} se $x$ e $y$ se sono valutati su due noti $n$ e $n'$ rispettivamente e $n'$ è un discendente (a distanza arbitraria positiva) dell'albero di $n$.\\
-    Si introducano se necessario altri simbli di \textit{costante}, \textit{funzione} e \textit{predicato} -indicando chiaramente quale sia sia la loro interpretazione sul dominio-. 
-    Si scrivano delle formule in logica dei predicati che esprimano le seguenti proprietà:
-    \begin{enumerate}
-        \item La radice e i suoi figli sono etichettati $P$ (in quei nodi è verificato il predicato $P$).
-        \item C'è un sottoalbero i cui nodi sono tutti etichettati da $P$.
-        \item C'è un cammino dalla radice con un numero infinito di nodi etichettati da $P$.
-    \end{enumerate}
-    
-    %% INDEX
-    \addcontentsline{toc}{subsection}{Esercizio A4.} 
-    %%
-    \item \textbf{\textcolor{black}{Esercizio A4.} (7 punti)} \\ 	
-    Si consideri la seguente formula
-    $$\lnot \bigg[\ \forall x.\bigg(P(x)\land (\ \forall y.Q(y)\rightarrow R(x,y)\ ) \land (\ \exists y. S(x,y)\rightarrow P(x)\ )\bigg)\ \bigg]$$
-    \begin{enumerate}
-        \item Si scriva la formula equivalente in forma prenessa.
-        \item Si trasformi la formula prenessa in forma di clausole.
-        \item Si scriva l'universo di Herbrand per la formula in forma di clausole
-    \end{enumerate}
 
     %% INDEX
-    \addcontentsline{toc}{subsection}{Esercizio A5.} 
+    \addcontentsline{toc}{subsection}{Esercizio 4.} 
     %%
-    \item \textbf{\textcolor{black}{Esercizio A5.} (5 punti, \textit{facoltativo})} \\ 	
-    Si consideri il seguente insieme di clausole:
-    $$\{P(x),\ D(x)\},\quad \{\lnot P(x),\lnot D(x)\},\ \{\lnot P(x),\ D(succ(x))\},\quad \{\lnot D(x),\ P(succ(x))\}$$
-    $$\{\lnot P(x),\ \lnot P(y),\ P(+(x,y))\}\quad \quad \{\lnot D(x),\ \lnot D(y),\ P(+(x,y))\}$$
-    $$\{\lnot P(x),\ \lnot D(y),\ D(+(x,y))\}\quad\quad\{\lnot D(x),\ \lnot P(y),\ D(+(x,y))\}$$
-    $$\{P(0)\}\quad \quad \{D(+(0,succ^2(0)\}$$
-    Dove $x$ ed $y$ sono variabili, $0$ una costante (ad esempio lo zero dei naturali), $P$ e $D$ dei predicati, $succ$ e $+$ dei simboli di funzione. Si trovi una refutazione per l'insieme di clausole.
-
+    \item \textbf{Esercizio 4 (Punti 7)}\\
+    Si scriva una macchina di Turing che ha in input sul nastro tre stringhe sull'alfabeto $\{0, 1\}$ separate dal simbolo $\sharp$. La macchina di Turing accetta se le due stringhe hanno uguale lunghezza lasciando sul nastro l'AND logico delle due stringhe (AND dei bit nella medesima posizione nelle due stringhe).
     
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 5.} 
+    %%
+    %\item \textbf{Esercizio 5 (Punti 4)}\\
+    %Si descriva ad alto livello una macchina di MdT che accetta l'unione di due linguaggi $L_1$ ed $L_2$ accettati da due automi pushdown $P_1$ e $P_2$ rispettivamente.
+
+    %\begin{osservazioni}
+    %    \underline{\textit{Soluzioni.}}\\
+    %\end{osservazioni}
+    
+
 \end{itemize}
+
 \vfill
 \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
 \end{document}

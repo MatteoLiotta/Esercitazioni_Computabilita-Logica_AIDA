@@ -1,0 +1,327 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.5cm, bottom=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[table]{xcolor}
+\usepackage{makeidx}
+\usepackage[most]{tcolorbox}
+\newtcolorbox{osservazioni}{
+  colback=gray!8,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\footnotesize,
+  left=2mm, right=2mm, top=2mm, bottom=2mm,
+  before skip=7pt,   % niente spazio prima
+  after skip=15pt     % niente spazio dopo
+}
+\newtcolorbox{osservazioni2}{
+  colback=ForestGreen!4,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\footnotesize,
+  left=2mm, right=2mm, top=2mm, bottom=2mm,
+  before skip=7pt,   % niente spazio prima
+  after skip=15pt     % niente spazio dopo
+}
+\pagestyle{fancy}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+\pagestyle{fancy}
+
+\usepackage{makeidx}
+
+%%%%%%%%%%%%%%%%%%%
+\newcommand{\EsercitazioneNum}{12}
+\newcommand{\Data}{04/12/2025}
+\newcommand{\DocType}{Esercitazione} % o "Eserciziario"
+\newcommand{\FullTitle}{\DocType\ \EsercitazioneNum}
+
+\newcommand{\Header}{
+\noindent
+  \small \textbf{Computabilità, Complessità e Logica - a.a. 2025/26} \hfill \textbf{\FullTitle} \\[0.2cm]
+  \scriptsize Matteo Liotta, \texttt{matteo.liotta@studenti.units.it} \hfill \Data \\[0.2cm]
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}} \\[0.3cm]}
+
+\newcommand{\NewPageHeader}{
+  \vfill
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  \newpage
+  {\Header}
+}
+%%%%%%%%%%%%%%%%%%%
+
+% Numero di pagina in basso al centro
+\fancyhf{}
+\fancyfoot[C] \thepage
+\renewcommand{\footrulewidth}{0pt} % niente linea in basso
+\renewcommand{\headrulewidth}{0pt} % niente linea in alto
+
+\begin{document}
+
+\footnotesize  % font generale più piccolo
+\Header\\[0.7cm]
+
+
+%%%%%%%%%%%%%%%% FOGLIO 2
+
+    
+    %% INDEX
+    \addcontentsline{toc}{section}{Esercitazione 12: \textit{Logica dei Predicati}}
+    
+    \noindent\Large \textbf{Esercitazione 12}: \textit{Logica dei Predicati} 
+    \begin{osservazioni}
+        \textbf{\textit{Nota}}. Sono indicati in \textcolor{ForestGreen}{\textit{verde}} gli esercizi a sfondo teorico, proposti per rafforzare le idee alla base dei metodi utilizzati. Sono invece indicati in \textcolor{blue}{\textit{blu}} gli esercizi che non saranno trattati durante l'esercitazione, bensì lasciati come strumento aggiuntivo di esercitazione individuale. Resta comunque assoluta disponibilità per la loro risoluzione negli incontri successivi, qualora necessario. 
+    \end{osservazioni}
+    
+    {\normalsize
+    \begin{itemize}[label=, leftmargin=0pt]
+    
+    %\item \textbf{\underline{Formule booleane cont'd.}}
+
+    %% INDEX
+    %\addcontentsline{toc}{subsection}{Esercizio 4.}
+    %%
+    %\item \textbf{\textcolor{black}{Esercizio 4.} (**)}\\
+    %Si considerino le seguenti formule booleane:    
+    %    $$\Big(((A \rightarrow (B \land \lnot C)) \lor (\overline A \lor B)) \rightarrow (\lnot A \lor C)\Big) \lor (B \land \lnot A) $$
+    %    \noindent e
+    %    $$\phi_2 = \big((\lnot A \lor B) \land (\lnot C \lor B)\big) \rightarrow ((C \lor B) \land A)$$
+    
+    
+    %Si indichi, giustificando il motivo, se la prima è equivalente alla seconda.\\[0.2cm]
+
+    \item \textbf{\underline{Logica dei Predicati}}
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 26.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 26.} (***)} \\ 	
+    Si consideri la seguente formula 
+
+    $$\bigg[ \lnot \forall x.\bigg( P(x)\land (\ \forall y. Q(y)\rightarrow R(x,y)\ )\bigg)\bigg]\land \bigg[\forall y.\exists z.\bigg(\ (S(x,y)\rightarrow P(z)\ )\lor P(x)\bigg)\bigg]$$
+    \begin{enumerate}
+        \item Si scriva la formula equivalente in forma Prenessa;
+        \item Si trasformi la formula in forma prenessa in insieme di clausole.
+    \end{enumerate}
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    Per semplicità, dato che i quantificatori \textit{identificano due porzioni distinte della formula}, consideriamo le due formule indipendentemente.\\
+
+    La prima formula è dunque la seguente:
+    
+    $$\bigg[ \lnot \forall x.\bigg( P(x)\land (\ \forall y. Q(y)\rightarrow R(x,y)\ )\bigg)\bigg]$$
+
+    Dapprima, portiamo all'interno le negazioni rendendo positiva la formula. 
+    $$\bigg[ \lnot \forall x.\bigg( P(x)\land (\ \forall y. Q(y)\rightarrow R(x,y)\ )\bigg)\bigg]\equiv$$
+    $$\exists x.\lnot\bigg( P(x)\land (\ \forall y. Q(y)\rightarrow R(x,y)\ )\bigg)\equiv$$
+    $$\exists x.\lnot\bigg( P(x)\land (\ \forall y. \overline Q(y)\lor R(x,y)\ )\bigg)\equiv$$
+    $$\exists x.\bigg( \overline P(x)\lor \lnot (\ \forall y. \overline Q(y)\lor R(x,y)\ )\bigg)\equiv$$
+    $$\exists x.\bigg( \overline P(x)\lor (\ \exists y. Q(y)\land \overline R(x,y)\ )\bigg)\equiv$$
+
+    A questo punto, vediamo che poiché la prima parte della formula è libera rispetto a $z$, possiamo anteporre il quantificatore esistenziale:
+
+    $$\exists x\exists y.\bigg( \overline P(x)\lor (\ Q(y)\land \overline R(x,y)\ )\bigg)\equiv$$
+    $$\exists x\exists y.\bigg(\ ( \overline P(x)\lor\ Q(y))\land (\overline P(x)\lor \overline R(x,y)\ )\bigg)$$
+
+    Ora, possiamo considerare la seconda formula. 
+
+    $$\bigg[\forall y.\exists z.\bigg(\ (S(x,y)\rightarrow P(z)\ )\lor P(x)\bigg)\bigg]$$
+
+    Dove, analogamente:
+    $$\forall y.\exists z.\bigg(\ (S(x,y)\rightarrow P(z)\ )\lor P(x)\ \bigg)$$
+    $$\forall y.\exists z.\bigg(\ \overline S(x,y)\lor P(z)\lor P(x)\ \bigg)$$
+
+    Notiamo però che i simboli comuni con la precedente formula, non sono gli stessi! Operiamo allora un cambio di variabile...
+    $$\forall t.\exists z.\bigg(\ \overline S(w,t)\lor P(z)\lor P(w)\ \bigg)$$
+    La formula non è cambiata. Possiamo ora procedere e considerare la formula intera, semplificando al fine di conscentrarci sui quantificatori:
+
+
+
+    
+    \end{osservazioni}
+    \NewPageHeader
+    \begin{osservazioni}
+    $$\bigg[\exists x\exists y.\bigg(\ ( \overline P(x)\lor\ Q(y))\land (\overline P(x)\lor \overline R(x,y)\ )\bigg)\bigg]\land \bigg[\forall t\exists z.\bigg(\ \overline S(w,t)\lor P(z)\lor P(w)\ \bigg)\bigg]\equiv$$
+    $$\bigg(\exists x\exists y.\phi_1(x,y)\bigg) \land \bigg( \forall t.\exists z. \phi_2(w,t,z)\bigg)$$
+    Notiamo che la variabile $w$ è libera. Allora è analogo scrivere esplicitando:
+    $$\forall w \bigg[\bigg(\exists x\exists y.\phi_1(x,y)\bigg) \land \bigg( \forall t.\exists z. \phi_2(w,t,z)\bigg)\bigg]$$
+    A questo punto, possiamo, rispettando l'ordine, portare anche gli altri quantificatori:
+    $$\forall w \exists x\exists y\forall t\exists z.\bigg(\phi_1(x,y) \land \phi_2(w,t,z)\bigg)$$
+    Si noti come l'ordine deve essere rispettato per evitare di introdurre dipendenze rispetto a $t$ non modellate originariamente dalla formula. A questo punto, si può introdurre il processo di skolemizzazione.\\
+
+    Si osserva come la scelta della costante da associare a $x$ e $y$ dipende \textbf{dalla scelta di $w$} che abbiamo proposto. Se così, poiché si tratta di una costante in funzione della scelta di $w$... possiamo sostituire i termini con \textit{termini funzionali su $w$}, preservando coerenza:
+    $$\forall w \forall t\exists z.\bigg(\phi_1(f_1(w),f_2(w)) \land \phi_2(w,t,z)\bigg)$$
+    Lo stesso varrebbe anche per z, se solo non vi fosse la dipendenza anche dalla scelta di $t$: per lui introduciamo un funzionale a due input.
+    $$\forall w \forall t\exists z.\bigg(\phi_1(f_1(w),f_2(w)) \land \phi_2(w,t,f_3(w,t))\bigg)$$
+    Allora, la formula diventerà: 
+
+    $$\forall w \forall t\exists z.\bigg( \ ( \overline P(f_1(w))\lor\ Q(f_2(w)))\land (\overline P(f_1(w))\lor \overline R(f_1(w),f_2(w))\ ) \land (\ \overline S(w,t)\lor P(f_3(w,t))\lor P(w) \ ) \bigg)$$
+
+    E liberandoci dei quantificatori universali, ricostruiamo l'insieme di clausole:
+    $$\{\overline P(f_1(w)),\ Q(f_2(w))\},\ \{\overline P(f_1(w)), \overline R(f_1(w),f_2(w))\ \},\ \{\overline S(w,t), P(f_3(w,t)), P(w)\}$$
+    \end{osservazioni}
+
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 27.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 27.} (***)} \\ 
+    Si consideri la seguente formula 
+    $$\lnot \bigg[\forall x.\bigg(\ (\  \exists y.R(y)\land \forall y.\lnot S(x,y)\ )\rightarrow P(x)\bigg)\ \bigg]$$
+    \begin{enumerate}
+        \item Si scriva la formula equivalente in forma Prenessa;
+        \item Si trasformi la formula in forma prenessa in insieme di clausole.\\[0.1cm]
+    \end{enumerate}
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    Come svolto nel precedente esercizio:
+    $$\lnot \bigg[\forall x.\bigg(\ (\  \exists y.R(y)\land \forall y.\lnot S(x,y)\ )\rightarrow P(x)\bigg)\ \bigg]\equiv$$
+    $$\lnot \bigg[\forall x.\bigg(\ \lnot(\  \exists y.R(y)\land \forall y.\lnot S(x,y)\ )\lor P(x)\bigg)\ \bigg]\equiv$$
+    $$ \bigg[\exists x.\lnot\bigg(\ \lnot(\  \exists y.R(y)\land \forall y.\lnot S(x,y)\ )\lor P(x)\bigg)\ \bigg]\equiv$$
+    $$ \exists x.\bigg(\ (\  \exists y.R(y)\land \forall y.\lnot S(x,y)\ )\land \overline P(x)\bigg)\ \equiv$$
+    $$ \exists x.\bigg(\ (\  \exists y.R(y)\land \forall w.\lnot S(x,w)\ )\land \overline P(x)\bigg)\ \equiv$$
+    $$ \exists x.\bigg(\ (\  \exists y\forall w (\ R(y)\land \overline S(x,w)\ )\land \overline P(x)\bigg)\ \equiv$$
+    $$ \exists x\exists y\forall w.\bigg( R(y)\land \overline S(x,w) \land \overline P(x)\bigg)\ \equiv$$
+
+    
+    \end{osservazioni}
+    \NewPageHeader
+    \begin{osservazioni}
+    $$ \exists  x\exists y\forall w.\bigg( R(y)\land \overline S(x,w) \land \overline P(x)\bigg)\ \equiv$$
+    A questo punto, fissiamo il valore di $x$ ed $y$ ad una costante:
+
+    $$ \forall w.\bigg( R(c_2)\land \overline S(c_1,w) \land \overline P(c_1)\bigg)\ \equiv$$
+
+    E scriviamo la formula in forma di clausole:
+
+    $$ \{R(c_2)\},\  \{\overline S(c_1,w)\},\ \{\overline P(c_1)\}$$
+    \end{osservazioni}
+
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 28.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 28.} (***)} \\ 
+    Si consideri la seguente formula 
+    $$\forall x\forall y.\bigg[ R(x,y)\rightarrow\bigg(\exists z.(\ R(x,z) \land \lnot W (z,x)\ ) \bigg) \bigg] \land \bigg[ \lnot\exists x\forall y.R(y,x)\bigg]$$
+    \begin{enumerate}
+        \item Si scriva la formula equivalente in forma Prenessa;
+        \item Si trasformi la formula in forma prenessa in insieme di clausole.\\[0.1cm]
+    \end{enumerate}
+    
+    \item \textbf{\underline{Modellazione di proprietà semplici sul dominio dei Naturali}}
+
+
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 29.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 29.} (*)}\\ 	
+    Si considerino i numeri Naturali come dominio. Si consideri
+    \begin{itemize}
+        \item un simbolo di \textbf{predicato} binario $= (x, y)$ che viene valutato a $vero$ se $x = y$ (predicato di uguaglianza).
+        \item un simbolo $+(x, y)$ di \textbf{funzione} binaria interpretato con l'usuale operazione di somma sui Naturali.
+        \item $0$ il simbolo di \textbf{costante} interpretato nel modo usuale.
+        \item $succ(x)$ il simbolo di \textbf{funzione} interpretato come successore (x+1)
+    \end{itemize}
+    Siano inoltre due predicati $P$ e $D$ interpretati come l'insieme dei numeri $pari$ e dei numeri $dispari$ rispettivamente. Si scrivano delle formule in logica dei predicati che esprimano le seguenti proprietà:
+    \begin{enumerate}
+        \item La somma di un numero $x$ e del successore di $y$ è il successore di $x+y$;
+        \item Ogni numero naturale e ottenibile come somma di due altri numeri;
+        \item La somma di due numeri dispari è un numero pari.\\[0.1cm]
+    \end{enumerate}
+    
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    \textbf{1.} Consideriamo la proprietà in cui \textit{la somma di un numero $x$ e del successore di $y$ deve essere uguale a al successore di $x+y$}. Possiamo rileggerla così:
+    \begin{center}
+    \textit{Per ogni scelta di x e di y, vale la proprietà di uguaglianza tra il risultato della somma tra $x$ e $succ(y)$ e $succ(x+y)$}
+    \end{center}
+
+    $$\forall x \forall y. =\bigg(+(\ x,succ(y)\ ),\ succ(\ +(x,y)\ )\bigg)$$
+    \textbf{2.} Consideriamo la proprietà in cui \textit{ogni numero naturale e ottenibile come somma di due altri numeri}. Possiamo rileggerla così:
+    
+    \begin{center}
+    \textit{Per ogni scelta di un numero $x$, esistono sicuramente due numeri $y$ e $z$ tali per cui $x$ sia uguale alla loro somma.}
+    \end{center}
+    Da cui la riscrittura è automatica:
+    $$\forall x\exists y\exists w. =\bigg( x, +(y,w) \bigg)$$
+    Possiamo anche formalizzare l'imposizione che questi due numeri siano diversi da $x$ o tra loro, semplicemente aggiungendo condizioni con $\land$ su $y,w$ e $x$ (e volendo $0$). 
+    \end{osservazioni}
+    \NewPageHeader
+    \begin{osservazioni}
+    \textbf{3.} Consideriamo la proprietà in cui \textit{a somma di due numeri dispari è un numero pari}. Possiamo rileggerla così:
+    \begin{center}
+    \textit{Per ogni scelta di un numero $x$ e $y$, il fatto che entrambi siano godano della proprietà di essere dispari implica che il risultato della loro somma sia un elemento del dominio che goda di parità}.
+    \end{center}
+    Allora la riscrittura è la seguente:
+
+    $$\forall x\forall z. \bigg[ \bigg(D(x)\land D(y)\bigg)\rightarrow P(\ +(x,y)\ )\bigg]$$
+    
+    \end{osservazioni}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 31.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 31.} (*)}\\ 	
+    Si considerino i numeri Naturali come dominio. Si consideri:
+    
+    \begin{itemize}
+    \item un simbolo di predicato binario $Primo(x)$ che viene interpretato come \textit{il predicato è un numero primo}. 
+    \item la funzione binaria $/(x, y)$ da interpretare come \textit{x è divisibile da y} e $succ(x)$ la funzione successore $(x+1)$. 
+    \item $0$ la costante interpretata come lo zero dei numeri naturali. 
+    \item i predicati $< (x, y)$ e $= (x, y)$ interpretati come le relazioni di ordinamento (stretto) e di uguaglianza. 
+    \end{itemize}
+    Si scrivano delle formule in logica dei predicati che esprimano le seguenti proprietà:
+    \begin{enumerate}
+        \item Ogni numero primo è divisibile solo da $1$ e da sé stesso.
+        \item Ci sono infiniti numeri primi.
+        \item Tra $7$ e $11$ non ci sono altri numeri primi.\\[0.1cm]
+    
+    \end{enumerate}
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    \textbf{1.} Se il numero è primo, questo significa che per ogni scelta di qualsiasi altro elemento del dominio a meno di $x$ stesso e $1$ che permettano a $x$ di essere da loro diviso. Analogamente, per ogni scelta di $x$, se $x$ è primo allora questo implica che non esiste alcun numero $y$ che sia contemporaneamente un divisore di $x$, diverso da $1$ e da $x$ stesso.
+    
+    $$\forall x. Primo(x)\rightarrow(\lnot\exists y. /(x,y) \land \lnot =(y,succ(0)) \land \lnot =(y,x) \ )$$
+
+    \textbf{2.} Dire che esistono infiniti numeri primi significa che dato un numero primo, esiste sicuramente un altro numero a lui più grande che gode anche questo della medesima proprietà. Oppure, significa che dato un numero primo, esiste sicuramente un altro numero a lui non più piccolo, né uguale, tale che anche questo della medesima proprietà. Allora:
+
+    $$\forall x.\bigg(\exists y. (\ \lnot <(x,y)\ ) \land (\ \lnot=(x,y)\ )\land Primo(y)\bigg)$$
+
+    \textbf{3.} Dire che tra 11 e 7 non esistono numeri primi significa che $8,9,10$ non sono primi:
+
+    $$\lnot Primo(succ^8(0))\quad \land\quad \lnot Primo(succ^9(0))\quad \lnot Primo(succ^{10}(0))$$
+    
+    \end{osservazioni}
+
+
+    \item \textbf{\underline{Modellazione di problemi complessi tramite Logica dei Predicati}}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 32.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 32.} (***)}\\ 	
+    Si ricordi l'esercizio in cui si è modellato il problema del sudoku tramite formule booleane (cfr. 6). Si riproponga con una scrittura di una formula secondo la logica dei predicati $$\phi_{sudoku}$$ per rappresentare il gioco del sudoku e le sue proprietà fondamentali.\\
+    
+    \begin{osservazioni2}
+    \underline{\textbf{Nota.}}\\
+    \textit{Per semplicità e senza perdita di generalità, si assuma che allegando $\phi_=$ tramite and logico alla formula $\phi_{sudoku}$ proposta si includano le tutte le proprietà dell'uguale, così da permettere l'uso del \textbf{predicato} $$=(\ \cdot\ ,\ \cdot\ )\ \subseteq \ Dominio\times Dominio$$}
+    \end{osservazioni2}
+
+
+
+    
+    
+    
+    
+\end{itemize}
+\vfill
+\noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{document}

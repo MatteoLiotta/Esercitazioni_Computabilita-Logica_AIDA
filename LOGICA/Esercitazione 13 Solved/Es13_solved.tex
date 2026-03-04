@@ -1,0 +1,500 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.5cm, bottom=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[table]{xcolor}
+\usepackage{makeidx}
+\usepackage[most]{tcolorbox}
+\newtcolorbox{osservazioni}{
+  colback=gray!8,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\footnotesize,
+  left=2mm, right=2mm, top=2mm, bottom=2mm,
+  before skip=7pt,   % niente spazio prima
+  after skip=15pt     % niente spazio dopo
+}
+\newtcolorbox{osservazioni2}{
+  colback=ForestGreen!4,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\footnotesize,
+  left=2mm, right=2mm, top=2mm, bottom=2mm,
+  before skip=7pt,   % niente spazio prima
+  after skip=15pt     % niente spazio dopo
+}
+\pagestyle{fancy}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+\pagestyle{fancy}
+
+\usepackage{makeidx}
+
+%%%%%%%%%%%%%%%%%%%
+\newcommand{\EsercitazioneNum}{13}
+\newcommand{\Data}{11/12/2025}
+\newcommand{\DocType}{Esercitazione} % o "Eserciziario"
+\newcommand{\FullTitle}{\DocType\ \EsercitazioneNum}
+
+\newcommand{\Header}{
+\noindent
+  \small \textbf{Computabilità, Complessità e Logica - a.a. 2025/26} \hfill \textbf{\FullTitle} \\[0.2cm]
+  \scriptsize Matteo Liotta, \texttt{matteo.liotta@studenti.units.it} \hfill \Data \\[0.2cm]
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}} \\[0.3cm]}
+
+\newcommand{\NewPageHeader}{
+  \vfill
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  \newpage
+  {\Header}
+}
+%%%%%%%%%%%%%%%%%%%
+
+% Numero di pagina in basso al centro
+\fancyhf{}
+\fancyfoot[C] \thepage
+\renewcommand{\footrulewidth}{0pt} % niente linea in basso
+\renewcommand{\headrulewidth}{0pt} % niente linea in alto
+
+\begin{document}
+
+\footnotesize  % font generale più piccolo
+\Header\\[0.7cm]
+
+
+%%%%%%%%%%%%%%%% FOGLIO 2
+
+    
+    %% INDEX
+    \addcontentsline{toc}{section}{Esercitazione 13: \textit{Universo di Herbrand e verifica della soddisfacibilità per LDP}}
+    
+    \noindent\Large \textbf{Esercitazione 13}: \textit{Universo di Herbrand e verifica della soddisfacibilità per LDP} 
+    \begin{osservazioni}
+        \textbf{\textit{Nota}}. Sono indicati in \textcolor{ForestGreen}{\textit{verde}} gli esercizi a sfondo teorico, proposti per rafforzare le idee alla base dei metodi utilizzati. Sono invece indicati in \textcolor{blue}{\textit{blu}} gli esercizi che non saranno trattati durante l'esercitazione, bensì lasciati come strumento aggiuntivo di esercitazione individuale. Resta comunque assoluta disponibilità per la loro risoluzione negli incontri successivi, qualora necessario. 
+    \end{osservazioni}
+    
+    {\normalsize
+    \begin{itemize}[label=, leftmargin=0pt]
+    
+    %\item \textbf{\underline{Formule booleane cont'd.}}
+
+    %% INDEX
+    %\addcontentsline{toc}{subsection}{Esercizio 4.}
+    %%
+    %\item \textbf{\textcolor{black}{Esercizio 4.} (**)}\\
+    %Si considerino le seguenti formule booleane:    
+    %    $$\Big(((A \rightarrow (B \land \lnot C)) \lor (\overline A \lor B)) \rightarrow (\lnot A \lor C)\Big) \lor (B \land \lnot A) $$
+    %    \noindent e
+    %    $$\phi_2 = \big((\lnot A \lor B) \land (\lnot C \lor B)\big) \rightarrow ((C \lor B) \land A)$$
+    
+    
+    %Si indichi, giustificando il motivo, se la prima è equivalente alla seconda.\\[0.2cm]
+
+    \item \textbf{\underline{Idenificazione di Modelli per la soddisfacibilità}}
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 33.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 33.} (**)} \\ 	
+    Si consideri il seguente insieme di clausole.
+    $$\forall x.\bigg[\bigg(Q_a(x) \rightarrow \exists y.\bigg(<(x,y)\land Q_b(y)\bigg)\bigg) \land \bigg( Q_b(x)\rightarrow \exists y.\bigg( <(x,y)\land Q_a(y) \bigg) \bigg)\bigg]$$
+    
+    \begin{enumerate}
+    \item Si trovi e definisca un modello che soddisfa la formula;
+    \item Si scriva la formula in forma normale prenessa;
+    \item Si scriva la formula in forma di clausole.\\[0.1cm]
+    \end{enumerate}
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+
+    \textbf{Definizione di un modello $M\models\phi$}\\
+    Consideriamo dapprima la produzione di un modello per la formula proposta. A tal proposito, ricordiamo come sia necessario identificare sia un \textit{dominio} $D$, sia una \textit{interpretazione} $I$. \\
+
+    La formula proposta attesta che, dato un qualsiasi elemento del dominio $x\in D$, allora devono essere verificate due condizioni:
+    \begin{itemize}
+        \item Se $x$ gode della proprietà $Q_a$, allora esiste sicuramente un altro elemento del dominio $y\in D$, maggiore di $x$, che gode della proprietà $Q_b$;
+        \item Analogamente, se $x$ gode della proprietà $Q_b$, allora esiste sicuramente un altro elemento del dominio $y\in D$, maggiore di $x$, che gode della proprietà $Q_a$;
+    \end{itemize}
+    Poiché per produrre un modello è necessario semplicemente trovare un dominio e una interpretazione che verifichino la formula, allora sarà sufficiente concentrarsi, ad esempio, sul dominio dei naturali. In tale dominio, dato un numero -anche zero-, possiamo sempre essere in grado di trovare almeno un numero che verifichi la condizione $x>y$. L'imposizione aggiuntiva sulle proprietà può essere a nostra discrezione. Risulta possibile, ad esempio, considerare:
+    \begin{itemize}
+        \item $Q_a \approx Primo$
+        \item $Q_b \approx Non\ Primo$
+    \end{itemize}
+    Senza perdita di generalità è sempre vero che, \textit{dato un numero naturale, se esso è primo allora è possibile trovare un numero a lui maggiore che non è primo, mentre se non primo, un numero maggiore che è primo}.\\
+
+    Risulta infine necessario formalizzare la scrittura del modello.
+    \begin{itemize}
+        \item $D \equiv  \mathbf{N}$
+        \item $I\ s.t.$
+        \begin{itemize}
+            \item $Q_a^I \subseteq D,\quad Q_a^I=\{x \in D\mid x\ primo\}$
+            \item $Q_b^I \subseteq D,\quad Q_b^I=\{x \in D\mid x\ non\ primo\}$
+            \item $<^I \subseteq D\times D,\quad <^I=\{(x,y) \in D\times D \mid x<y\}$\\
+        \end{itemize}
+    \end{itemize}
+
+    \textbf{Scrittura in forma prenessa e di clausole}\\
+    Procediamo come noto, riscrivendo simboli di implicazione e portando esternamente i quantificatori:
+    $$\forall x.\bigg[\bigg(Q_a(x) \rightarrow \exists y.\bigg(<(x,y)\land Q_b(y)\bigg)\bigg) \land \bigg( Q_b(x)\rightarrow \exists y.\bigg( <(x,y)\land Q_a(y) \bigg) \bigg)\bigg]\equiv$$
+    $$\forall x.\bigg[\bigg(\lnot Q_a(x)\lor \exists y.\bigg(<(x,y)\land Q_b(y)\bigg)\bigg) \land \bigg( \lnot Q_b(x)\lor \exists y.\bigg( <(x,y)\land Q_a(y) \bigg) \bigg)\bigg]\equiv$$
+    $$\forall x.\bigg[\exists y.\bigg(\lnot Q_a(x)\lor \bigg(<(x,y)\land Q_b(y)\bigg)\bigg) \land \exists y.\bigg( \lnot Q_b(x)\lor \bigg( <(x,y)\land Q_a(y) \bigg) \bigg)\bigg]\equiv$$
+    
+    \end{osservazioni}
+    \NewPageHeader
+    \begin{osservazioni}
+    $$\forall x.\bigg[\exists y.\bigg(\lnot Q_a(x)\lor \bigg(<(x,y)\land Q_b(y)\bigg)\bigg) \land \exists z.\bigg( \lnot Q_b(x)\lor \bigg( <(x,z)\land Q_a(z) \bigg) \bigg)\bigg]\equiv$$
+    $$\forall x\exists y\exists z.\bigg[\bigg(\lnot Q_a(x)\lor \bigg(<(x,y)\land Q_b(y)\bigg)\bigg) \land \bigg( \lnot Q_b(x)\lor \bigg( <(x,z)\land Q_a(z) \bigg) \bigg)\bigg]\equiv$$
+    Dato che dovremo scriverla in forma di clausole, otteniamo già le clausole:
+    $$\forall x\exists y\exists z.\bigg[\bigg(\bigg(\lnot Q_a(x)\lor <(x,y)\bigg)\land \bigg(\lnot Q_a(x)\lor Q_b(y)\bigg)\bigg) \land \bigg( \bigg(\lnot Q_b(x)\lor<(x,z)\bigg) \land\bigg(\lnot Q_b(x)\lor Q_a(z) \bigg) \bigg)\bigg]\equiv$$
+    $$\forall x\exists y\exists z.\bigg[\bigg(\lnot Q_a(x)\lor <(x,y)\bigg)\land \bigg(\lnot Q_a(x)\lor Q_b(y)\bigg) \land \bigg(\lnot Q_b(x)\lor<(x,z)\bigg) \land\bigg(\lnot Q_b(x)\lor Q_a(z) \bigg) \bigg]$$
+
+    Ora, possiamo occuparci della skolemizzazione della formula.
+    $$\forall x \exists z.\bigg[\bigg(\lnot Q_a(x)\lor <(x,f(x))\bigg)\land \bigg(\lnot Q_a(x)\lor Q_b(f(x))\bigg) \land \bigg(\lnot Q_b(x)\lor<(x,z)\bigg) \land\bigg(\lnot Q_b(x)\lor Q_a(z) \bigg) \bigg]\approx$$
+    $$\forall x. \bigg[\bigg(\lnot Q_a(x)\lor <(x,f(x))\bigg)\land \bigg(\lnot Q_a(x)\lor Q_b(f(x))\bigg) \land \bigg(\lnot Q_b(x)\lor<(x,g(x))\bigg) \land\bigg(\lnot Q_b(x)\lor Q_a(g(x)) \bigg) \bigg]$$
+
+    Da cui
+
+    $$S = \{\lnot Q_a(x),\ <(x,f(x))\},\ \{\lnot Q_a(x),\ Q_b(f(x))\},\ \{\lnot Q_b(x),<(x,g(x))\},\ \{\lnot Q_b(x),\ Q_a(g(x))\}$$
+    \end{osservazioni}
+    $\\$
+    
+    \item \textbf{\underline{Universo di Herbrand}}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 34.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 34.} (*)} \\ 	
+    Si consideri il seguente insieme di clausole.
+    $$ S = \{P(a)\},\ \{P(g(g(a))\},\ \{P(g(x)),\lnot P(x)\} $$
+    
+    Si definisca per l'insieme di clausole S l'universo di Herbrand.
+    
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    L'universo di Herbrand può essere costruito osservando dapprima che:
+    \begin{itemize}
+        \item Nelle clausole è presente un simbolo di costante $a$
+        \item Nelle clausole è presente un simbolo di funzione $g$
+    \end{itemize}
+    Allora, possiamo scrivere $H$ come l'insieme di tutti gli elementi ottenuti con applicazioni del funzionale sulla costante e sé stesso:
+    $$H=\{a,\ g(a),\ g^2(a),\ g^3(a),\ ...,\ g^i(a),\ ...\}$$
+    \end{osservazioni}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 35.} 
+    %%
+    \item \textbf{\textcolor{ForestGreen}{Esercizio 35.} (*)} \\ 	
+    Si consideri il seguente insieme di clausole.
+    $$ S = \{B(x,y)\},\ \{P(f(x)\},\ \{\lnot B(g(x),y)\} $$
+    
+    Si definisca per l'insieme di clausole S l'universo di Herbrand.
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    L'universo di Herbrand può essere costruito osservando dapprima che:
+    \begin{itemize}
+        \item Nelle clausole \textbf{non} è presente un simbolo di costante;
+        \item Nelle clausole sono presenti due simboli di funzione $f$ e $g$.
+    \end{itemize}
+    Avremo bisogno di introdurre d'ufficio un simbolo di costante $a$ -uno solo anche se appaiono 2 variabili, x e y-. 
+    Allora, possiamo scrivere $H$ come l'insieme di tutti gli elementi ottenuti con applicazioni dei funzionali sulla costante e loro stessi:
+    $$H=\{a,\ f(a),\ g(a),\ \ f(f(a)),\ f(g(a)),\ g(f(a)),\ g(g(a)),\ ...\}$$
+    \end{osservazioni}
+    
+    \NewPageHeader
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 36.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 36.} (**)} \\ 	
+    Si consideri il seguente insieme di clausole
+    $$\{Q(x),\ P(x)\},\ 
+    \{\lnot Q(x),\ Q(succ_1(x)),\ Q(succ_2(x))\},\
+    \{\lnot P(x),\ P(succ_1(x)),\ P(succ_2(x))\},$$
+    $$\{\lnot P(succ_1(x)),\lnot P(succ_2(x))\},\
+    \{\lnot Q(succ_1(x)),\lnot Q(succ_2(x))\}
+    $$
+    
+    \begin{enumerate}
+        \item Si definisca l'universo di Herbrand per l'insieme di clausole;
+        \item Si trovi un modello che soddisfa la formula.
+    \end{enumerate}
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+
+    \textbf{Universo di Herbrand}\\
+    Analogamente a quanto presentato precedentemente, l'universo di Herbrand impiega 
+    \begin{itemize}
+        \item il simbolo di costante introdotto d'ufficio $a$;
+        \item i simboli funzionali $succ_1$ e $succ_2$.
+    \end{itemize}
+    $$H=\{a,\ succ_1(a),\ succ_2(a),\ succ_1^2(a),\ succ_1(succ_2(a)),\ succ_2(succ_1(a)),\ succ_2^2(a),\ ...\}$$\\
+    \textbf{Identificazione di un modello}\\
+    Poichè in questo caso si ha a disposizione una formula in forma di clausole, non dobbiamo essere tratti in inganno: ricordiamo che ogni clausola è una \textit{condizione} che deve coesistere in relazione alle altre. Ogni elemento di una clausola è legato con $\lor$ e quindi, nel caso:
+    $$\{\lnot Q(x),\ Q(succ_1(x)),\ Q(succ_2(x))\}$$
+    in realtà possiamo vedere scritto
+    $$Q(x)\rightarrow \bigg( Q(succ_1(x)) \lor Q(succ_2(x))\bigg)$$
+    (con $x$ quantificata universalmente). Dunque, partendo dall'insieme di clausole:
+    $$\{Q(x),\ P(x)\},\ 
+    \{\lnot Q(x),\ Q(succ_1(x)),\ Q(succ_2(x))\},\
+    \{\lnot P(x),\ P(succ_1(x)),\ P(succ_2(x))\},$$
+    $$\{\lnot P(succ_1(x)),\lnot P(succ_2(x))\},\
+    \{\lnot Q(succ_1(x)),\lnot Q(succ_2(x))\}
+    $$
+    osserviamo che la formula equivalente è costituita da -in ordine-:
+    
+    \begin{itemize}
+        \item $Q(x) \lor P(x)$: \textit{dato un elemento del dominio $x$, esso gode della proprietà $P$ o gode della proprietà $Q$};
+        \item $Q(x)\rightarrow \bigg( Q(succ_1(x)) \lor Q(succ_2(x))\bigg)$: \textit{se $x$ gode della proprietà $Q$, allora o anche l'elemento del dominio individuato da $succ_1(x)$ ne gode o ne gode $succ_2(x)$ -e potenzialmente entrambi};
+        \item $P(x)\rightarrow \bigg( P(succ_1(x)) \lor P(succ_2(x))\bigg)$: \textit{se $x$ gode della proprietà $P$, allora o anche l'elemento del dominio individuato da $succ_1(x)$ ne gode o ne gode $succ_2(x)$ -e potenzialmente entrambi};
+        \item $\lnot P(succ_1(x)) \lor \lnot P(succ_2(x))$: solo uno, al più, tra gli elementi del dominio individuati da $succ_1(x)$ e $succ_2(x)$ può godere della proprietà $P$;
+        \item $\lnot Q(succ_1(x)) \lor \lnot Q(succ_2(x))$: solo uno, al più, tra gli elementi del dominio individuati da $succ_1(x)$ e $succ_2(x)$ può godere della proprietà $Q$;
+    \end{itemize}
+    Vediamo allora come la seguente interpretazione $I$ sul dominio $D=\mathbf{N}$ soddisfa la formula proposta:
+    \begin{itemize}
+        \item $Q^I \subseteq D,\quad Q^I=\{x \in D\mid x\ dispari\}$
+        \item $P^I \subseteq D,\quad P^I=\{x \in D\mid x\ pari \}$
+        \item $succ_1^I:D\rightarrow D,\quad succ_1^I(x)=x+1$
+        \item $succ_2^I:D\rightarrow D,\quad succ_2^I(x)=x+2$
+        \item $<^I \subseteq D\times D,\quad <^I=\{(x,y) \in D\times D \mid x<y\}$\\
+    \end{itemize}
+    
+
+    
+
+    
+    \end{osservazioni}
+    %%% INDEX
+    %\addcontentsline{toc}{subsection}{Esercizio 36.} 
+    %%
+    %\item \textbf{\textcolor{blue}{Esercizio 36.} (**)} \\ 	
+    %Si consideri nuovamente l'esercizio 33. Dunque, si definisca per l'insieme %di clausole ottenuto da 
+    %$$\forall x.\bigg[Q_a(x) \rightarrow \exists y.\bigg(<(x,y)\land Q_b(y)\bigg)\bigg] \land \bigg[ Q_b(x)\rightarrow \exists y.\bigg( <(x,y)\land Q_a(y) \bigg) \bigg]$$
+    %l'universo di Herbrand associato.\\[0.1cm]
+
+    
+    \item \textbf{\underline{Identificazione di una refutazione per l'insoddisfacibilità}}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 37.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 37.} (**)} \\ 	
+    Si consideri il seguente insieme di clausole
+    $$
+    S=\{\lnot F(x,y), \lnot D(x), D(y)\},\ \{\lnot D(x), \lnot M(x)\},\ \{\lnot U(x),M(x)\},\ \{F(z,a)\},\ \{U(a)\},\ \{D(z)\}
+    $$    
+    \begin{enumerate}
+        \item Si definisca l'universo di Herbrand per l'insieme di clausole;
+        \item Si trovi una refutazione per l'insieme di clausole.
+    \end{enumerate}
+
+    \NewPageHeader
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    Per risolvere, ricordiamo come qui
+    $$H=\{a,f(a), f^2(a), ...,f^i(a)\}$$
+    con $f$ introdotto d'ufficio a causa dell'assenza di simboli funzionali. Possiamo vedere come le clausole ci permettano di estrarre e concludere delle inofrmazioni:
+    \begin{itemize}
+        \item $\{U(a)\}$: Sappiamo che la costante $a$ gode della proprietà $a$
+        \item $\{\lnot U(x),M(x)\}\equiv U(x)\rightarrow M(x)$
+        \item $\{\lnot D(x), \lnot M(x)\}\equiv M(x)\rightarrow\lnot D(x)$
+    \end{itemize}
+    Poiché possediamo la clausola
+    $$\{U(a)\}$$
+
+    
+    risulta necessario che, instanziando $\{\lnot U(x),M(x)\}$ con $a$ ed ottenendo $\{\lnot U(a),M(a)\}$, congiuntamente all'informazione della clausola unitaria si possa dedurre semplicemente che 
+    $$\{M(a)\}$$
+    L'unico modo, sapendo che le condizioni dell'implicazioni sussistono, di avere l'operatore soddisfatto, è di avere soddisfato anche la conseguenza. Poiché sappiamo che è necessariamente da soddisfare la condizione, la stessa imposizione vale per la conseguenza e possiamo ridurci alla clausola presentata. 
+    
+    Possiamo vedere, senza perdita di generalità, come di fatto avere
+    $$\{U(a)\},\ \{M(a)\}$$
+    sia equivalente a 
+    $$U(a)\land M(a)$$
+    Quindi, possiamo ricavare anche la clausola 
+    $$\{M(a)\}$$
+    Per il medesimo motivo, usando $M(x)\rightarrow\lnot D(x)$, possiamo ricavare anche $$\{\lnot D(a)\}$$
+    L'insieme di clausole ora, instanziando anche $\{D(z|_a)\}$
+    $$
+    \{\lnot F(x,y), \lnot D(x), D(y)\},\ \{\lnot D(x), \lnot M(x)\},\ \{\lnot U(x),M(x)\},\ \{F(z,a)\},\ \{U(a)\},\ \{D(z)\},\ \{D(a)\},\ \{\lnot D(a)\},\ \{M(a)\}
+    $$
+    Ci permette di ricavare l'insoddisfacibilità, a causa de $$\{D(a)\},\ \{\lnot D(a)\}$$
+    \end{osservazioni}
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 38.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 38.} (**)} \\ 	
+    Si consideri nuovamente l'esercizio 33: se soddisfacibile si identifichi un modello per la formula, altrimenti si trovi una refutazione per l'insieme di clausole ricavato (cfr. es. 36)
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 39.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 39.} (**)} \\ 	
+    Si consideri il seguente insieme di clausole, con $a$ simbolo di costante:
+    $$\{<(x,succ(x)\},\ \{\lnot<(x,y),\ \lnot <(y,z), <(x,z)\},\ \{\lnot P(x),\ \lnot <(x,y),\lnot P(y)\},\ \{P(0)\},
+    \ \{P(succ^3(0))\}
+    $$  
+    \begin{enumerate}
+        \item Si definisca l'universo di Herbrand per l'insieme di clausole;
+        \item Si trovi una refutazione per l'insieme di clausole.
+    \end{enumerate}
+
+    \begin{osservazioni}
+    \underline{Soluzione.}\\
+    Si considera:
+    $$H=\{0,\ succ(0),\ succ^2(0), ...,\ succ^i(0),...\}$$
+    Inoltre, risulta necessario introdurre un sottoinsieme dell'universo di Herbrand
+    $$H'\subseteq H$$
+    tali da definire un insieme di clausole \textit{groundizzate}:
+    $$S|_{H'} = \{ C(g) \mid C\in S \ e \ C(g)=C(x_1|_{g_1},...,x_n|_{g_n}),\ g_i\in H, i=1,...,n\}$$
+    La risoluzione si basa sull'applicazione di algoritmi quali DPLL o DP per trovare l'insoddisfacibilità, a partire dalle informazioni presenti o dedotte dall'insieme di clausole.\\
+    \end{osservazioni}
+    
+    \NewPageHeader
+
+    \begin{osservazioni}
+    
+
+    Poiché $S$ contiene già della conoscenza a priori, secondo cui è vero che\\ 
+    $$P(0) \quad \quad P(succ^3(0))$$\\
+    Possiamo cercare di utilizzare le regole imposte dalle clausole per dedurre una eventuale \textit{contraddizione}. A tal proposito, dovremmo essere in grado di ottenere una tra le due seguenti clausole:\\
+    $$\{\lnot P(succ^3(0))\}\quad \quad \{\lnot P(0)\}$$\\
+    Osserviamo dunque le regole imposte da $S$; una delle sue clausole è la seguente:\\
+    $$\{\lnot P(x),\ \lnot <(x,y),\lnot P(y)\}$$\\
+    Avendo la possibilità di \textit{groundizzare la clausola} con elementi di $H$, nulla ci vieta di istanziare $x|_0$ e $y|_{succ^3(0)}$ ottenendo la clausola\\
+    $$\{\lnot P(0),\ \lnot <(0,succ^3(0)),\lnot P(succ^3(0))\}$$\\
+    Già abbiamo una intuizione della contraddizione: infatti, tale clausola può essere vista come la formula in cui
+    $$<(0,succ^3(0))\rightarrow\bigg(P(0)\quad \lor\quad  P(succ^3(0))\bigg)$$\\
+    ossia in cui se è vero che $<(0,succ^3(0))$, allora una solo tra gli elementi del dominio $0$ e $succ^3(0)$ può godere della proprietà $P$... ma S attesta che entrambi ne godono. Non sappiamo ancora, però, se è vero che $<(0,succ^3(0))$. Riusciamo a ricavare questa conoscenza (in termini i clausola unitaria)?\\
+
+    Di fatto, da $S$ sappiamo che in via generale che $\{<(x,succ(x)\}$, quindi che instanziando con elementi dell'universo di Herbrand è possibile "\textit{sapere}" che
+    $$\{<(0,succ(0)\}$$
+    $$\{<(succ(0),succ^2(0)\}$$
+    $$\{<(succ^2(0),succ^3(0)\}$$\\
+    Si noti come queste clausole unitarie saranno aggiunte all'insieme di clausole.
+    Queste conoscenze non ci sono ancora sufficienti: abbiamo bisogno di una \textit{proprietà transitiva} per dedurre $<(0,succ^3(0))$. Tale proprietà sembra essere presente in $S$, grazie alla clausola 
+    $$\{\lnot<(x,y),\ \lnot <(y,z), <(x,z)\} \quad\quad \equiv  \quad\quad \bigg(<(x,y)\land <(y,z)\bigg) \rightarrow\ <(x,z)$$
+
+    Perché utile riconsiderare la definizione in termini di conseguenza logica? Perchè, come ricordiamo, nel caso in cui si avesse, in linea generale $$\phi =X\rightarrow Y,\quad \alpha(X)=T $$non sarebbe possibile soddisfare la formula $\phi$ assegnando a $Y$ un valore di verità positivo. Dunque, analogamente, \textit{se abbiamo certezza nei confronti della verità della condizione, perché la formula sia soddisfatta è assolutamente necessario che siano vere le conseguenze}. Quindi, in questo caso potremmo sì instanziare\\
+    $$\{\lnot<(0,succ(0)),\ \lnot <(succ(0),succ^2(0), <(0,succ^2(0))\}$$\\ ma sapendo che ambo le condizioni sussistono, possiamo già \textbf{chiedere che sia obbligatoriamente} verificata la conseguenza. Cioé, proprio perché vere e devono già devono essere obbligatoriamente verificate le condizioni, per noi è sufficiente andare a richiedere che anche le conseguenze siano verificate (poiché non è possibile avere assegnazione in valutazione a true con $T\rightarrow F$). 
+
+    Possiamo quindi semplicemente aggiungere la clausola $$\{<(0,succ^2(0))\}$$che sarebbe analogamente possibile ritrovare tramite complessa -e non necessaria- riduzione, ma poiché già possediamo le clausole $\{<(0,succ(0)\}$ e $\{<(succ(0),succ^2(0)\}$ non abbiamo necessità di proseguire in questa direzione. Quindi, \textbf{solo grazie alla proprietà} (implicitamente) presente in $S$, possiamo \textit{dedurre 2 nuove clausole:}
+    
+    \begin{itemize}
+        \item Poiché $\{<(0,succ(0)\},\ \{<(succ(0),succ^2(0)\} \in S\mid_{ H' }$ allora $\{<(0,succ^2(0)\} \in S\mid_{H'}$ grazie a:
+        $\bigg(<(x,y)\land <(y,z)\bigg) \rightarrow\ <(x,z)$
+        \item Analogamente, sapendo ora che necessario siano verificate $\{<(0,succ(0)\}$, $\{<(0,succ^2(0)\}$ e $\{<(succ^2(0),succ^3(0)\}$, ne segue che possediamo anche la clausola $$\{<(0,succ^3(0)\}$$
+    \end{itemize}
+
+    \end{osservazioni}
+    \NewPageHeader
+    \begin{osservazioni}
+    
+    Ricapitolando, ora l'insieme delle clausole groundizzate che aggiungeremo alle originarie presenta:
+    $$S|_{H'}= \{<(0,succ(0)\},
+    \ \{<(succ(0),succ^2(0)\},
+    \ \{<(succ^2(0),succ^3(0)\},
+    \ \{<(0,succ^3(0)\}$$
+
+    Possiamo ora sfruttare la conoscenza ricavata intorno a  $$<(0,succ^3(0)) \rightarrow \bigg( \lnot P(0) \lor \lnot P(succ^3(0))\bigg)$$ precedentemente trattata, per ottenere come prima grazie alla clausola $\{<(0,succ^3(0))\}$, la nuova clausola $$\{\lnot P(0), \lnot P(succ^3(0))\}$$
+
+    Ecco che, utilizzando l'insieme di conoscenza a priori $S$ e 
+
+    $$S|_{H'}= \{<(0,succ(0)\},
+    \ \{<(succ(0),succ^2(0)\},
+    \ \{<(succ^2(0),succ^3(0)\},
+    \ \{<(0,succ^3(0)\},
+    \ \{\lnot P(0), \lnot P(succ^3(0))\}$$\\
+    Possiamo da $S\cup S|_{H'}=$ 
+    
+    $$\{<(x,succ(x)\},\ \{\lnot<(x,y),\ \lnot <(y,z), <(x,z)\},\ \{\lnot P(x),\ \lnot <(x,y),\lnot P(y)\},\ \{P(0)\},
+    \ \{P(succ^3(0))\},$$
+    $$
+    \{<(0,succ(0)\},
+    \ \{<(succ(0),succ^2(0)\},
+    \ \{<(succ^2(0),succ^3(0)\},
+    \ \{<(0,succ^3(0)\},
+    \ \{\lnot P(0), \lnot P(succ^3(0))\}$$\\
+    ottenere tramite risolventi secondo DP o DPLL:
+    
+    $$\{\lnot P(0), \lnot P(succ^3(0))\},\ \{P(0)\}\overset{R}{\Rightarrow} \{\lnot P(succ^3(0))\}$$\\
+    Che, insieme alla clausola $\{P(succ^3(0))\}$ presente originariamente in $S$ dà luogo a una contraddizione.
+
+    
+    \end{osservazioni}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 40.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 40.} (**)} \\ 	
+    Si consideri il seguente insieme di clausole, con $a$ simbolo di costante:
+    $$\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},\quad \{\lnot D(x), P(succ(x))\},$$
+    $$\{\lnot P(x), \lnot P(y), P(+(x, y))\},\ \{\lnot D(x), \lnot D(y), P(+(x, y))\},$$
+    $$\{\lnot D(x), \lnot P(y), D(+(x, y))\},\quad \{\lnot P(x), \lnot D(y), D(+(x, y))\}$$
+    $$\{P(0)\},\quad \{D(\ +(0, succ^2(0))\ )\}$$
+
+    Dove $x$ e $y$ sono variabili, $0$ simbolo di costante, $P$ e $D$ predicati, $succ$ e $+$ dei simboli di funzione.
+    \begin{enumerate}
+        \item Si definisca l'universo di Herbrand per l'insieme di clausole;
+        \item Si trovi una refutazione per l'insieme di clausole.
+    \end{enumerate}
+    
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    Si osserva che 
+    $$H=\{a,\ succ^i(a),\ +^k(succ^i(a),succ^j(a)), \mid i,j,k\in N \}$$\\
+    Allora, occupiamoci di trovare una refutazione. Per farlo risulta essenziale riuscire a riscrivere le clausole e comprenderne il significato.
+    \begin{itemize}
+        \item $\{P(x), D(x)\}\equiv P(x)\rightarrow\lnot D(x)$. \textit{Se x è pari, non è dispari}
+        \item $\{\lnot P(x), \lnot D(x)\}\equiv D(x)\rightarrow\lnot P(x)$. \textit{Se x non può essere entrambe}
+        \item $\{\lnot P(x), D(succ(x))\}\equiv P(x)\rightarrow D(succ(x))$. \textit{Se x pari, il suo successore è dispari}
+        \item $\{\lnot D(x), P(succ(x))\}\equiv D(x)\rightarrow P(succ(x))$. \textit{Se x dispari, il suo successore è pari}
+        \item $\{\lnot P(x), \lnot P(y), P(+(x, y))\}\equiv \bigg( P(x)\land P(y) \bigg)\rightarrow P(+(x,y))$. \textit{Dati due numeri pari, la loro somma dà luogo a un numero pari}.
+        \item $\{\lnot D(x), \lnot D(y), P(+(x, y))\}\equiv \bigg( D(x)\land D(y) \bigg)\rightarrow P(+(x,y))$. \textit{Dati due numeri dispari, la loro somma è ancora pari}.
+        \item $\{\lnot P(x), \lnot D(y), D(+(x, y))\}\equiv \bigg( D(x)\land D(y) \bigg)\rightarrow D(+(x,y))$. \textit{Dato un numero pari e uno dispari, la loro somma è dispari}.
+        \item $\{\lnot D(x), \lnot P(y), D(+(x, y))\}\equiv \bigg( D(x)\land D(y) \bigg)\rightarrow D(+(x,y))$. \textit{Dato un numero dispari e uno pari, la loro somma è dispari}.
+    \end{itemize}
+    
+    \end{osservazioni}
+    \NewPageHeader
+    \begin{osservazioni}
+    Considerato anche che inizialmente \textit{sappiamo} che \textit{$0$} è pari e $2$ è dispari:
+    $$\{P(0)\},\quad \{D(\ +(0, succ^2(0))\ )\}$$
+    Possiamo aspettarci di riuscire a ricavare una contraddizione. Infatti, sapendo la parità di $0$, possiamo dedurre la disparità di $succ(0)$ e di conseguenza la parità di $succ^2(0)$. Possiamo allora anche dedurre la parità della loro somma, in quanto ambo pari deve essere pari. Abbiamo allora che si ottengono le seguenti clausole tramite regole contenute in S (attenzione: usiamo le regole, estendendo le informazioni che abbiamo a priori):
+    $$\{D(succ(0))\}$$
+    $$\{P(succ^2(0))\}$$
+    $$\{P(+(0,succ^2(0)))\}$$
+    
+    Questo però \textbf{non} ci permette ancora di osservare una contraddizione.\\
+    
+    Dobbiamo riportarci alla scrittura secondo cui si ottiene $\{D(\ +(0, succ^2(0))\ )\}$ e per farlo possiamo usare la regola
+
+    $$\{\lnot P(x), \lnot D(x)\} \equiv P(x)\rightarrow \lnot D(x)$$\\
+    E sapendo, $\{P(+(0,succ^2(0)))\}$ ne segue che si può inserire la clausola $$\{\lnot D (+(0,succ^2(0)))\}$$
+    Da cui la contraddizione. Infatti, si otterrebbe come insieme di clausole...
+
+    $$\{P(x), D(x)\},\quad \{\lnot P(x), \lnot D(x)\},\quad \{\lnot P(x), D(succ(x))\},\quad \{\lnot D(x), P(succ(x))\},$$
+    $$\{\lnot P(x), \lnot P(y), P(+(x, y))\},\ \{\lnot D(x), \lnot D(y), P(+(x, y))\},$$
+    $$\{\lnot D(x), \lnot P(y), D(+(x, y))\},\quad \{\lnot P(x), \lnot D(y), D(+(x, y))\}$$
+    $$\{P(0)\},\quad \{D(\ +(0, succ^2(0))\ )\}$$
+    $$\{D(succ(0))\}$$
+    $$\{P(succ^2(0))\}$$
+    $$\{P(+(0,succ^2(0)))\}$$
+    $$\{\lnot D (+(0,succ^2(0)))\}$$
+    \end{osservazioni}
+    
+    \end{itemize}
+    
+
+ 
+
+\vfill
+\noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{document}

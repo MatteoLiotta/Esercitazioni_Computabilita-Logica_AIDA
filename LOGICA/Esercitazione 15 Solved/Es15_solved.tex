@@ -1,0 +1,437 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.5cm, bottom=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[table]{xcolor}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage[normalem]{ulem}
+\usepackage{makeidx}
+\usepackage[most]{tcolorbox}
+\newtcolorbox{osservazioni}{
+  colback=gray!8,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\footnotesize,
+  left=2mm, right=2mm, top=2mm, bottom=2mm,
+  before skip=7pt,   % niente spazio prima
+  after skip=15pt     % niente spazio dopo
+}
+\newtcolorbox{osservazioni2}{
+  colback=ForestGreen!4,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\footnotesize,
+  left=2mm, right=2mm, top=2mm, bottom=2mm,
+  before skip=7pt,   % niente spazio prima
+  after skip=15pt     % niente spazio dopo
+}
+\pagestyle{fancy}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+\pagestyle{fancy}
+
+\usepackage{makeidx}
+
+%%%%%%%%%%%%%%%%%%%
+\newcommand{\EsercitazioneNum}{12}
+\newcommand{\Data}{18/12/2025}
+\newcommand{\DocType}{Esercitazione} % o "Eserciziario"
+\newcommand{\FullTitle}{\DocType\ \EsercitazioneNum}
+
+\newcommand{\Header}{
+\noindent
+  \small \textbf{Computabilità, Complessità e Logica - a.a. 2025/26} \hfill \textbf{\FullTitle} \\[0.2cm]
+  \scriptsize Matteo Liotta, \texttt{matteo.liotta@studenti.units.it} \hfill \Data \\[0.2cm]
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}} \\[0.3cm]}
+
+\newcommand{\NewPageHeader}{
+  \vfill
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  \newpage
+  {\Header}
+}
+%%%%%%%%%%%%%%%%%%%
+
+% Numero di pagina in basso al centro
+\fancyhf{}
+\fancyfoot[C] \thepage
+\renewcommand{\footrulewidth}{0pt} % niente linea in basso
+\renewcommand{\headrulewidth}{0pt} % niente linea in alto
+
+\begin{document}
+
+\footnotesize  % font generale più piccolo
+\Header\\[0.7cm]
+
+
+%%%%%%%%%%%%%%%% FOGLIO 2
+
+    
+    %% INDEX
+    \addcontentsline{toc}{section}{Esercitazione 15: \textit{Logica dei Predicati}}
+    
+    \noindent\Large \textbf{Esercitazione 15}: \textit{Logica dei Predicati, identificazione di una refutazione} 
+    \begin{osservazioni}
+        \textbf{\textit{Nota}}. Sono indicati in \textcolor{ForestGreen}{\textit{verde}} gli esercizi a sfondo teorico, proposti per rafforzare le idee alla base dei metodi utilizzati. Sono invece indicati in \textcolor{blue}{\textit{blu}} gli esercizi che non saranno trattati durante l'esercitazione, bensì lasciati come strumento aggiuntivo di esercitazione individuale. Resta comunque assoluta disponibilità per la loro risoluzione negli incontri successivi, qualora necessario. 
+    \end{osservazioni}
+    
+    {\normalsize
+    \begin{itemize}[label=, leftmargin=0pt]
+    
+    %\item \textbf{\underline{Formule booleane cont'd.}}
+
+    %% INDEX
+    %\addcontentsline{toc}{subsection}{Esercizio 4.}
+    %%
+    %\item \textbf{\textcolor{black}{Esercizio 4.} (**)}\\
+    %Si considerino le seguenti formule booleane:    
+    %    $$\Big(((A \rightarrow (B \land \lnot C)) \lor (\overline A \lor B)) \rightarrow (\lnot A \lor C)\Big) \lor (B \land \lnot A) $$
+    %    \noindent e
+    %    $$\phi_2 = \big((\lnot A \lor B) \land (\lnot C \lor B)\big) \rightarrow ((C \lor B) \land A)$$
+    
+    
+    %Si indichi, giustificando il motivo, se la prima è equivalente alla seconda.\\[0.2cm]
+
+    \item \textbf{\underline{Identificazione di una refutazione}}
+
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 41.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 41.} (*)} \\ 	
+    Si consideri la seguente formula 
+    $$S=\{=(x,x)\},\ \{\lnot=(x,y),=(y,x)\},\ \{\lnot =(x,y), \lnot(y,z),=(x,z)\},\ $$
+    $$\{\ =(x,y),\ =(f(x),f(y))\ \},$$
+    $$\{=(a,b)\},\quad $$ $$\{\lnot =(f(a),f(b))\}$$
+    
+    \begin{enumerate}
+        \item Si scriva l'universo di Herbrand per l'insieme di clausole $S$.
+        \item Si identifichi una refutazione per $S$.
+    \end{enumerate}
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\    
+    \begin{table}[H]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\{=(a,b)\},\quad $$ $$\{\lnot =(f(a),f(b))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{=(x,x)\},\ \{\lnot=(x,y),=(y,x)\},\ \{\lnot =(x,y), \lnot(y,z),=(x,z)\},$\newline
+            $\{\ =(x,y),\ =(f(x),f(y))\ \},$
+            \\
+        \hline
+        Clausole Ground & $\emptyset$ \\
+        \hline
+    \end{tabularx}
+    \end{table}
+
+    Osserviamo che si ha la diseguaglianza tra le funzioni di due termini uguali. Allora, basta istanziare:
+
+    \begin{table}[H]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\{=(a,b)\},\quad $$ $$\{\lnot =(f(a),f(b))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{=(x,x)\},\ \{\lnot=(x,y),=(y,x)\},\ \{\lnot =(x,y), \lnot(y,z),=(x,z)\},$\newline
+            $\{\ \lnot =(x,y),\ =(f(x),f(y))\ \}$
+            \\
+        \hline
+        Clausole Ground & $\{\lnot =(a,b),\ =(f(a),f(b))\ \}$ \\
+        \hline
+    \end{tabularx}
+    \end{table}
+    Semplificando, si ottiene che:
+    \begin{table}[H]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\{=(a,b)\},\quad $$ $$\{\lnot =(f(a),f(b))\}$ \\
+        \hline
+        Clausole Libere & 
+            $\{=(x,x)\},\ \{\lnot=(x,y),=(y,x)\},\ \{\lnot =(x,y), \lnot(y,z),=(x,z)\},$\newline
+            $\{\ \lnot =(x,y),\ =(f(x),f(y))\ \}$
+            \\
+        \hline
+        Clausole Ground & $\{\ =(f(a),f(b))\ \}$ \\
+        \hline
+    \end{tabularx}
+    \end{table}
+    Che insieme a $\{\lnot=(f(a),f(b))\ \}$ dà origine alla clausola vuota.
+    \end{osservazioni}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 42.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 42.} (*)} \\ 	
+    Si consideri la seguente formula 
+    $$\bigg((\ \exists x A(x)\ ) \rightarrow (\exists x B(x)) \bigg) \land \lnot (\exists x (A(x) \rightarrow B(x)))$$
+    \NewPageHeader
+    \begin{enumerate}
+        \item Si scriva la formula in formato di clausole.
+        \item Si scriva l'universo di Herbrand per l'insieme di clausole $S$.
+        \item Si identifichi una refutazione per l'insiem di clausole.
+    \end{enumerate}
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    $$\bigg((\ \exists x A(x)\ ) \rightarrow (\exists x B(x)) \bigg) \land \lnot (\exists x (A(x) \rightarrow B(x)))\equiv$$
+    $$\bigg(\lnot(\ \exists x A(x)\ ) \lor (\exists x B(x)) \bigg) \land \lnot  (\exists x (\lnot A(x) \lor B(x)))\equiv$$
+    $$\bigg((\ \forall x. \lnot A(x)\ ) \lor (\exists x. B(x)) \bigg) \land \lnot  (\exists x (\lnot A(x) \lor B(x)))\equiv$$
+    $$\bigg((\ \forall x. \lnot A(x)\ ) \lor (\exists y. B(y)) \bigg) \land \lnot  (\exists z (\lnot A(z) \lor B(z)))\equiv$$
+    $$\exists y\forall x.\bigg(\lnot A(x)\ \lor B(y) \bigg) \land  (\forall z \lnot (\lnot A(z) \lor B(z)))\equiv$$
+    $$\exists y\forall x.\bigg(\lnot A(x)\ \lor B(y) \bigg) \land  (\forall z ( A(z) \land \lnot B(z)))\equiv$$
+    $$\exists y\forall x\forall z.\bigg(\lnot A(x)\ \lor B(y) \bigg) \land  ( A(z) \land \lnot B(z)) \equiv$$
+    $$\exists y\forall x\forall z.\bigg(\lnot A(x)\ \lor B(y) \bigg) \land  A(z) \land \lnot B(z)$$
+    
+    Da cui il formato di clausole:
+    $$S=\{\lnot A(x),B(a)\},\ \{A(z)\},\ \{\lnot B(z)\},\quad\quad\quad H=\{a\}$$
+    Ossia:
+    \begin{table}[H]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\emptyset$ \\
+        \hline
+        Clausole Libere & 
+            $\{\lnot A(x),B(a)\},\ \{A(z)\},\ \{\lnot B(z)\}$
+            \\
+        \hline
+        Clausole Ground & $\emptyset$ \\
+        \hline
+    \end{tabularx}
+    \end{table}
+    E istanziando per creare una contraddizione:
+
+    \begin{table}[H]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\emptyset$ \\
+        \hline
+        Clausole Libere & 
+            $\{\lnot A(x),B(a)\},\ \{A(z)\},\ \{\lnot B(z)\}$
+            \\
+        \hline
+        Clausole Ground & $\{\lnot A(a),B(a)\},\quad \{\lnot B(a)\},\quad \{A(a)\}$\\
+        \hline
+    \end{tabularx}
+    \end{table}
+
+    Semplificando:
+
+    \begin{table}[H]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\emptyset$ \\
+        \hline
+        Clausole Libere & 
+            $\{\lnot A(x),B(a)\},\ \{A(z)\},\ \{\lnot B(z)\}$
+            \\
+        \hline
+        Clausole Ground & $\{B(a)\},\quad \{\lnot B(a)\},\quad \{A(a)\}$\\
+        \hline
+    \end{tabularx}
+    \end{table}
+
+    Da cui una contraddizione.
+    \end{osservazioni}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 43.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 43.} (*)} \\ 	
+    Si consideri la seguente formula 
+    $$
+    \phi=\forall x.\lnot \exists z.\bigg(Q(x,z)\rightarrow P(x)\bigg)\models \exists y.\bigg(Q(y,y) \land \lnot P(y)\bigg)
+    $$
+    
+    Si mostri l'insoddisfacibilità della formula $\phi$ tramite l'identificazione di una refutazione.
+    \NewPageHeader
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    Provare che una formula è conseguenza logica di un'altra:
+    $$\phi_1\models\phi_2$$
+    è equivalente a provare che 
+    $$\phi_1\land (\lnot\phi_2)$$
+    è insoddisfacibile. Proviamo allora l'insoddisfacibilità di:
+
+    $$
+    \bigg(\forall x.\lnot \exists z.\bigg(Q(x,z)\rightarrow P(x)\bigg)\ \bigg)\land \lnot\bigg( \exists y.\bigg(Q(y,y) \rightarrow \lnot P(y)\bigg)\bigg) \equiv
+    $$
+    $$
+    \bigg(\forall x. \forall z.\lnot\bigg(Q(x,z)\rightarrow P(x)\bigg)\ \bigg)\land \bigg( \forall y.\lnot \bigg(\lnot Q(y,y) \lor \lnot P(y)\bigg)\bigg) \equiv
+    $$
+    $$
+    \bigg(\forall x. \forall z.\bigg(Q(x,z)\land \lnot P(x)\bigg)\ \bigg)\land \bigg( \forall y. \bigg( Q(y,y) \land  P(y)\bigg)\bigg) \equiv
+    $$
+    $$
+    \forall x\forall z\forall y.\bigg[\bigg(Q(x,z)\land \lnot P(x)\ \bigg)\land   \bigg( Q(y,y) \land  P(y)\bigg)\bigg] \equiv
+    $$
+    $$
+    \forall x\forall z\forall y.\bigg[Q(x,z)\land \lnot P(x)\land  Q(y,y) \land  P(y)\bigg] \equiv
+    $$
+    Da cui il formato di clausole:
+    $$S=\{Q(x,z)\},\ \{\lnot P(x)\},\ \{ Q(y,y)\},\ \{ P(y)\}\quad\quad H =\{a\} $$
+    Ossia
+    \begin{table}[H]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\emptyset$ \\
+        \hline
+        Clausole Libere & 
+            $\{Q(x,z)\},\ \{\lnot P(x)\},\ \{ Q(y,y)\},\ \{ P(y)\}$
+            \\
+        \hline
+        Clausole Ground & $\emptyset$\\
+        \hline
+    \end{tabularx}
+    \end{table}
+
+    Anche non istanziando è immediata la contraddizione:
+
+    \begin{table}[H]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\emptyset$ \\
+        \hline
+        Clausole Libere & 
+            $\{Q(x,z)\},\ \{\lnot P(x)\},\ \{ Q(y,y)\},\ \{ P(y)\}$
+            \\
+        \hline
+        Clausole Ground & $\{P(a)\},\ \{\lnot P(a)\}$\\
+        \hline
+    \end{tabularx}
+    \end{table}
+
+    Da cui l'insoddisfacibilità della formula. Allora, le due formule $\phi_1$ e $\phi_2$ sono davvero $\phi_1\models\phi_2$.
+
+    
+    
+    \end{osservazioni}
+        %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 44.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 44.} (*)} \\ 	
+    Si consideri la seguente formula 
+    $$
+    S = \{P(x,y)\},\ \{\lnot Q(x)\},\ \{\lnot P(x,x),Q(x)\}
+    $$
+    
+    Si identifichi una refutazione per l'insieme di clausole $S$.
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    L'insieme di clausole è:
+    \begin{table}[H]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\emptyset$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x,y)\},\ \{\lnot Q(x)\},\ \{\lnot P(x,x),Q(x)\}$
+            \\
+        \hline
+        Clausole Ground & $\emptyset$\\
+        \hline
+    \end{tabularx}
+    \end{table}
+
+    Allora, groundizzando:
+
+ 
+    \end{osservazioni}
+    \NewPageHeader
+    \begin{osservazioni}
+    
+    \begin{table}[H]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\emptyset$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x,y)\},\ \{\lnot Q(x)\},\ \{\lnot P(x,x),Q(x)\}$
+            \\
+        \hline
+        Clausole Ground & $\{P(a,a)\},\ \{\lnot Q(a)\},\ \{\lnot P(a,a),Q(a)\}$\\
+        \hline
+    \end{tabularx}
+    \end{table}
+    E semplificando:
+
+    \begin{table}[H]
+    \centering
+    \small 
+    \renewcommand{\arraystretch}{1.5} 
+    
+    \begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}X|}
+        \hline
+        Clausole Chiuse & $\emptyset$ \\
+        \hline
+        Clausole Libere & 
+            $\{P(x,y)\},\ \{\lnot Q(x)\},\ \{\lnot P(x,x),Q(x)\}$
+            \\
+        \hline
+        Clausole Ground & $\{P(a,a)\},\ \{\lnot Q(a)\},\ \{Q(a)\}$\\
+        \hline
+    \end{tabularx}
+    \end{table}
+
+    Da cui la contraddizione.
+    
+
+    \end{osservazioni}
+    
+    
+
+
+    
+\end{itemize}
+\vfill
+\noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{document}

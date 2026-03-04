@@ -1,0 +1,275 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.5cm, bottom=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[table]{xcolor}
+\setlength{\parindent}{0pt}
+\usepackage{makeidx}
+\usepackage[most]{tcolorbox}
+\newtcolorbox{osservazioni}{
+  colback=gray!8,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\footnotesize,
+  left=2mm, right=2mm, top=2mm, bottom=2mm,
+  before skip=7pt,   % niente spazio prima
+  after skip=15pt     % niente spazio dopo
+}
+\newtcolorbox{osservazioni2}{
+  colback=ForestGreen!4,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\footnotesize,
+  left=2mm, right=2mm, top=2mm, bottom=2mm,
+  before skip=7pt,   % niente spazio prima
+  after skip=15pt     % niente spazio dopo
+}
+\pagestyle{fancy}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+\pagestyle{fancy}
+
+\usepackage{makeidx}
+
+%%%%%%%%%%%%%%%%%%%
+\newcommand{\EsercitazioneNum}{14}
+\newcommand{\Data}{15/12/2025}
+\newcommand{\DocType}{Esercitazione} % o "Eserciziario"
+\newcommand{\FullTitle}{\DocType\ \EsercitazioneNum}
+
+\newcommand{\Header}{
+\noindent
+  \small \textbf{Computabilità, Complessità e Logica - a.a. 2025/26} \hfill \textbf{\FullTitle} \\[0.2cm]
+  \scriptsize Matteo Liotta, \texttt{matteo.liotta@studenti.units.it} \hfill \Data \\[0.2cm]
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}} \\[0.3cm]}
+
+\newcommand{\NewPageHeader}{
+  \vfill
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  \newpage
+  {\Header}
+}
+%%%%%%%%%%%%%%%%%%%
+
+% Numero di pagina in basso al centro
+\fancyhf{}
+\fancyfoot[C] \thepage
+\renewcommand{\footrulewidth}{0pt} % niente linea in basso
+\renewcommand{\headrulewidth}{0pt} % niente linea in alto
+
+\begin{document}
+
+\footnotesize  % font generale più piccolo
+\Header\\[0.7cm]
+
+
+%%%%%%%%%%%%%%%% FOGLIO 2
+
+    
+    %% INDEX
+    \addcontentsline{toc}{section}{Esercitazione 14: \textit{Universo di Herbrand e verifica della soddisfacibilità per LDP}}
+    
+    \noindent\Large \textbf{Esercitazione 14}: \textit{Simulazione d'Esame (appello 13/02/2024)} 
+    
+    {\normalsize
+    \begin{itemize}[label=, leftmargin=0pt]
+    
+    %\item \textbf{\underline{Formule booleane cont'd.}}
+
+    %% INDEX
+    %\addcontentsline{toc}{subsection}{Esercizio 4.}
+    %%
+    %\item \textbf{\textcolor{black}{Esercizio 4.} (**)}\\
+    %Si considerino le seguenti formule booleane:    
+    %    $$\Big(((A \rightarrow (B \land \lnot C)) \lor (\overline A \lor B)) \rightarrow (\lnot A \lor C)\Big) \lor (B \land \lnot A) $$
+    %    \noindent e
+    %    $$\phi_2 = \big((\lnot A \lor B) \land (\lnot C \lor B)\big) \rightarrow ((C \lor B) \land A)$$
+    
+    
+    %Si indichi, giustificando il motivo, se la prima è equivalente alla seconda.\\[0.2cm]
+
+    \item \textbf{\underline{Totale: 33 punti}}\\[0.1cm]
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio A1.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio A1.} (6 punti)} \\ 	
+    Nelle due coppie di seguito, si dica se la seconda formula è conseguenza logica della prima
+    $$A\lor (B\rightarrow C) \quad \quad A\land B$$
+    $$ (\lnot A\lor B\lor C) \land (A\lor B)\quad \quad B\lor C$$
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    \textbf{Coppia nr. 1}\\
+    La prima formula può essere equivalentemente scritta come
+    $$A\lor (B\rightarrow C)\equiv A\lor (\lnot B\lor C)\equiv A\lor \overline B\lor C$$
+    E, per quanto la prima formula può essere soddisfatta anche dal modello $$\alpha:=\{A\leftarrow 0,\ B\leftarrow1,\ C\leftarrow0\}$$
+    La seconda non è modellata da tale $\alpha$. Non è vero che ogni modello che soddisfi $\phi_1$ è un modello anche per $\phi_2$.\\[0.2cm]
+
+    \textbf{Coppia nr. 2}\\
+    Per quanto riguarda invece
+    $$(\lnot A\lor B\lor C)\land(A\lor B)\quad B\lor C$$
+    possiamo dire che, come ricordiamo, essa è una formula in forma CNF che ha il letterale $A$ e $\lnot A$ nelle due sue clausole. Si era provato che allora dato un valore fissato di $A$, la scelta sulla soddisfacibilità ricade su $B$ o $C$. A questo punto, dato che ciascuna delle scelte intorno a questi due letterali identifica un modello che soddisfa anche $\phi_2$, si ha che $\phi_1\models\phi_2$.
+    
+    
+    \end{osservazioni}
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio A2.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio A2.} (7 punti)} \\ 	
+    Si consideri il seguente insieme di clausole e si usi l'algoritmo di Davis-Puttnam descrivendo i passi in dettaglio per mostrare l'eventuale soddisfacibilità. Se così, si indichi una valutazione. Dire se l'insieme di clausole soddisfa un formato speciale.
+    $$ S = \{\{\lnot P,Q\},\ \{\lnot P,R\}\},\ \{\lnot P,\lnot S\}\},\ \{R,S\},\ \{\lnot Q,\lnot R\},\ \{\lnot Q,S\}\}$$
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    Si considera
+    $$ S = \{\{\lnot P,Q\},\ \{\lnot P,R\}\},\ \{\lnot P,\lnot S\}\},\ \{R,S\},\ \{\lnot Q,\lnot R\},\ \{\lnot Q,S\}\}$$
+    \begin{enumerate}
+        \item Pivot \textit{Q}.
+        \begin{itemize}
+            \item Esonerate: $\{\lnot P,R\}\},\ \{\lnot P,\lnot S\},\ \{R,S\}$
+            \item Risolventi: $\{\lnot P,\lnot R\},\ \{\lnot P,S\}$
+            \item $S_1 = \{\lnot P,R\}\},\ \{\lnot P,\lnot S\},\ \{R,S\},\ \{\lnot P,\lnot R\},\ \{\lnot P,S\}$
+        \end{itemize}
+        \item Pivot \textit{R}
+        \begin{itemize}
+            \item Esonerate: $\{\lnot P,\lnot S\},\ \{\lnot P,S\}$
+            \item Risolventi: $\{\lnot P \},\ \{\lnot P,S\}$
+            \item $S_2 = \{\lnot P,\lnot S\},\ \{\lnot P,S\},\ \{\lnot P \}$
+        \end{itemize}
+        \item Pivot \textit{S}
+        \begin{itemize}
+            \item Esonerate: $\{\lnot P \}$
+            \item Risolventi: $\{\lnot P \}$
+            \item $S_3 = \{\lnot P \}$
+        \end{itemize}
+    \end{enumerate}
+    Scegliendo allora $\alpha(P)=F$, si arriva alla soddisfacibilità. Se così, allora la scelta del valore $\alpha(S)$ è libera e si impone $\alpha(S)=0$, che impone però che $\alpha(R)=1$. La scelta di $Q$ non è in questo caso libera ma richiesta $\alpha(Q)=0$. 
+    \end{osservazioni}
+    \NewPageHeader
+    \begin{osservazioni}
+    Poiché la formula in formato di clausole ha solo 2 letterali per clausole essa soddisfa il formato di Krom, ma non di Horn in quanto compaiono clausole con ambo i letterali positivi.
+    \end{osservazioni}
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio A3.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio A3.} (8 punti)} \\ 	
+    Si considerino gli alberi binari infiniti (ogni nodo ha un figlio destro e uno sinistro) etichettati su simboli proposizionali in $\Sigma$. Si consideri un simboli di predicato binario $A(x,y)$ che viene valutato a \textit{Vero} se $x$ e $y$ se sono valutati su due noti $n$ e $n'$ rispettivamente e $n'$ è un discendente (a distanza arbitraria positiva) dell'albero di $n$.\\
+    Si introducano se necessario altri simbli di \textit{costante}, \textit{funzione} e \textit{predicato} -indicando chiaramente quale sia sia la loro interpretazione sul dominio-. 
+    Si scrivano delle formule in logica dei predicati che esprimano le seguenti proprietà:
+    \begin{enumerate}
+        \item La radice e i suoi figli sono etichettati $P$ (in quei nodi è verificato il predicato $P$).
+        \item C'è un sottoalbero i cui nodi sono tutti etichettati da $P$.
+        \item C'è un cammino dalla radice con un numero infinito di nodi etichettati da $P$.
+    \end{enumerate}
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    Ricapitolando, abbiamo come dominio nodi di un albero binario infinito. Il simbolo di predicato $A$ lega i nodi che sono rispettivamente antenati e discendenti:
+    $$A(x,y)=y \text{ è discendente a distanza abitraria di }x \approx A(antenato, discendente)$$
+    A questo punto, possiamo suggerire una scrittura per ciascuna delle tre proprietà.\\
+
+    \textbf{Proprietà 1.}\\
+    Se la radice e i suoi figli sono etichettati con P, allora dobbiamo ottenere un modo di identificare la radice. Risulta possibile introdurre un simbolo di costante
+    $$r\in D,\quad r^I=radice$$
+    ma è altrettanto possibile caratterizzarlo come elemento che non è antenato di nessun nodo
+    $$\exists x.\forall y.\bigg(\lnot A(y,x)\bigg)$$
+    Per riuscire infine a parlare dei figli, sapendo che ogni nodo ha un figlio destro e sinistro, possiamo introdurre due simboli funzionali:
+    $$right^I:D\rightarrow D,\quad right^I(x)=figlio\ destro\ di\ x$$
+    $$left^I:D\rightarrow D,\quad left^I(x)=figlio\ sinistro\ di\ x$$
+    E dire che
+    \begin{itemize}
+        \item $P(r) \land P(left(r)) \land P(right(r))$
+        \item $\exists x.\forall y.\bigg(\lnot A(y,x) \land P(x)\land P(right(x))\land P(left(x))\bigg)$
+    \end{itemize}
+    Ma per comodità useremo $r$ per identificare la radice.\\
+
+    \textbf{Proprietà 2.}\\
+    Dire che esiste un sottoalbero i cui nodi sono tutti etichettati da P, significa che esiste un nodo tale che, esso gode di $P$ e così anche tutti i nodi che sono a lui discendenti, per qualsiasi percorso. Possiamo usare infatti il simbolo di Predicato $A$:
+    $$\exists x. \bigg[P(x)\land\bigg[\forall y.\bigg(A(x,y) \land P(y)\bigg)\bigg]\bigg]$$
+
+    \textbf{Proprietà 3.}\\
+    Per parlare di un cammino, abbiamo una difficoltà: non possiamo obbligare ambo i figli di un nodo a godere di $P$. Possiamo però dire che:
+    \begin{itemize}
+        \item La radice gode della proprietà $P$
+        \item Se deve esistere un percorso dalla radice di nodi che godano di $P$, significa che il nodo successivo alla radice ammette un figlio che gode di $P$
+        \item Non è possibile però generalizzare dicendo che $$P(y)\rightarrow P(right(y)\lor P(left(y))$$perché alcuni nodi potrebbero non essere del percorso. Non vogliamo vincolare più di quanto necessario.
+        \item Sicuramente però, se il nodo è parte del cammino, questo dovrà essere vero. Se non possiamo garantire dall'alto la generalizzazione, dobbiamo assicurarci di trovare un modo di verificare che un nodo sia parte del cammino in cui quelli precedenti siano etichettati da $P$. 
+    \end{itemize}
+    \end{osservazioni}
+    \NewPageHeader
+    \begin{osservazioni}
+    La soluzione sarebbe interrogare i predecessori: se tutti i nodi di cui questo è discendente godono di $P$, allora deve essere vera l'estensione della proprietà ai figli.
+
+    \textit{Per ogni nodo che gode di P, se ogni suo nodo predecessore gode di y allora deve essere vero che anche uno dei suoi figli ne gode.}
+    
+    Dunque
+    $$P(r)\land\bigg[\forall x. \bigg[\bigg(P(x)\land \forall y.[\ A(x,y) \land P(y)\ ]\bigg)\rightarrow(\ P(right(x)\lor P(left(x)\ )\bigg]\ \bigg]$$
+    \end{osservazioni}
+
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio A4.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio A4.} (7 punti)} \\ 	
+    Si consideri la seguente formula
+    $$\lnot \bigg[\ \forall x.\bigg(P(x)\land (\ \forall y.(\ Q(y)\rightarrow R(x,y)\ ) \ )\land (\ \exists y. S(x,y)\rightarrow P(x)\ )\bigg)\ \bigg]$$
+    \begin{enumerate}
+        \item Si scriva la formula equivalente in forma prenessa.
+        \item Si trasformi la formula prenessa in forma di clausole.
+        \item Si scriva l'universo di Herbrand per la formula in forma di clausole
+    \end{enumerate}
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}
+    $$\lnot \bigg[\ \forall x.\bigg(P(x)\land (\ \forall y.Q(y)\rightarrow R(x,y)\ ) \land (\ \exists y. S(x,y)\rightarrow P(x)\ )\bigg)\ \bigg]\equiv$$
+    $$ \bigg[\ \exists x.\lnot\bigg(P(x)\land (\ \forall y.Q(y)\rightarrow R(x,y)\ ) \land (\ \exists y. S(x,y)\rightarrow P(x)\ )\bigg)\ \bigg]\equiv$$
+    $$ \bigg[\ \exists x.\lnot\bigg(P(x)\land (\ \forall y.\lnot Q(y)\lor R(x,y)\ ) \land (\ \exists y. \lnot S(x,y)\lor P(x)\ )\bigg)\ \bigg]\equiv$$
+    $$ \bigg[\ \exists x.\bigg(\lnot P(x)\lor \lnot(\ \forall y.\lnot Q(y)\lor R(x,y)\ ) \lor \lnot(\ \exists y. \lnot S(x,y)\lor P(x)\ )\bigg)\ \bigg]\equiv$$
+    $$ \bigg[\ \exists x.\bigg(\lnot P(x)\lor (\ \exists y. Q(y)\land \lnot R(x,y)\ ) \lor (\ \forall y. S(x,y)\land \lnot P(x)\ )\bigg)\ \bigg]\equiv$$
+    $$ \exists x.\bigg(\lnot P(x)\lor (\ \exists y. Q(y)\land \lnot R(x,y)\ ) \lor (\ \forall z. S(x,z)\land \lnot P(x)\ )\bigg)\equiv$$
+    Dove, poiché $A \lor (B \land A) \equiv A$:
+    $$ \exists x\exists y.\bigg(\lnot P(x)\lor (\ Q(y)\land \lnot R(x,y)\ ) \bigg)\equiv$$
+    $$ \exists x\exists y.\bigg(\ (\ \lnot P(x)\lor\ Q(y)\ )\land (\ \lnot P(x) \lor \lnot R(x,y)\ ) \bigg)\equiv$$
+    
+
+    Tramite skolemizzazione si introducono 2 costanti di skolem, per $x$ ed $y$, ottenendo l'insieme di clausole:
+
+    $$ \{\lnot P(a), \ Q(b)\ \}, \{ \lnot P(a), \lnot R(a,b)\}$$
+
+
+    Da cui 
+    $$H=\{a,b\}$$
+    
+    
+    
+    
+    \end{osservazioni}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio A5.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio A5.} (5 punti, \textit{facoltativo})} \\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{P(x),\ D(x)\},\quad \{\lnot P(x),\lnot D(x)\},\ \{\lnot P(x),\ D(succ(x))\},\quad \{\lnot D(x),\ P(succ(x))\}$$
+    $$\{\lnot P(x),\ \lnot P(y),\ P(+(x,y))\}\quad \quad \{\lnot D(x),\ \lnot D(y),\ P(+(x,y))\}$$
+    $$\{\lnot P(x),\ \lnot D(y),\ D(+(x,y))\}\quad\quad\{\lnot D(x),\ \lnot P(y),\ D(+(x,y))\}$$
+    $$\{P(0)\}\quad \quad \{D(+(0,succ^2(0)\}$$
+    Dove $x$ ed $y$ sono variabili, $0$ una costante (ad esempio lo zero dei naturali), $P$ e $D$ dei predicati, $succ$ e $+$ dei simboli di funzione. Si trovi una refutazione per l'insieme di clausole.
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    La soluzione è proposta nell'approfondimento 4.
+    \end{osservazioni}
+
+    
+\end{itemize}
+\vfill
+\noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{document}

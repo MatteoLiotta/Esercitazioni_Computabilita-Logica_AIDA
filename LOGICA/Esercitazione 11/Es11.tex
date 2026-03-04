@@ -1,0 +1,266 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.5cm, bottom=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[table]{xcolor}
+\usepackage{makeidx}
+\usepackage[most]{tcolorbox}
+\newtcolorbox{osservazioni}{
+  colback=gray!8,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\footnotesize,
+  left=2mm, right=2mm, top=2mm, bottom=2mm,
+  before skip=7pt,   % niente spazio prima
+  after skip=15pt     % niente spazio dopo
+}
+\newtcolorbox{osservazioni2}{
+  colback=gray!8,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\small,
+  left=5mm, right=5mm, top=3mm, bottom=3mm,
+  before skip=0pt,   % niente spazio prima
+  after skip=30pt     % niente spazio dopo
+}
+\pagestyle{fancy}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+\pagestyle{fancy}
+
+\usepackage{makeidx}
+
+%%%%%%%%%%%%%%%%%%%
+\newcommand{\EsercitazioneNum}{11}
+\newcommand{\Data}{28/11/2025}
+\newcommand{\DocType}{Esercitazione} % o "Eserciziario"
+\newcommand{\FullTitle}{\DocType\ \EsercitazioneNum}
+
+\newcommand{\Header}{
+\noindent
+  \small \textbf{Computabilità, Complessità e Logica - a.a. 2025/26} \hfill \textbf{\FullTitle} \\[0.2cm]
+  \scriptsize Matteo Liotta, \texttt{matteo.liotta@studenti.units.it} \hfill \Data \\[0.2cm]
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}} \\[0.3cm]}
+
+\newcommand{\NewPageHeader}{
+  \vfill
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  \newpage
+  {\Header}
+}
+%%%%%%%%%%%%%%%%%%%
+
+% Numero di pagina in basso al centro
+\fancyhf{}
+\fancyfoot[C] \thepage
+\renewcommand{\footrulewidth}{0pt} % niente linea in basso
+\renewcommand{\headrulewidth}{0pt} % niente linea in alto
+
+\begin{document}
+
+\footnotesize  % font generale più piccolo
+\Header\\[0.7cm]
+
+
+%%%%%%%%%%%%%%%% FOGLIO 2
+
+    
+    %% INDEX
+    \addcontentsline{toc}{section}{Esercitazione 11: \textit{CNF e Algoritmi di Soddisfacibilità}}
+    
+    \noindent\Large \textbf{Esercitazione 11}: \textit{CNF e Algoritmi di Soddisfacibilità (DP, DPLL)} 
+    \begin{osservazioni}
+        \textbf{\textit{Nota}}. Sono indicati in \textcolor{ForestGreen}{\textit{verde}} gli esercizi a sfondo teorico, proposti per rafforzare le idee alla base dei metodi utilizzati. Sono invece indicati in \textcolor{blue}{\textit{blu}} gli esercizi che non saranno trattati durante l'esercitazione, bensì lasciati come strumento aggiuntivo di esercitazione individuale. Resta comunque assoluta disponibilità per la loro risoluzione negli incontri successivi, qualora necessario. 
+    \end{osservazioni}
+    
+    {\normalsize
+    \begin{itemize}[label=, leftmargin=0pt]
+    
+    %\item \textbf{\underline{Formule booleane cont'd.}}
+
+    %% INDEX
+    %\addcontentsline{toc}{subsection}{Esercizio 4.}
+    %%
+    %\item \textbf{\textcolor{black}{Esercizio 4.} (**)}\\
+    %Si considerino le seguenti formule booleane:    
+    %    $$\Big(((A \rightarrow (B \land \lnot C)) \lor (\overline A \lor B)) \rightarrow (\lnot A \lor C)\Big) \lor (B \land \lnot A) $$
+    %    \noindent e
+    %    $$\phi_2 = \big((\lnot A \lor B) \land (\lnot C \lor B)\big) \rightarrow ((C \lor B) \land A)$$
+    
+    
+    %Si indichi, giustificando il motivo, se la prima è equivalente alla seconda.\\[0.2cm]
+
+    
+    \item \textbf{\underline{Formule booleane in forma CNF}}
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 7.} 
+    %%
+    \item \textbf{\textcolor{ForestGreen}{Esercizio 7.} (**)}\\ 	
+    Si consideri la seguente formula booleana:
+    $$\phi:= l_1\lor l_2 \lor l_3 \lor l_4$$
+    Considerata allora la scrittura:
+    $$\phi':=\phi_1\land \phi_2 = (X\lor l_1\lor l_2)\land(\overline{X} \lor l_3\lor l_4)$$
+    Data una assegnazione $\alpha$ tale che $\alpha \models \phi$, si indichino tutte le assegnazioni che modellano $\phi'$.
+
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 8.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 8.} (**)}\\ 	
+    Si consideri la seguente formula booleana:
+
+    $$\phi:= \bigg(P \rightarrow (Q\lor R)\bigg)\rightarrow \bigg( (P\rightarrow Q) \lor (P\rightarrow Q) \bigg)$$
+    
+    Si scriva $\phi$ in forma congiuntiva di clausole CNF.
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 9.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 9.} (**)}\\ 	
+    Si consideri la seguente formula booleana:
+
+    $$\phi:=(\ \lnot(X_1\lor X_2)\ \lor \ (X_3 \lor X_4)\  )\ \land\ X_5$$
+    
+    Si scriva $\phi$ in forma congiuntiva di clausole CNF.\\[0.2cm]
+
+    \textbf{\underline{Algoritmi di Soddisfacibilità: \textit{Davis-Putnam} (DP)}}
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 10.} 
+    %%
+    \item \textbf{Esercizio 10 (*)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{Q,\lnot R\}, \{R,\lnot S\},\{S,\lnot T\},\{T,\lnot U\},\{U,\lnot W\},\{W,\lnot Q\}$$
+    
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam (DP);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.
+    \end{enumerate}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 11.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 11.} (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{\lnot A,B\}, \{\lnot B,C\}, \{\lnot C,D\},\{\lnot D,A\},\{\lnot A, \lnot C\},\{B, C\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam (DP);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.\\[0.2cm]
+    \end{enumerate}
+
+    \NewPageHeader
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 12.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 12.} (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{A, B, C\}, \{\lnot A, \lnot B\}, \{\lnot B, \lnot C\}, \{A, \lnot C\}, \{\lnot A, D\}, \{B, \lnot D\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam (DP);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.\\[0.2cm]
+    \end{enumerate}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 13.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 13.} (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{P, Q, S\}, \{P, Q, \lnot S\}, \{P, \lnot Q\}, \{\lnot P, R\}, \{\lnot P, \lnot R\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam (DP);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.\\[0.2cm]
+    \end{enumerate}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 14.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 14.} (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{A, B\}, \{\lnot A, C\}, \{\lnot B, D\}, \{\lnot C, \lnot D\}, \{C, \lnot B\}, \{A, \lnot D\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam (DP);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.\\[0.2cm]
+    \end{enumerate}
+
+    \textbf{\underline{Algoritmi di Soddisfacibilità: \textit{Davis-Putnam-Logemann-Loveland} (DPLL)}}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 15.} 
+    %%
+    \item \textbf{\textcolor{ForestGreen}{Esercizio 15.} (**)}\\ 	
+    Si consideri la formula booleana in forma CNF:
+    $$\phi = (P)\land(\overline P \lor R)\land (\overline R \lor Q)$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam-Logemann-Loveland (DPLL);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.
+    \end{enumerate}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 16.} 
+    %%
+    \item \textbf{Esercizio 16. (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{A, B, \lnot C\}, \{\lnot A, C, D\}, \{\lnot B, C, \lnot D\}, \{\lnot C, D, E\}, \{\lnot D, \lnot E, B\}, \{\lnot A, \lnot B, E\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam-Logemann-Loveland (DPLL);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.
+    \end{enumerate}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 17.} 
+    %%
+    \item \textbf{Esercizio 17. (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{A, B\}, \{A, \neg B\}, \{\neg A, C\}, \{\neg A, \neg C\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam-Logemann-Loveland (DPLL);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.\\[0.2cm]
+    \end{enumerate}
+
+    \NewPageHeader
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 18.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 18.} (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{P, Q, R\}, \{\lnot P, Q, S\}, \{\lnot Q, R, S\}, \{\lnot R, \lnot S, Q\}, \{\lnot P, \lnot Q, \lnot R\}, \{P, \lnot Q, \lnot S\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam-Logemann-Loveland (DPLL);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.
+    \end{enumerate}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 19.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 19.} (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{X, Y, \lnot Z\}, \{\lnot X, Z, U\}, \{\lnot Y, Z, V\}, \{\lnot Z, \lnot U, W\}, \{\lnot V, \lnot W, Y\}, \{\lnot X, \lnot V, W\}, \{X, \lnot Y, V\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam-Logemann-Loveland (DPLL);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.
+    \end{enumerate}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 20.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 20.} (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{A, B, C, D, \overline E\}, \{C, \overline B\}, \{D, \overline A\}, \{B, \overline D\}, \{C, A, \overline E\}, \{A, B, C, D, E\},$$$$\{C, \overline D\}, \{\overline D, \overline A, B\}, \{E, \overline C, D\}, \{C, A, \overline E\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando \textbf{sia} l'algoritmo di Davis-Putnam-Logemann-Loveland (DPLL) che l'algoritmo di Davis-Putnam (DP);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.
+    \end{enumerate}
+
+    
+\end{itemize}
+\vfill
+\noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{document}

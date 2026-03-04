@@ -1,0 +1,646 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.5cm, bottom=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[table]{xcolor}
+\usepackage{makeidx}
+\usepackage[most]{tcolorbox}
+\newtcolorbox{osservazioni}{
+  colback=gray!8,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\footnotesize,
+  left=2mm, right=2mm, top=2mm, bottom=2mm,
+  before skip=7pt,   % niente spazio prima
+  after skip=15pt     % niente spazio dopo
+}
+\newtcolorbox{osservazioni2}{
+  colback=gray!8,    % sfondo grigio chiaro
+  colframe=white,      % nessun bordo
+  arc=2mm,            % angoli smussati
+  boxrule=0pt,        % spessore bordo 0
+  fontupper=\small,
+  left=5mm, right=5mm, top=3mm, bottom=3mm,
+  before skip=0pt,   % niente spazio prima
+  after skip=30pt     % niente spazio dopo
+}
+\pagestyle{fancy}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+\pagestyle{fancy}
+
+\usepackage{makeidx}
+
+%%%%%%%%%%%%%%%%%%%
+\newcommand{\EsercitazioneNum}{11}
+\newcommand{\Data}{28/11/2025}
+\newcommand{\DocType}{Esercitazione} % o "Eserciziario"
+\newcommand{\FullTitle}{\DocType\ \EsercitazioneNum}
+
+\newcommand{\Header}{
+\noindent
+  \small \textbf{Computabilità, Complessità e Logica - a.a. 2025/26} \hfill \textbf{\FullTitle} \\[0.2cm]
+  \scriptsize Matteo Liotta, \texttt{matteo.liotta@studenti.units.it} \hfill \Data \\[0.2cm]
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}} \\[0.3cm]}
+
+\newcommand{\NewPageHeader}{
+  \vfill
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  \newpage
+  {\Header}
+}
+%%%%%%%%%%%%%%%%%%%
+
+% Numero di pagina in basso al centro
+\fancyhf{}
+\fancyfoot[C] \thepage
+\renewcommand{\footrulewidth}{0pt} % niente linea in basso
+\renewcommand{\headrulewidth}{0pt} % niente linea in alto
+
+\begin{document}
+
+\footnotesize  % font generale più piccolo
+\Header\\[0.7cm]
+
+
+%%%%%%%%%%%%%%%% FOGLIO 2
+
+    
+    %% INDEX
+    \addcontentsline{toc}{section}{Esercitazione 11: \textit{CNF e Algoritmi di Soddisfacibilità}}
+    
+    \noindent\Large \textbf{Esercitazione 11}: \textit{CNF e Algoritmi di Soddisfacibilità (DP, DPLL)} 
+    \begin{osservazioni}
+        \textbf{\textit{Nota}}. Sono indicati in \textcolor{ForestGreen}{\textit{verde}} gli esercizi a sfondo teorico, proposti per rafforzare le idee alla base dei metodi utilizzati. Sono invece indicati in \textcolor{blue}{\textit{blu}} gli esercizi che non saranno trattati durante l'esercitazione, bensì lasciati come strumento aggiuntivo di esercitazione individuale. Resta comunque assoluta disponibilità per la loro risoluzione negli incontri successivi, qualora necessario. 
+    \end{osservazioni}
+    
+    {\normalsize
+    \begin{itemize}[label=, leftmargin=0pt]
+    
+    %\item \textbf{\underline{Formule booleane cont'd.}}
+
+    %% INDEX
+    %\addcontentsline{toc}{subsection}{Esercizio 4.}
+    %%
+    %\item \textbf{\textcolor{black}{Esercizio 4.} (**)}\\
+    %Si considerino le seguenti formule booleane:    
+    %    $$\Big(((A \rightarrow (B \land \lnot C)) \lor (\overline A \lor B)) \rightarrow (\lnot A \lor C)\Big) \lor (B \land \lnot A) $$
+    %    \noindent e
+    %    $$\phi_2 = \big((\lnot A \lor B) \land (\lnot C \lor B)\big) \rightarrow ((C \lor B) \land A)$$
+    
+    
+    %Si indichi, giustificando il motivo, se la prima è equivalente alla seconda.\\[0.2cm]
+
+    
+    \item \textbf{\underline{Formule booleane in forma CNF}}
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 7.} 
+    %%
+    \item \textbf{\textcolor{ForestGreen}{Esercizio 7.} (**)}\\ 	
+    Si consideri la seguente formula booleana:
+    $$\phi:= l_1\lor l_2 \lor l_3 \lor l_4$$
+    Considerata allora la scrittura:
+    $$\phi':=\phi_1\land \phi_2 = (X\lor l_1\lor l_2)\land(\overline{X} \lor l_3\lor l_4)$$
+    Data una assegnazione $\alpha$ tale che $\alpha \models \phi$, si indichino tutte le assegnazioni che modellano $\phi'$.
+
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 8.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 8.} (**)}\\ 	
+    Si consideri la seguente formula booleana:
+
+    $$\phi:= \bigg(P \rightarrow (Q\lor R)\bigg)\rightarrow \bigg( (P\rightarrow Q) \lor (P\rightarrow Q) \bigg)$$
+    
+    Si scriva $\phi$ in forma congiuntiva di clausole CNF.
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    L'esercizio richiede la riformulazione in forma normale congiuntiva della formula booleana indicata.
+
+    \textbf{1.} Riscriviamo le implicazioni logiche
+    
+    $$\phi:= \bigg(P \rightarrow (Q\lor R)\bigg)\rightarrow \bigg( (P\rightarrow Q) \lor (P\rightarrow R) \bigg)=$$
+    $$\phi:= \overline {\bigg(P \rightarrow (Q\lor R)\bigg)} \lor \bigg( (P\rightarrow Q) \lor (P\rightarrow R) \bigg)=$$
+    $$\phi:= \overline {\bigg(\overline P \lor (Q\lor R)\bigg)} \lor \bigg( (\overline P\lor Q) \lor (\overline P\lor R) \bigg)=$$
+
+    \textbf{2.} Portiamo le negazioni alle variabili (NNF)
+    $$\phi:=  {\bigg( P \land \overline {(Q\lor R)}\bigg)} \lor \bigg( (\overline P\lor Q) \lor (\overline P\lor R) \bigg)={\bigg( P \land (\overline Q\land \overline R)}\bigg) \lor \bigg( (\overline P\lor Q) \lor (\overline P\lor R) \bigg)$$
+
+    Allora 
+    $$=\bigg( P \land \overline Q\land \overline R\bigg) \lor \bigg( \overline P\lor Q \lor R \bigg)=$$
+
+    Per semplicità, indichiamo 
+
+    $$=\bigg( P \land \overline Q\land \overline R\bigg) \lor \tilde \phi =$$
+    $$=(\tilde \phi \lor P) \land (\tilde \phi \lor \overline Q) \land (\tilde \phi \lor \overline R)$$
+
+    E reintroducendo $\tilde \phi$:
+
+    $$=\bigg((P \land \overline Q\land \overline R) \lor P\bigg) \land \bigg((P \land \overline Q\land \overline R) \lor \overline Q\bigg) \land \bigg((P \land \overline Q\land \overline R) \lor \overline R\bigg)$$
+
+    Dove, se
+
+    $$\bigg((P \land \overline Q\land \overline R) \lor P\bigg)=(P\lor P) \land (P\lor \overline Q) \land (P \lor \overline R) = P \land (P\lor \overline Q) \land (P \lor \overline R)$$
+
+    Allora 
+    
+    $$\phi = ... = %\bigg(P \land (P\lor \overline Q) \land (P \lor \overline R)\bigg) \land \bigg((\overline Q \lor P ) \land (\overline Q\lor \overline Q) \land (\overline Q \lor \overline R)\bigg) \land \bigg((\overline R \lor P ) \land (\overline R\lor \overline Q) \land (\overline R \lor \overline R)\bigg)=$$
+    \bigg(P \land (P\lor \overline Q) \land (P \lor \overline R)\bigg) \land \bigg((\overline Q \lor P ) \land \overline Q\land (\overline Q \lor \overline R)\bigg) \land \bigg((\overline R \lor P ) \land (\overline R\lor \overline Q) \land \overline R\bigg)$$    
+    
+    \end{osservazioni}
+    \NewPageHeader    
+
+    \begin{osservazioni}
+    Da cui:
+
+    $$\phi = 
+    P \land (P\lor \overline Q) \land (P \lor \overline R) \land (\overline Q \lor P ) \land \overline Q\land (\overline Q \lor \overline R) \land (\overline R \lor P ) \land (\overline R\lor \overline Q) \land \overline R=$$
+    $$P \land \overline Q \land \overline R \land (P\lor \overline Q) \land (P\lor \overline R)\land (\overline Q \lor \overline R)$$    
+    
+    \end{osservazioni}
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 9.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 9.} (**)}\\ 	
+    Si consideri la seguente formula booleana:
+
+    $$\phi:=(\ \lnot(X_1\lor X_2)\ \lor \ (X_3 \lor X_4)\  )\ \land\ X_5$$
+    
+    Si scriva $\phi$ in forma congiuntiva di clausole CNF.
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    $$\phi:=(\ \lnot(X_1\lor X_2)\ \lor \ (X_3 \lor X_4)\  )\ \land\ X_5=$$
+    $$(\ (\overline X_1\land \overline X_2)\ \lor \ (X_3 \lor X_4)\  )\ \land\ X_5=$$
+    $$(\ (\overline X_1\land \overline X_2)\ \lor \ \tilde \phi\  )\ \land\ X_5=$$
+    $$(\ (\overline X_1 \lor \tilde \phi) \land (\overline X_2 \lor \tilde \phi\  ))\ \land\ X_5=$$
+    $$(\overline X_1 \lor \tilde \phi) \land (\overline X_2 \lor \tilde \phi\ )\ \land\ X_5=$$
+    $$(\overline X_1 \lor X_3 \lor X_4) \land (\overline X_2 \lor X_3 \lor X_4 \ )\ \land\ X_5$$
+    \end{osservazioni}
+    $\\[0.2cm]$
+
+    \textbf{\underline{Algoritmi di Soddisfacibilità: \textit{Davis-Putnam} (DP)}}
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 10.} 
+    %%
+    \item \textbf{Esercizio 10 (*)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{Q,\lnot R\}, \{R,\lnot S\},\{S,\lnot T\},\{T,\lnot U\},\{U,\lnot W\},\{W,\lnot Q\}$$
+    
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam (DP);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.
+    \end{enumerate}
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione}.}\\
+    $$S_0 = \{Q,\lnot R\}, \{R,\lnot S\},\{S,\lnot T\},\{T,\lnot U\},\{U,\lnot W\},\{W,\lnot Q\}$$
+    
+    \textbf{1.} Pivot $R$
+    \begin{itemize}
+        \item \textbf{\textit{Clausole esonerate:}} $\{S,\lnot T\},\{T,\lnot U\},\{U,\lnot W\},\{W,\lnot Q\}$
+        \item \textbf{\textit{Risolventi:}} $\{Q,\lnot S\}$
+    \end{itemize}
+    $$S_1 = \{S,\lnot T\},\{T,\lnot U\},\{U,\lnot W\},\{W,\lnot Q\}, \{Q,\lnot S\}$$
+    
+    \textbf{2.} Pivot $T$
+    \begin{itemize}
+        \item \textbf{\textit{Clausole esonerate:}} $\{U,\lnot W\},\{W,\lnot Q\}, \{Q,\lnot S\}$
+        \item \textbf{\textit{Risolventi:}} $\{S,\lnot U\}$
+    \end{itemize}
+    $$S_2= \{U,\lnot W\},\{W,\lnot Q\}, \{Q,\lnot S\},\{S,\lnot U\}$$
+
+    
+    \textbf{3.} Pivot $W$
+    \begin{itemize}
+        \item \textbf{\textit{Clausole esonerate:}} $\{Q,\lnot S\},\{S,\lnot U\}$
+        \item \textbf{\textit{Risolventi:}} $\{U,\lnot Q\}$
+    \end{itemize}
+    $$S_3 = \{Q,\lnot S\},\{S,\lnot U\},\{U,\lnot Q\}$$
+    \end{osservazioni}
+    \NewPageHeader
+
+\begin{osservazioni}
+    \textbf{4.} Pivot $S$
+    \begin{itemize}
+        \item \textbf{\textit{Clausole esonerate:}} $\{U,\lnot Q\}$
+        \item \textbf{\textit{Risolventi:}} $\{Q,\lnot U\}$
+    \end{itemize}
+    $$S_4 = \{U,\lnot Q\},\{Q,\lnot U\}$$
+
+    \textbf{5.} Pivot $U$
+    \begin{itemize}
+        \item \textbf{\textit{Clausole esonerate:}} $\emptyset$
+        \item \textbf{\textit{Risolventi:}} $\{Q,\lnot Q\}$
+    \end{itemize}
+    $$S_5 = \{Q,\lnot Q\}$$
+
+    E poiché vanno eliminate le tautologie, si ottiene $S_5=\emptyset$. Segue la soddisfacibilità del modello.\\
+
+    \underline{\textit{Identificazione di un modello $\alpha \mid \alpha\models\phi$}}\\
+    
+    Possiamo considerare la costruzione del modello. La variabile $Q$ sarà assegnata a piacimento tra $F$ e $T$, dato il risultato tautologico.
+    $$\alpha(Q)=False$$
+    Se così, allora ritornando al passo precedente, ritroviamo che doveva essere soddisfatta $\{Q,\lnot U\}$. Da questo segue che necessariamente dovremo avere allora:
+    $$\alpha(U)=False$$
+    Allora, poiché avevamo $\{S,\lnot U\}$, segue per il medesimo motivo:
+    $$\alpha(S)=False$$
+    Analogamente per  $\{U,\lnot W\}$:
+    $$\alpha(W)=False$$
+    E per  $\{T,\lnot U\}$
+    $$\alpha(T)=False$$
+    Ed infine, $\{Q,\lnot R\}$ richiede:
+    $$\alpha(R)=False$$
+
+    $$\alpha := \{S\rightarrow False,\ T\rightarrow False,\ W\rightarrow False,\ U\rightarrow False,\ Q\rightarrow False\} $$ è tale che $\alpha \models \phi$.
+    
+\end{osservazioni}
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 11.} 
+    %%
+    \item \textbf{\textcolor{black}{Esercizio 11.} (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{\lnot A,B\}, \{\lnot B,C\}, \{\lnot C,D\},\{\lnot D,A\},\{\lnot A, \lnot C\},\{B, C\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam (DP);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.\\[0.2cm]
+    \end{enumerate}
+
+\begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    $$S_0 = \{\lnot A,B\}, \{\lnot B,C\}, \{\lnot C,D\},\{\lnot D,A\},\{\lnot A, \lnot C\},\{B, C\}$$
+    
+    \textbf{1.} Pivot $A$
+    \begin{itemize}
+        \item \textbf{\textit{Clausole esonerate:}} $\{\lnot B,C\}, \{\lnot C,D\},\{B, C\}$
+        \item \textbf{\textit{Risolventi:}} $\{B, \lnot D\}, \{\lnot C, \lnot D\}$
+    \end{itemize}
+    $$S_1 = \{\lnot B,C\}, \{\lnot C,D\},\{B, C\},\{B, \lnot D\}, \{\lnot C, \lnot D\}$$
+
+    \textbf{2.} Pivot $B$
+    \begin{itemize}
+        \item \textbf{\textit{Clausole esonerate:}} $\{\lnot C,D\}, \{\lnot C, \lnot D\}$
+        \item \textbf{\textit{Risolventi:}} $\{C\}, \{\lnot D,C\}$
+    \end{itemize}
+    $$S_2 = \{\lnot C,D\}, \{\lnot C, \lnot D\}, \{C\}, \{\lnot D,C\}$$
+
+    \textbf{3.} Pivot $C$
+    \begin{itemize}
+        \item \textbf{\textit{Clausole esonerate:}} $\emptyset$
+        \item \textbf{\textit{Risolventi:}} $\{D\},\{\lnot D\}, \{D,\lnot D\},\{\lnot D\}$
+    \end{itemize}
+\end{osservazioni}
+\NewPageHeader
+\begin{osservazioni}
+    $$S_3 = \{D\},\{\lnot D\}, \{D,\lnot D\},\{\lnot D\}=\{D\},\{\lnot D\},\{\lnot D\}$$\\
+    
+    Da cui si osserva che si origina clausola vuota da $\{D\},\{\lnot D\}$. Ne segue l'insoddisfacibilità della formula booleana corrispondente.
+\end{osservazioni}
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 12.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 12.} (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{A, B, C\}, \{\lnot A, \lnot B\}, \{\lnot B, \lnot C\}, \{A, \lnot C\}, \{\lnot A, D\}, \{B, \lnot D\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam (DP);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.\\[0.2cm]
+    \end{enumerate}
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    $$S_0 = \{A, B, C\}, \{\lnot A, \lnot B\}, \{\lnot B, \lnot C\}, \{A, \lnot C\}, \{\lnot A, D\}, \{B, \lnot D\}$$\\
+    
+    \textbf{1.} Pivot $C$ (per comodità rispetto ai risolventi)
+    \begin{itemize}
+        \item \textbf{\textit{Clausole esonerate:}} $\{\lnot A, \lnot B\}, \{\lnot A, D\}, \{B, \lnot D\}$
+        \item \textbf{\textit{Risolventi:}} $\{A, B, \lnot B\}, \{A, B, A\}$
+    \end{itemize}
+    $$S_1 = \{\lnot A, \lnot B\}, \{\lnot A, D\}, \{B, \lnot D\},\{A, B, \lnot B\}, \{A, B, A\}=\{\lnot A, \lnot B\}, \{\lnot A, D\}, \{B, \lnot D\}, \{A, B\}$$
+
+    \textbf{2.} Pivot $D$
+    \begin{itemize}
+        \item \textbf{\textit{Clausole esonerate:}} $\{\lnot A, \lnot B\}, \{A, B\}$
+        \item \textbf{\textit{Risolventi:}} $ \{\lnot A, B\}$
+    \end{itemize}
+    $$S_2 = \{\lnot A, \lnot B\}, \{A, B\},\{\lnot A, B\}$$
+
+    \textbf{3.} Pivot $B$
+    \begin{itemize}
+        \item \textbf{\textit{Clausole esonerate:}} $\emptyset$
+        \item \textbf{\textit{Risolventi:}} $\{\lnot A, A\}, \{\lnot A\}$
+    \end{itemize}
+    $$S_2 = \{\lnot A, A\}, \{\lnot A\} =\{\lnot A\}$$
+    
+    Allora, essendo presente una clausola con un solo letterale, è possibile solo assegnare $$\alpha(A)=False$$ affinché sia $\phi$ soddisfatta. Se così, si conclude producendo l'insieme vuoto di clausole e ne segue la soddisfacibilità della formula $\phi$ corrispondente. \\
+    Sapendo che $\alpha(A)=False$ e avendo clausola $\{A, \lnot C\}$ ne segue che $$\alpha(C)=False$$Avendo $\{A, B, C\}$ si necessita di $$\alpha(B)=True$$Vediamo inoltre che tutte le clausole sarebbero ora soddisfatte, indipendentemente dal valore di $D$. Allora, i modelli che soddisfano $\phi$ sono:
+    \begin{itemize}
+        \item $\alpha := \{A\rightarrow False,\ B\rightarrow True,\ C\rightarrow False,\ D\rightarrow False\} $
+        \item $\alpha := \{A\rightarrow False,\ B\rightarrow True,\ C\rightarrow False,\ D\rightarrow True\} $
+    \end{itemize}
+    
+
+    
+    \end{osservazioni}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 13.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 13.} (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{P, Q, S\}, \{P, Q, \lnot S\}, \{P, \lnot Q\}, \{\lnot P, R\}, \{\lnot P, \lnot R\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam (DP);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.\\[0.2cm]
+    \end{enumerate}
+
+    \NewPageHeader
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    $$\{P, Q, S\}, \{P, Q, \lnot S\}, \{P, \lnot Q\}, \{\lnot P, R\}, \{\lnot P, \lnot R\}$$\\
+    
+    \textbf{1.} Pivot $R$
+    \begin{itemize}
+        \item \textbf{\textit{Clausole esonerate:}} $\{P, Q, S\}, \{P, Q, \lnot S\}, \{P, \lnot Q\}$
+        \item \textbf{\textit{Risolventi:}} $\{\lnot P\}$
+    \end{itemize}
+    $$S_1 = \{P, Q, S\}, \{P, Q, \lnot S\}, \{P, \lnot Q\},\{\lnot P\}$$
+
+    Questo impone necessariamente che 
+    $$\alpha(P)=False$$
+    E allora 
+
+    $S_1\overset{\alpha(P)=F}{=}\{Q, S\}, \{Q, \lnot S\}, \{\lnot Q\}$
+
+    Da cui necessariamente
+
+    $$\alpha(D)=False$$
+
+    E allora 
+
+    $S_1\overset{\alpha}{=}\{S\}, \{\lnot S\}$
+
+    Allora, scegliendo come pivot $S$, si ottiene la clausola vuota, da cui segue l'insoddisfacibilità della formula.
+    
+    \end{osservazioni}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 14.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 14.} (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{A, B\}, \{\lnot A, C\}, \{\lnot B, D\}, \{\lnot C, \lnot D\}, \{C, \lnot B\}, \{A, \lnot D\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam (DP);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.\\[0.2cm]
+    \end{enumerate}
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}
+    $$\{A, B\}, \{\lnot A, C\}, \{\lnot B, D\}, \{\lnot C, \lnot D\}, \{C, \lnot B\}, \{A, \lnot D\}$$\\
+    
+    \textbf{1.} Pivot $D$
+    \begin{itemize}
+        \item \textbf{\textit{Clausole esonerate:}} $\{A, B\}, \{\lnot A, C\}, \{C, \lnot B\}$
+        \item \textbf{\textit{Risolventi:}} $\{\lnot B, \lnot C\}, \{\lnot B, A\}$
+    \end{itemize}
+    $$S_1 = \{A, B\}, \{\lnot A, C\}, \{C, \lnot B\},\{\lnot B, \lnot C\}, \{\lnot B, A\}$$
+
+    \textbf{2.} Pivot $B$
+    \begin{itemize}
+        \item \textbf{\textit{Clausole esonerate:}} $\{\lnot A, C\}$
+        \item \textbf{\textit{Risolventi:}} $\{A, C\},\{A, \lnot C\},\{A\}$
+    \end{itemize}
+    $$S_2 = \{\lnot A, C\},\{A, C\},\{A, \lnot C\},\{A\}$$
+    
+    Segue necessariamente che $\alpha(A)=True$
+
+    $$S_2 \overset{\alpha}{=} \{C\}$$
+
+    Ed allora anche $$\alpha(C)=False$$ e si ottiene l'insieme vuoto di clausole, da cui la soddisfacibilità.
+
+    Data la clausola $\{C, \lnot B\}$ segue $$\alpha(B)=False$$ e dato che ora il valore di $D$ non altera il valore di verità della formula, due modelli sono per $\phi$:
+    \begin{itemize}
+        \item $\alpha := \{A\rightarrow True,\ B\rightarrow False,\ C\rightarrow False,\ D\rightarrow False\} $
+        \item $\alpha := \{A\rightarrow True,\ B\rightarrow False,\ C\rightarrow False,\ D\rightarrow True\} $
+    \end{itemize}    
+    \end{osservazioni}
+    
+    \NewPageHeader
+    \textbf{\underline{Algoritmi di Soddisfacibilità: \textit{Davis-Putnam-Logemann-Loveland} (DPLL)}}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 15.} 
+    %%
+    \item \textbf{\textcolor{ForestGreen}{Esercizio 15.} (**)}\\ 	
+    Si consideri la formula booleana in forma CNF:
+    $$\phi = (P)\land(\overline P \lor R)\land (\overline R \lor Q)$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam-Logemann-Loveland (DPLL);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.
+    \end{enumerate}
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    \textcolor{ForestGreen}{\textbf{Idea}: \textit{L'esercizio mostra l'utilità legata ad avere formule in forma CNF.}}
+    
+    
+    \end{osservazioni}
+    
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 16.} 
+    %%
+    \item \textbf{Esercizio 16. (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{A, B, \lnot C\}, \{\lnot A, C, D\}, \{\lnot B, C, \lnot D\}, \{\lnot C, D, E\}, \{\lnot D, \lnot E, B\}, \{\lnot A, \lnot B, E\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam-Logemann-Loveland (DPLL);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.
+    \end{enumerate}
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    $$\{A, B, \lnot C\}, \{\lnot A, C, D\}, \{\lnot B, C, \lnot D\}, \{\lnot C, D, E\}, \{\lnot D, \lnot E, B\}, \{\lnot A, \lnot B, E\}$$\\
+    
+    \begin{itemize}[label=*]
+        \item Sia $\alpha(A)=True$. Allora 
+        $$\{C, D\}, \{\lnot B, C, \lnot D\}, \{\lnot C, D, E\}, \{\lnot D, \lnot E, B\}, \{\lnot B, E\}$$
+        \begin{itemize}[label=*]
+            \item Sia $\alpha(B)=True$. Allora:
+            $$\{C, D\}, \{C, \lnot D\}, \{\lnot C, D, E\}, \{E\}$$
+            \begin{itemize}[label=*]
+                \item Sia $\alpha(C)=True$. Allora:
+                $$\{D,E\}, \{E\}$$            
+                    $\quad$ * Sia $\alpha(D)=True$. Allora:
+                    $$\{E\}$$
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+    
+    Da cui, con $\alpha(E)=True$ segue la soddisfacibilità, poiché esiste almeno un modello che soddisfi la formula booleana corrispondente. Infatti, con 
+
+   $$\alpha := \{A\rightarrow True,\ B\rightarrow True,\ C\rightarrow True,\ D\rightarrow True, \ E\rightarrow True\} $$
+
+   $$\alpha \models\phi$$
+    
+    \end{osservazioni}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 17.} 
+    %%
+    \item \textbf{Esercizio 17. (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{A, B\}, \{A, \neg B\}, \{\neg A, C\}, \{\neg A, \neg C\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam-Logemann-Loveland (DPLL);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.\\[0.2cm]
+    \end{enumerate}
+
+    \NewPageHeader
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    $$\{A, B\}, \{A, \neg B\}, \{\neg A, C\}, \{\neg A, \neg C\}$$\\
+    
+    \begin{itemize}[label=*]
+        \item Sia $\alpha(A)=True$. Allora: 
+        $$\{C\}, \{\neg C\}$$
+        Si ottiene la clausola vuota: è necessario effettuare \textit{backtrack}.
+        \item Sia $\alpha(A)=False$. Allora:
+        $$\{B\}, \{\neg B\}$$\\
+        Si ottiene la clausola vuota: è necessario effettuare \textit{backtrack}.
+    \end{itemize}
+    Non è possibile effettuare nuovamente backtrack e non si è ottenuta l'insieme vuoto di clausole: segue l'insoddisfacibilità della formula booleana corrispodente. Idealmente, nessuna assegnazione di $A$ è permette a $\phi$ di essere verificata.
+    \end{osservazioni}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 18.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 18.} (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{P, Q, R\}, \{\lnot P, Q, S\}, \{\lnot Q, R, S\}, \{\lnot R, \lnot S, Q\}, \{\lnot P, \lnot Q, \lnot R\}, \{P, \lnot Q, \lnot S\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam-Logemann-Loveland (DPLL);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.
+    \end{enumerate}
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    
+    $$\{P, Q, R\}, \{\lnot P, Q, S\}, \{\lnot Q, R, S\}, \{\lnot R, \lnot S, Q\}, \{\lnot P, \lnot Q, \lnot R\}, \{P, \lnot Q, \lnot S\}$$
+    
+    Potremmo sceglier qualsiasi letterale, ma concentriamoci su alcuni che semplifichino l'insieme di clausole, come $P$.
+    \begin{itemize}[label=*]
+        \item Sia $\alpha(P)=True$. Allora 
+        $$\{Q, S\}, \{\lnot Q, R, S\}, \{\lnot R, \lnot S, Q\}, \{\lnot Q, \lnot R\}$$
+        \begin{itemize}[label=*]
+            \item Sia $\alpha(Q)=True$. Allora
+            $$\{R, S\}, \{\lnot R\}$$
+            Da qui necessariamente abbiamo che $\alpha(R)=False$. 
+            $$\{S\}$$
+            E allora necessariamente $$\alpha(S)=True$$
+        \end{itemize}
+    \end{itemize}
+
+    Abbiamo trovato un modello che soffisfa $\phi$:
+
+       $$\alpha := \{P\rightarrow True,\ Q\rightarrow True,\ R\rightarrow False,\ S\rightarrow True\} $$
+
+    Ne segue dunque la soddisfacibilità della formula.
+    
+    
+    \end{osservazioni}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 19.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 19.} (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{X, Y, \lnot Z\}, \{\lnot X, Z, U\}, \{\lnot Y, Z, V\}, \{\lnot Z, \lnot U, W\}, \{\lnot V, \lnot W, Y\}, \{\lnot X, \lnot V, W\}, \{X, \lnot Y, V\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando l'algoritmo di Davis-Putnam-Logemann-Loveland (DPLL);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.
+    \end{enumerate}
+
+    \NewPageHeader
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    
+    $$\{X, Y, \lnot Z\}, \{\lnot X, Z, U\}, \{\lnot Y, Z, V\}, \{\lnot Z, \lnot U, W\}, \{\lnot V, \lnot W, Y\}, \{\lnot X, \lnot V, W\}, \{X, \lnot Y, V\}$$
+
+    \begin{itemize}[label=*]
+        \item Sia $\alpha(W)=True$. Allora:
+        $$\{X, Y, \lnot Z\}, \{\lnot X, Z, U\}, \{\lnot Y, Z, V\}, \{\lnot V, Y\}, \{X, \lnot Y, V\}$$
+        \begin{itemize}[label=*]
+            \item Sia $\alpha(X)=True$
+            $$\{Z, U\}, \{\lnot Y, Z, V\}, \{\lnot V, Y\}$$
+            \begin{itemize}[label=*]
+                \item Sia $\alpha(Y)=True$. Allora
+                $$\{Z, U\}, \{Z, V\}$$
+                Da cui sufficiente 
+                $$\alpha(Z)=True$$
+                $$\alpha(U)=True$$
+                $$\alpha(V)=True$$
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+
+    Abbiamo trovato un modello che soffisfa $\phi$:
+
+    $$\alpha := \{W\rightarrow True,\ X\rightarrow True,\ Y\rightarrow True,\ Z\rightarrow True\, U\rightarrow True, V\rightarrow True\} $$
+
+    Ne segue dunque la soddisfacibilità della formula.
+    \end{osservazioni}
+
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 20.} 
+    %%
+    \item \textbf{\textcolor{blue}{Esercizio 20.} (**)}\\ 	
+    Si consideri il seguente insieme di clausole:
+    $$\{A, B, C, D, \overline E\}, \{C, \overline B\}, \{D, \overline A\}, \{B, \overline D\}, \{C, A, \overline E\}, \{A, B, C, D, E\},$$$$\{C, \overline D\}, \{\overline D, \overline A, B\}, \{E, \overline C, D\}, \{C, A, \overline E\}$$
+    \begin{enumerate}
+        \item Si indichi se la formula booleana $\phi$ corrispondente è soddisfacibile utilizzando \textbf{sia} l'algoritmo di Davis-Putnam-Logemann-Loveland (DPLL) che l'algoritmo di Davis-Putnam (DP);
+        \item Se soddisfacibile, si proponga una valutazione delle  $\alpha$ tale per cui $\alpha\models\phi$.
+    \end{enumerate}
+
+    \begin{osservazioni}
+    \underline{\textit{Soluzione.}}\\
+    
+    $$\{A, B, C, D, \overline E\}, \{C, \overline B\}, \{D, \overline A\}, \{B, \overline D\}, \{C, A, \overline E\}, \{A, B, C, D, E\},$$$$\{C, \overline D\}, \{\overline D, \overline A, B\}, \{E, \overline C, D\}, \{C, A, \overline E\}$$
+
+    \begin{itemize}[label=*]
+        \item Sia $\alpha(A)=True$. Allora:
+        $$\{C, \overline B\}, \{D\}, \{B, \overline D\},\{C, \overline D\}, \{\overline D, B\}, \{E, \overline C, D\}$$
+        Segue che necessariamente $$\alpha(D)=True$$
+        $$\{C, \overline B\}, \{B\},\{C\}, \{B\}$$
+        $$\{C, \overline B\}, \{B\},\{C\}$$
+        Segue necessariamente
+        $$\alpha(C)=True$$
+        $$\alpha(B)=True$$
+    \end{itemize}
+
+    
+    Abbiamo trovato un modello che soffisfa $\phi$:
+
+    $$\alpha := \{A\rightarrow True,\ B\rightarrow True,\ C\rightarrow True,\ D\rightarrow True\} $$
+
+    Ne segue dunque la soddisfacibilità della formula.
+    
+    \end{osservazioni}
+
+\end{itemize}
+\vfill
+\noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{document}

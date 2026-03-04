@@ -2,11 +2,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[margin=1.5cm, bottom=2cm]{geometry}
 \usepackage{fancyhdr}
-\usepackage[dvipsnames]{xcolor}
 \usepackage{enumitem}
 \usepackage{xcolor}
-\usepackage[table]{xcolor}
-\setlength{\parindent}{0pt}
 \usepackage{makeidx}
 \usepackage[most]{tcolorbox}
 \newtcolorbox{osservazioni}{
@@ -20,14 +17,14 @@
   after skip=15pt     % niente spazio dopo
 }
 \newtcolorbox{osservazioni2}{
-  colback=ForestGreen!4,    % sfondo grigio chiaro
+  colback=gray!8,    % sfondo grigio chiaro
   colframe=white,      % nessun bordo
   arc=2mm,            % angoli smussati
   boxrule=0pt,        % spessore bordo 0
-  fontupper=\footnotesize,
-  left=2mm, right=2mm, top=2mm, bottom=2mm,
-  before skip=7pt,   % niente spazio prima
-  after skip=15pt     % niente spazio dopo
+  fontupper=\small,
+  left=5mm, right=5mm, top=3mm, bottom=3mm,
+  before skip=0pt,   % niente spazio prima
+  after skip=30pt     % niente spazio dopo
 }
 \pagestyle{fancy}
 \usepackage{tikz}
@@ -37,8 +34,8 @@
 \usepackage{makeidx}
 
 %%%%%%%%%%%%%%%%%%%
-\newcommand{\EsercitazioneNum}{14}
-\newcommand{\Data}{15/12/2025}
+\newcommand{\EsercitazioneNum}{08}
+\newcommand{\Data}{28/10/2025}
 \newcommand{\DocType}{Esercitazione} % o "Eserciziario"
 \newcommand{\FullTitle}{\DocType\ \EsercitazioneNum}
 
@@ -72,204 +69,740 @@
 
     
     %% INDEX
-    \addcontentsline{toc}{section}{Esercitazione 14: \textit{Universo di Herbrand e verifica della soddisfacibilità per LDP}}
+    \addcontentsline{toc}{section}{Esercitazione 08: \textit{Soluzione Appello 28 febbraio 2025}}
     
-    \noindent\Large \textbf{Esercitazione 14}: \textit{Simulazione d'Esame (appello 13/02/2024)} 
+    \noindent\Large \textbf{Esercitazione 08}: \textit{Soluzione Appello 28 febbraio 2025}
+    \begin{osservazioni}
+        \textbf{\textit{Nota}}. Sono indicati in \textcolor{blue}{\textit{blu}} gli esercizi che non saranno trattati durante l'esercitazione, bensì lasciati come strumento aggiuntivo di esercitazione individuale. Resta comunque assoluta disponibilità per la loro risoluzione negli incontri successivi, qualora necessario.
+    \end{osservazioni}
     
     {\normalsize
     \begin{itemize}[label=, leftmargin=0pt]
     
-    %\item \textbf{\underline{Formule booleane cont'd.}}
-
     %% INDEX
-    %\addcontentsline{toc}{subsection}{Esercizio 4.}
+    \addcontentsline{toc}{subsection}{Esercizio 1.} 
     %%
-    %\item \textbf{\textcolor{black}{Esercizio 4.} (**)}\\
-    %Si considerino le seguenti formule booleane:    
-    %    $$\Big(((A \rightarrow (B \land \lnot C)) \lor (\overline A \lor B)) \rightarrow (\lnot A \lor C)\Big) \lor (B \land \lnot A) $$
-    %    \noindent e
-    %    $$\phi_2 = \big((\lnot A \lor B) \land (\lnot C \lor B)\big) \rightarrow ((C \lor B) \land A)$$
-    
-    
-    %Si indichi, giustificando il motivo, se la prima è equivalente alla seconda.\\[0.2cm]
-
-    \item \textbf{\underline{Totale: 33 punti}}\\[0.1cm]
-    
-    %% INDEX
-    \addcontentsline{toc}{subsection}{Esercizio A1.} 
-    %%
-    \item \textbf{\textcolor{black}{Esercizio A1.} (6 punti)} \\ 	
-    Nelle due coppie di seguito, si dica se la seconda formula è conseguenza logica della prima
-    $$A\lor (B\rightarrow C) \quad \quad A\land B$$
-    $$ (\lnot A\lor B\lor C) \land (A\lor B)\quad \quad B\lor C$$
-
-    \begin{osservazioni}
-    \underline{\textit{Soluzione.}}\\
-    \textbf{Coppia nr. 1}\\
-    La prima formula può essere equivalentemente scritta come
-    $$A\lor (B\rightarrow C)\equiv A\lor (\lnot B\lor C)\equiv A\lor \overline B\lor C$$
-    E, per quanto la prima formula può essere soddisfatta anche dal modello $$\alpha:=\{A\leftarrow 0,\ B\leftarrow1,\ C\leftarrow0\}$$
-    La seconda non è modellata da tale $\alpha$. Non è vero che ogni modello che soddisfi $\phi_1$ è un modello anche per $\phi_2$.\\[0.2cm]
-
-    \textbf{Coppia nr. 2}\\
-    Per quanto riguarda invece
-    $$(\lnot A\lor B\lor C)\land(A\lor B)\quad B\lor C$$
-    possiamo dire che, come ricordiamo, essa è una formula in forma CNF che ha il letterale $A$ e $\lnot A$ nelle due sue clausole. Si era provato che allora dato un valore fissato di $A$, la scelta sulla soddisfacibilità ricade su $B$ o $C$. A questo punto, dato che ciascuna delle scelte intorno a questi due letterali identifica un modello che soddisfa anche $\phi_2$, si ha che $\phi_1\models\phi_2$.
-    
-    
-    \end{osservazioni}
-    
-    %% INDEX
-    \addcontentsline{toc}{subsection}{Esercizio A2.} 
-    %%
-    \item \textbf{\textcolor{black}{Esercizio A2.} (7 punti)} \\ 	
-    Si consideri il seguente insieme di clausole e si usi l'algoritmo di Davis-Puttnam descrivendo i passi in dettaglio per mostrare l'eventuale soddisfacibilità. Se così, si indichi una valutazione. Dire se l'insieme di clausole soddisfa un formato speciale.
-    $$ S = \{\{\lnot P,Q\},\ \{\lnot P,R\}\},\ \{\lnot P,\lnot S\}\},\ \{R,S\},\ \{\lnot Q,\lnot R\},\ \{\lnot Q,S\}\}$$
-
-    \begin{osservazioni}
-    \underline{\textit{Soluzione.}}\\
-    Si considera
-    $$ S = \{\{\lnot P,Q\},\ \{\lnot P,R\}\},\ \{\lnot P,\lnot S\}\},\ \{R,S\},\ \{\lnot Q,\lnot R\},\ \{\lnot Q,S\}\}$$
-    \begin{enumerate}
-        \item Pivot \textit{Q}.
-        \begin{itemize}
-            \item Esonerate: $\{\lnot P,R\}\},\ \{\lnot P,\lnot S\},\ \{R,S\}$
-            \item Risolventi: $\{\lnot P,\lnot R\},\ \{\lnot P,S\}$
-            \item $S_1 = \{\lnot P,R\}\},\ \{\lnot P,\lnot S\},\ \{R,S\},\ \{\lnot P,\lnot R\},\ \{\lnot P,S\}$
+    \item \textbf{Esercizio 1 (Punti 7)}\\ 	Dati i due automi in figura 
+    \begin{itemize} 
+        \item Si costruisca l'automa per l'intersezione dei due automi;
+        \item si costruisca l'automa per l'espressione regolare $((ab)^*\cdot (bc)^*)\cdot b^*$
         \end{itemize}
-        \item Pivot \textit{R}
-        \begin{itemize}
-            \item Esonerate: $\{\lnot P,\lnot S\},\ \{\lnot P,S\}$
-            \item Risolventi: $\{\lnot P \},\ \{\lnot P,S\}$
-            \item $S_2 = \{\lnot P,\lnot S\},\ \{\lnot P,S\},\ \{\lnot P \}$
-        \end{itemize}
-        \item Pivot \textit{S}
-        \begin{itemize}
-            \item Esonerate: $\{\lnot P \}$
-            \item Risolventi: $\{\lnot P \}$
-            \item $S_3 = \{\lnot P \}$
-        \end{itemize}
-    \end{enumerate}
-    Scegliendo allora $\alpha(P)=F$, si arriva alla soddisfacibilità. Se così, allora la scelta del valore $\alpha(S)$ è libera e si impone $\alpha(S)=0$, che impone però che $\alpha(R)=1$. La scelta di $Q$ non è in questo caso libera ma richiesta $\alpha(Q)=0$. 
-    \end{osservazioni}
-    \NewPageHeader
-    \begin{osservazioni}
-    Poiché la formula in formato di clausole ha solo 2 letterali per clausole essa soddisfa il formato di Krom, ma non di Horn in quanto compaiono clausole con ambo i letterali positivi.
-    \end{osservazioni}
     
-    %% INDEX
-    \addcontentsline{toc}{subsection}{Esercizio A3.} 
-    %%
-    \item \textbf{\textcolor{black}{Esercizio A3.} (8 punti)} \\ 	
-    Si considerino gli alberi binari infiniti (ogni nodo ha un figlio destro e uno sinistro) etichettati su simboli proposizionali in $\Sigma$. Si consideri un simboli di predicato binario $A(x,y)$ che viene valutato a \textit{Vero} se $x$ e $y$ se sono valutati su due noti $n$ e $n'$ rispettivamente e $n'$ è un discendente (a distanza arbitraria positiva) dell'albero di $n$.\\
-    Si introducano se necessario altri simbli di \textit{costante}, \textit{funzione} e \textit{predicato} -indicando chiaramente quale sia sia la loro interpretazione sul dominio-. 
-    Si scrivano delle formule in logica dei predicati che esprimano le seguenti proprietà:
-    \begin{enumerate}
-        \item La radice e i suoi figli sono etichettati $P$ (in quei nodi è verificato il predicato $P$).
-        \item C'è un sottoalbero i cui nodi sono tutti etichettati da $P$.
-        \item C'è un cammino dalla radice con un numero infinito di nodi etichettati da $P$.
-    \end{enumerate}
+    %\begin{figure}
+    \begin{center}
+
+        \begin{tikzpicture}
+    		\node[state, initial, initial text =, fill = black!5] (A) {$s_0$};
+    		\node[state] (B) [above right=of A,fill = black!5] {$s_1$};
+    		\node[state] (C) [below right=of A,fill = black!5] {$s_2$};
+    		\node[state, accepting] (D) [below right=of B,fill = black!5] {$s_3$};
+
+            \path[->]
+    		(A) edge[above, bend left] node{$a$} (B)
+    		(B) edge[above] node{$b$} (D)
+    		(A) edge[above, bend left] node{$b$} (C)
+    		(C) edge[above] node{$a$} (D)
+    		(B) edge[above, bend left] node{$b$} (A)
+    		(C) edge[above, bend left] node{$a$} (A)
+    		(D) edge[above, loop] node{$a,b$} (D);
+    	\end{tikzpicture}
+    %
+    	\begin{tikzpicture}
+        \node[state, initial, initial text =, fill = black!5] (A) {$g_0$};
+    	\node[state] (B) [above right=of A,fill = black!5] {$g_1$};
+    	\node[state, accepting,fill = black!5] (C) [below right=of A] {$g_2$};
+    %	\node[state, accepting] (D1) [right=of B] {$g_3$};
+    %	\node[state, accepting] (D2) [right=of C] {$g_4$};
+    %		
+    	\path[->]
+        (A) edge[above, bend left] node{$a$} (B)
+        (B) edge[above, bend left] node{$b$} (C)
+    	(B) edge[above, bend left] node{$b$} (A)
+    	(A) edge[above, bend right] node{$b$} (C)
+    	(C) edge[above, bend left] node{$a$} (B);
+    %	\draw (D1) edge[above, bend left] node{$a$} (B);
+    %	\draw (D2) edge[above, bend left] node{$b$} (C);
+    \end{tikzpicture}
+    %\end{figure}
+    \end{center}
 
     \begin{osservazioni}
-    \underline{\textit{Soluzione.}}\\
-    Ricapitolando, abbiamo come dominio nodi di un albero binario infinito. Il simbolo di predicato $A$ lega i nodi che sono rispettivamente antenati e discendenti:
-    $$A(x,y)=y \text{ è discendente a distanza abitraria di }x \approx A(antenato, discendente)$$
-    A questo punto, possiamo suggerire una scrittura per ciascuna delle tre proprietà.\\
+        \underline{\textit{Soluzione.}}\\
+        Otteniamo le determinizzazioni:
 
-    \textbf{Proprietà 1.}\\
-    Se la radice e i suoi figli sono etichettati con P, allora dobbiamo ottenere un modo di identificare la radice. Risulta possibile introdurre un simbolo di costante
-    $$r\in D,\quad r^I=radice$$
-    ma è altrettanto possibile caratterizzarlo come elemento che non è antenato di nessun nodo
-    $$\exists x.\forall y.\bigg(\lnot A(y,x)\bigg)$$
-    Per riuscire infine a parlare dei figli, sapendo che ogni nodo ha un figlio destro e sinistro, possiamo introdurre due simboli funzionali:
-    $$right^I:D\rightarrow D,\quad right^I(x)=figlio\ destro\ di\ x$$
-    $$left^I:D\rightarrow D,\quad left^I(x)=figlio\ sinistro\ di\ x$$
-    E dire che
+        
+        Costruiamo dapprima l'automa prodotto, in cui sono mantenuti solo gli archi comuni.
+     \begin{center}
+
+        \begin{tikzpicture}
+    		\node[state, initial, initial text =, fill = black!5] (A) {$s_0$};
+    		\node[state] (B) [above right=of A,fill = black!5] {$s_1$};
+    		\node[state] (C) [below right=of A,fill = black!5] {$s_2$};
+    		\node[state, accepting] (D) [below right=of B,fill = black!5] {$s_3$};
+
+            \path[->]
+    		(A) edge[above, bend left] node{$a$} (B)
+    		(B) edge[above] node{$b$} (D)
+    		(A) edge[above, bend left] node{$b$} (C)
+    		(C) edge[above] node{$a$} (D)
+    		(B) edge[above, bend left] node{$b$} (A)
+    		(C) edge[above, bend left] node{$a$} (A)
+    		(D) edge[above, loop] node{$a,b$} (D);
+    	\end{tikzpicture}
+    %
+    	\begin{tikzpicture}
+        \node[state, initial, initial text =, fill = black!5] (A) {$g_0$};
+    	\node[state] (B) [above right=of A,fill = black!5] {$g_1$};
+    	\node[state, accepting,fill = black!5] (C) [below right=of A] {$g_2$};
+    %	\node[state, accepting] (D1) [right=of B] {$g_3$};
+    %	\node[state, accepting] (D2) [right=of C] {$g_4$};
+    %		
+    	\path[->]
+        (A) edge[above, bend left] node{$a$} (B)
+        (B) edge[above, bend left] node{$b$} (C)
+    	(B) edge[above, bend left] node{$b$} (A)
+    	(A) edge[above, bend right] node{$b$} (C)
+    	(C) edge[above, bend left] node{$a$} (B);
+    %	\draw (D1) edge[above, bend left] node{$a$} (B);
+    %	\draw (D2) edge[above, bend left] node{$b$} (C);
+    \end{tikzpicture}
+    %\end{figure}
+    \end{center}
+
+        diventano :
+
+ \begin{center}
+
+        \begin{tikzpicture}
+    		\node[state, initial, initial text =, fill = black!5] (A) {$\{s_0\}$};
+    		\node[state] (B) [above right=of A,fill = black!5] {$\{s_1\}$};
+    		\node[state] (C) [below right=of A,fill = black!5] {$\{s_2\}$};
+    		\node[state, accepting] (D) [right=3of A,fill = black!5] {$\{s_0,s_3\}$};
+            \node[state, accepting] (E) [right=3of C,fill = black!5] {$\{s_1,s_3\}$};
+            \node[state, accepting] (F) [right=3of B,fill = black!5] {$\{s_2,s_3\}$};
+            
+
+            \path[->]
+    		(A) edge[above, bend left] node{$a$} (B)
+    		%(B) edge[above] node{$b$} (D)
+    		(A) edge[above, bend right] node{$b$} (C)
+            (B) edge[above, bend left] node{$b$} (D)
+            (C) edge[above, bend right] node{$a$} (D)
+            (E) edge[above, loop right] node{$a$} (D)
+            (F) edge[above, loop right] node{$b$} (D)
+            (D) edge[above, bend right] node{$a$} (E)
+            (E) edge[above, bend right] node{$b$} (D)
+            (D) edge[above, bend left] node{$b$} (F)
+            (F) edge[above, bend left] node{$a$} (D);
+            %(E) edge[above, bend right] node{$a$} (F)
+    		%(C) edge[above] node{$a$} (D)
+    		%(B) edge[above, bend left] node{$b$} (A)
+    		%(C) edge[above, bend left] node{$a$} (A)
+    		%(D) edge[above, loop] node{$a,b$} (D);
+    	\end{tikzpicture}
+    %
+    	\begin{tikzpicture}
+        \node[state, initial, initial text =, fill = black!5] (A) {$\{g_0\}$};
+    	\node[state] (B) [above right=of A,fill = black!5] {$\{g_1\}$};
+    	\node[state, accepting,fill = black!5] (C) [below right=of A] {$\{g_2\}$};
+        \node[state, accepting,fill = black!5] (D) [right=of B] {$\{g_0,g_2\}$};
+    %	\node[state, accepting] (D1) [right=of B] {$g_3$};
+    %	\node[state, accepting] (D2) [right=of C] {$g_4$};
+    %		
+    	\path[->]
+        (A) edge[above, bend left] node{$a$} (B)
+        (C) edge[right] node{$a$} (B)
+    	(A) edge[above, bend right] node{$b$} (C)
+        (B) edge[above, bend right] node{$b$} (D)
+        (D) edge[above, bend right] node{$a$} (B)
+        (D) edge[above, bend left] node{$b$} (C)
+        
+    	%(C) edge[above, bend left] node{$a$} (B);
+    %	\draw (D1) edge[above, bend left] node{$a$} (B);
+    %	\draw (D2) edge[above, bend left] node{$b$} (C);
+    \end{tikzpicture}
+    %\end{figure}
+    \end{center}
+
+
+    \end{osservazioni}
+
+\NewPageHeader
+
+    \begin{osservazioni}
+
+
+    Per chiarezza, in quanto questi degli automi deterministici, nulla ci vieta di \textit{rinominare gli stati}:
+
+     \begin{center}
+
+        \begin{tikzpicture}
+    		\node[state, initial, initial text =, fill = black!5] (A) {$S_0$};
+    		\node[state] (B) [above right=of A,fill = black!5] {$S_1$};
+    		\node[state] (C) [below right=of A,fill = black!5] {$S_2$};
+    		\node[state, accepting] (D) [right=3of A,fill = black!5] {$S_3$};
+            \node[state, accepting] (E) [right=3of C,fill = black!5] {$S_4$};
+            \node[state, accepting] (F) [right=3of B,fill = black!5] {$S_5$};
+            
+
+            \path[->]
+    		(A) edge[above, bend left] node{$a$} (B)
+    		%(B) edge[above] node{$b$} (D)
+    		(A) edge[above, bend right] node{$b$} (C)
+            (B) edge[above, bend left] node{$b$} (D)
+            (C) edge[above, bend right] node{$a$} (D)
+            (E) edge[above, loop right] node{$a$} (D)
+            (F) edge[above, loop right] node{$b$} (D)
+            (D) edge[above, bend right] node{$a$} (E)
+            (E) edge[above, bend right] node{$b$} (D)
+            (D) edge[above, bend left] node{$b$} (F)
+            (F) edge[above, bend left] node{$a$} (D);
+            %(E) edge[above, bend right] node{$a$} (F)
+    		%(C) edge[above] node{$a$} (D)
+    		%(B) edge[above, bend left] node{$b$} (A)
+    		%(C) edge[above, bend left] node{$a$} (A)
+    		%(D) edge[above, loop] node{$a,b$} (D);
+    	\end{tikzpicture}
+    %
+    	\begin{tikzpicture}
+        \node[state, initial, initial text =, fill = black!5] (A) {$G_0$};
+    	\node[state] (B) [above right=of A,fill = black!5] {$G_1$};
+    	\node[state, accepting,fill = black!5] (C) [below right=of A] {$G_2$};
+        \node[state, accepting,fill = black!5] (D) [right=of B] {$G_3$};
+    %	\node[state, accepting] (D1) [right=of B] {$g_3$};
+    %	\node[state, accepting] (D2) [right=of C] {$g_4$};
+    %		
+    	\path[->]
+        (A) edge[above, bend left] node{$a$} (B)
+        (C) edge[right] node{$a$} (B)
+    	(A) edge[above, bend right] node{$b$} (C)
+        (B) edge[above, bend right] node{$b$} (D)
+        (D) edge[above, bend right] node{$a$} (B)
+        (D) edge[above, bend left] node{$b$} (C);
+        
+    	%(C) edge[above, bend left] node{$a$} (B);
+    %	\draw (D1) edge[above, bend left] node{$a$} (B);
+    %	\draw (D2) edge[above, bend left] node{$b$} (C);
+    \end{tikzpicture}
+    %\end{figure}
+    \end{center}
+
+    L'automa prodotto allora è il seguente.
+
+    \begin{center}
+        \begin{tikzpicture}
+    		\node[state, initial, initial text =, fill = black!5] (A) {$(S_0,G_0)$};
+    		\node[state] (B) [above right=1of A,fill = black!5] {$(S_1,G_1)$};
+    		\node[state] (C) [below right=1of A,fill = black!5] {$(S_2,G_2)$};
+    		\node[state, accepting] (D) [right=of B,fill = black!5] {$(S_3, G_3)$};
+            \node[state] (E) [right=of C,fill = black!5] {$(S_3,G_1)$};
+            \node[state, accepting] (F) [right=of D,fill = black!5] {$(S_5, G_2)$};
+            \node[state] (G) [right=of E,fill = black!5] {$(S_5,G_3)$};
+            \node[state, accepting] (H) [right=2of F,fill = black!5] {$(S_4,G_1)$};
+            
+
+            \path[->]
+    		(A) edge[above, bend left] node{$a$} (B)
+    		%(B) edge[above] node{$b$} (D)
+    		(A) edge[above, bend right] node{$b$} (C)
+            (B) edge[above] node{$b$} (D)
+            (C) edge[above] node{$a$} (E)
+            (G) edge[bend left, above] node{$a$} (E)
+            (G) edge[right] node{$b$} (F)
+            (E)  edge[bend left, above] node{$b$} (G)
+            (D)  edge[above] node{$b$} (F)
+            (F) edge[above] node{$a$} (E)
+            (D) edge[above, bend left] node{$a$} (H)
+            (H) edge[below, bend left] node{$b$} (D);
+            %(D) edge[above, loop above] node{$b$} (D)
+            %(E) edge[above, loop above] node{$a$} (E)
+            %(D) edge[above, bend left] node{$b$} (F)
+            %(E) edge[above, bend right] node{$a$} (F);
+    		%(C) edge[above] node{$a$} (D)
+    		%(B) edge[above, bend left] node{$b$} (A)
+    		%(C) edge[above, bend left] node{$a$} (A)
+    		%(D) edge[above, loop] node{$a,b$} (D);
+    	\end{tikzpicture}
+    \end{center}
+
+    
+    
+    
+        
+
+
+        Invece, per quanto riguarda la seconda parte, possiamo scrivere l'espressione regolare sfruttando la possibilità di costruirlo inv via modulare:
     \begin{itemize}
-        \item $P(r) \land P(left(r)) \land P(right(r))$
-        \item $\exists x.\forall y.\bigg(\lnot A(y,x) \land P(x)\land P(right(x))\land P(left(x))\bigg)$
+        \item $ab$:
+
+        \begin{center}
+    	\begin{tikzpicture}
+    		\node[state, initial, initial text=, fill = black!10] (A) {$q_0$};
+    		\node[state] (B) [right=1of A,fill = black!10] {$q_1$};
+            \node[state] (C) [right=1of B,fill = black!10, accepting] {$q_2$};
+
+        \path[->]
+            (A) edge [above] node {$a$} (B) 
+            (B) edge [above] node {$b$} (C) ;
+
+        \end{tikzpicture}
+        \end{center}
+
+        \item $bc$:
+
+        \begin{center}
+    	\begin{tikzpicture}
+    		\node[state, initial, initial text=, fill = black!10] (A) {$p_0$};
+    		\node[state] (B) [right=1of A,fill = black!10] {$p_1$};
+            \node[state] (C) [right=1of B,fill = black!10, accepting] {$p_2$};
+
+        \path[->]
+            (A) edge [above] node {$b$} (B) 
+            (B) edge [above] node {$c$} (C);
+
+        \end{tikzpicture}
+        \end{center}
+        
+        \item $(ab)^*$:
+        
+        \begin{center}
+    	\begin{tikzpicture}
+    		\node[state, initial, initial text=, fill = black!10, accepting] (A) {$q_0$};
+    		\node[state] (B) [right=1of A,fill = black!10] {$q_1$};
+            \node[state] (C) [right=1of B,fill = black!10, accepting] {$q_2$};
+
+        \path[->]
+            (A) edge [above] node {$a$} (B)
+            (B) edge [above] node {$b$} (C) 
+            (C) edge [below, bend left] node {$\epsilon$} (A);
+
+        \end{tikzpicture}
+        \end{center}   
+        
+        
+        \item $(bc)^*$:
+        
+        \begin{center}
+    	\begin{tikzpicture}
+    		\node[state, initial, initial text=, fill = black!10, accepting] (A) {$p_0$};
+    		\node[state] (B) [right=1of A,fill = black!10] {$p_1$};
+            \node[state] (C) [right=1of B,fill = black!10, accepting] {$p_2$};
+
+        \path[->]
+            (A) edge [above] node {$b$} (B)
+            (B) edge [above] node {$c$} (C) 
+            (C) edge [below, bend left] node {$\epsilon$} (A);
+
+        \end{tikzpicture}
+        \end{center}
+        
     \end{itemize}
-    Ma per comodità useremo $r$ per identificare la radice.\\
-
-    \textbf{Proprietà 2.}\\
-    Dire che esiste un sottoalbero i cui nodi sono tutti etichettati da P, significa che esiste un nodo tale che, esso gode di $P$ e così anche tutti i nodi che sono a lui discendenti, per qualsiasi percorso. Possiamo usare infatti il simbolo di Predicato $A$:
-    $$\exists x. \bigg[P(x)\land\bigg[\forall y.\bigg(A(x,y) \land P(y)\bigg)\bigg]\bigg]$$
-
-    \textbf{Proprietà 3.}\\
-    Per parlare di un cammino, abbiamo una difficoltà: non possiamo obbligare ambo i figli di un nodo a godere di $P$. Possiamo però dire che:
-    \begin{itemize}
-        \item La radice gode della proprietà $P$
-        \item Se deve esistere un percorso dalla radice di nodi che godano di $P$, significa che il nodo successivo alla radice ammette un figlio che gode di $P$
-        \item Non è possibile però generalizzare dicendo che $$P(y)\rightarrow P(right(y)\lor P(left(y))$$perché alcuni nodi potrebbero non essere del percorso. Non vogliamo vincolare più di quanto necessario.
-        \item Sicuramente però, se il nodo è parte del cammino, questo dovrà essere vero. Se non possiamo garantire dall'alto la generalizzazione, dobbiamo assicurarci di trovare un modo di verificare che un nodo sia parte del cammino in cui quelli precedenti siano etichettati da $P$. 
-    \end{itemize}
-    \end{osservazioni}
-    \NewPageHeader
-    \begin{osservazioni}
-    La soluzione sarebbe interrogare i predecessori: se tutti i nodi di cui questo è discendente godono di $P$, allora deve essere vera l'estensione della proprietà ai figli.
-
-    \textit{Per ogni nodo che gode di P, se ogni suo nodo predecessore gode di y allora deve essere vero che anche uno dei suoi figli ne gode.}
-    
-    Dunque
-    $$P(r)\land\bigg[\forall x. \bigg[\bigg(P(x)\land \forall y.[\ A(x,y) \land P(y)\ ]\bigg)\rightarrow(\ P(right(x)\lor P(left(x)\ )\bigg]\ \bigg]$$
     \end{osservazioni}
 
-    
-    %% INDEX
-    \addcontentsline{toc}{subsection}{Esercizio A4.} 
-    %%
-    \item \textbf{\textcolor{black}{Esercizio A4.} (7 punti)} \\ 	
-    Si consideri la seguente formula
-    $$\lnot \bigg[\ \forall x.\bigg(P(x)\land (\ \forall y.(\ Q(y)\rightarrow R(x,y)\ ) \ )\land (\ \exists y. S(x,y)\rightarrow P(x)\ )\bigg)\ \bigg]$$
-    \begin{enumerate}
-        \item Si scriva la formula equivalente in forma prenessa.
-        \item Si trasformi la formula prenessa in forma di clausole.
-        \item Si scriva l'universo di Herbrand per la formula in forma di clausole
-    \end{enumerate}
+\NewPageHeader
 
-    \begin{osservazioni}
-    \underline{\textit{Soluzione.}}
-    $$\lnot \bigg[\ \forall x.\bigg(P(x)\land (\ \forall y.Q(y)\rightarrow R(x,y)\ ) \land (\ \exists y. S(x,y)\rightarrow P(x)\ )\bigg)\ \bigg]\equiv$$
-    $$ \bigg[\ \exists x.\lnot\bigg(P(x)\land (\ \forall y.Q(y)\rightarrow R(x,y)\ ) \land (\ \exists y. S(x,y)\rightarrow P(x)\ )\bigg)\ \bigg]\equiv$$
-    $$ \bigg[\ \exists x.\lnot\bigg(P(x)\land (\ \forall y.\lnot Q(y)\lor R(x,y)\ ) \land (\ \exists y. \lnot S(x,y)\lor P(x)\ )\bigg)\ \bigg]\equiv$$
-    $$ \bigg[\ \exists x.\bigg(\lnot P(x)\lor \lnot(\ \forall y.\lnot Q(y)\lor R(x,y)\ ) \lor \lnot(\ \exists y. \lnot S(x,y)\lor P(x)\ )\bigg)\ \bigg]\equiv$$
-    $$ \bigg[\ \exists x.\bigg(\lnot P(x)\lor (\ \exists y. Q(y)\land \lnot R(x,y)\ ) \lor (\ \forall y. S(x,y)\land \lnot P(x)\ )\bigg)\ \bigg]\equiv$$
-    $$ \exists x.\bigg(\lnot P(x)\lor (\ \exists y. Q(y)\land \lnot R(x,y)\ ) \lor (\ \forall z. S(x,z)\land \lnot P(x)\ )\bigg)\equiv$$
-    Dove, poiché $A \lor (B \land A) \equiv A$:
-    $$ \exists x\exists y.\bigg(\lnot P(x)\lor (\ Q(y)\land \lnot R(x,y)\ ) \bigg)\equiv$$
-    $$ \exists x\exists y.\bigg(\ (\ \lnot P(x)\lor\ Q(y)\ )\land (\ \lnot P(x) \lor \lnot R(x,y)\ ) \bigg)\equiv$$
-    
+\begin{osservazioni}
+\begin{itemize}
+    \item $((ab)^*(bc)^*)b^*$:
+        \begin{center}
+    	\begin{tikzpicture}
+    		\node[state, initial, initial text=, fill = black!10] (A) {$q_0$};
+    		\node[state] (B) [right=1of A,fill = black!10] {$q_1$};
+            \node[state] (C) [right=1of B,fill = black!10] {$q_2$};
 
-    Tramite skolemizzazione si introducono 2 costanti di skolem, per $x$ ed $y$, ottenendo l'insieme di clausole:
+            \node[state, initial text=, fill = black!10,right=1of C] (A2) {$p_0$};
+    		\node[state] (B2) [right=1of A2,fill = black!10] {$p_1$};
+            \node[state] (C2) [right=1of B2,fill = black!10] {$p_2$};
+            
+            \node[state] (A3) [below=1of B2,fill = black!10, accepting] {$z_0$};
 
-    $$ \{\lnot P(a), \ Q(b)\ \}, \{ \lnot P(a), \lnot R(a,b)\}$$
+        \path[->]
+            (A) edge [above] node {$a$} (B)
+            (B) edge [above] node {$b$} (C) 
+            (C) edge [below, bend left] node {$\epsilon$} (A)
+            (A2) edge [above] node {$b$} (B2)
+            (B2) edge [above] node {$c$} (C2) 
+            (C2) edge [below, bend left] node {$\epsilon$} (A2)
+            (C) edge [below, bend right] node {$\epsilon$} (A2)
+            (A) edge [above, bend left] node {$\epsilon$} (A2)
+            (A2) edge [above, bend right] node {$\epsilon$} (A3)
+            (C2) edge [above, bend left] node {$\epsilon$} (A3)
+            (A3) edge [above, loop above] node {$b$} (A3);
+            ;
 
-
-    Da cui 
-    $$H=\{a,b\}$$
-    
-    
-    
-    
-    \end{osservazioni}
-
-    %% INDEX
-    \addcontentsline{toc}{subsection}{Esercizio A5.} 
-    %%
-    \item \textbf{\textcolor{black}{Esercizio A5.} (5 punti, \textit{facoltativo})} \\ 	
-    Si consideri il seguente insieme di clausole:
-    $$\{P(x),\ D(x)\},\quad \{\lnot P(x),\lnot D(x)\},\ \{\lnot P(x),\ D(succ(x))\},\quad \{\lnot D(x),\ P(succ(x))\}$$
-    $$\{\lnot P(x),\ \lnot P(y),\ P(+(x,y))\}\quad \quad \{\lnot D(x),\ \lnot D(y),\ P(+(x,y))\}$$
-    $$\{\lnot P(x),\ \lnot D(y),\ D(+(x,y))\}\quad\quad\{\lnot D(x),\ \lnot P(y),\ D(+(x,y))\}$$
-    $$\{P(0)\}\quad \quad \{D(+(0,succ^2(0)\}$$
-    Dove $x$ ed $y$ sono variabili, $0$ una costante (ad esempio lo zero dei naturali), $P$ e $D$ dei predicati, $succ$ e $+$ dei simboli di funzione. Si trovi una refutazione per l'insieme di clausole.
-    \begin{osservazioni}
-    \underline{\textit{Soluzione.}}\\
-    La soluzione è proposta nell'approfondimento 4.
-    \end{osservazioni}
-
-    
+        \end{tikzpicture}
+        \end{center}
+        
 \end{itemize}
+
+\end{osservazioni}
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 2.} 
+    %%
+    \item \textbf{Esercizio 2 (Punti 6)}\\
+    Si scriva una grammatica libera dal contesto che definisce il linguaggio delle parentesi tonde correttamente accoppiate come tradizionalmente si trovano nelle espressioni aritmetiche ad esempio: $(), ((())), (()()) (())(())(), etc$. 
+
+    \begin{osservazioni}
+        \underline{\textit{Soluzione.}}\\
+        Per risolvere l'esercizio dovremo avere sempre $N$ parentesi chiuse $)$ dopo altrettante $N$ aperte $($, perciò:
+        \begin{itemize}
+            \item Dovremo avere sempre all'inizio un $($, mai $)$
+            \item Possiamo utilizzare l'idea di mantenere un debito, proprio come per il linguaggio delle parole con numero di a e b uguale.
+        \end{itemize}
+        La grammatica proposta è la seguente:\\
+        
+        \texttt{S -> A}\\
+        \texttt{A -> () | (R | $\epsilon$} $\quad \leftarrow$ \textit{L'idea è di avere la possibilità di mantenere un debito, che potremo saldare o aumentare}\\
+        \texttt{R -> )A | (RR} $\quad\quad\ \leftarrow$ \textit{Saldiamo il debito o lo incrementiamo (unitario)}  
+    \end{osservazioni}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 3.} 
+    %%
+    \item \textbf{Esercizio 3 (Punti 7)}\\
+    Si scriva un automa a pila che accetta il seguente linguaggio $\{w^1\sharp w^2 : w^1,w^2 \in \{a,b\}^+, \mbox{ o } |w^1|_a = 2|w^2|_a \mbox{ oppure } |w^1|_b = 2|w^2|_b\}$ (o doppio numero di a in $w^1$ rispetto a  $w^2$ oppure doppio numero di $b$).	
+    
+    \begin{osservazioni}
+        \underline{\textit{Soluzione.}}\\
+        La soluzione può sfruttare il non determinismo:
+        \begin{itemize}
+            \item All'inizio, possiamo leggere o $a$ o $b$, ma solo in un percorso sceglieremo di controllare se il numero di $a$ è doppio, nell'altro le $b$.
+            \item Per via della possibilità di considerare di terminazione tutte le computazioni che portino ad uno stato finale, segue la verifica in contemporanea di ambo le possibilità.
+        \end{itemize}
+
+        (Si noti come la transizione etichettata con $x,AA,\epsilon$ estrae due $A$ singoli dalla pila, mentre $x,\epsilon, AA$ ne inserisce due singoli. Lo si assume per brevità.). \\
+        
+        Possiamo partire con:
+
+        \begin{center}
+    	\begin{tikzpicture}
+    		\node[state, initial, initial text=, fill = black!10] (A) {$q_0$};
+    		\node[state] (B) [above right=1.1of A,fill = black!10] {$q_1$};
+            \node[state] (C) [below right=1.1of A,fill = black!10] {$q_2$};
+            
+        \path[->]
+            (A) edge [bend left, left] node {$\begin{array}{c} a,\epsilon,A \\ b,\epsilon,\epsilon \end{array}$} (B)
+            (A) edge [bend right, left] node {$\begin{array}{c} a,\epsilon,\epsilon\\ b,\epsilon,B \end{array}$} (C);
+            ;
+
+        \end{tikzpicture}
+        \end{center}
+
+\end{osservazioni}
+\NewPageHeader
+\begin{osservazioni}
+        Nel precedente si mostra quindi il non determinismo anticipato precedentemente. A questo punto è possibile continuare ammettendo altre letture e raggiungendo il simbolo che separa le due parole:
+
+        \begin{center}
+    	\begin{tikzpicture}
+    		\node[state, initial, initial text=, fill = black!10] (A) {$q_0$};
+    		\node[state] (B) [above right=1.1of A,fill = black!10] {$q_1$};
+            \node[state] (C) [below right=1.1of A,fill = black!10] {$q_2$};
+            \node[state] (D) [right=1.5of B,fill = black!10] {$q_3$};
+            \node[state] (E) [right=1.5of C,fill = black!10] {$q_4$};
+            
+        \path[->]
+            (A) edge [bend left, left] node {$\begin{array}{c} a,\epsilon,A \\ b,\epsilon,\epsilon \end{array}$} (B)
+            (A) edge [bend right, left] node {$\begin{array}{c} a,\epsilon,\epsilon\\ b,\epsilon,B \end{array}$} (C)
+            (B) edge [above] node {$\begin{array}{c}  \#,\epsilon,\epsilon \end{array}$} (D)
+            (C) edge [below] node {$\begin{array}{c} \#,\epsilon,\epsilon  \end{array}$} (E)
+            (B) edge [loop above, above] node {$\begin{array}{c} a,\epsilon,A\\ b,\epsilon,\epsilon\end{array}$} (B)
+            (C) edge [loop above, above] node {$\begin{array}{c} a,\epsilon,\epsilon\\ b,\epsilon,B\end{array}$} (C)             
+            ;
+        \end{tikzpicture}
+        \end{center}
+        Raggiunta la parola $w_2$, vediamo se il numero di $a$ è effettivamente doppio, scaricando un simbolo dalla pila per ogni lettura, ignorando l'altra lettera:
+        
+        \begin{center}
+    	\begin{tikzpicture}
+    		\node[state, initial, initial text=, fill = black!10] (A) {$q_0$};
+    		\node[state] (B) [above right=1.1of A,fill = black!10] {$q_1$};
+            \node[state] (C) [below right=1.1of A,fill = black!10] {$q_2$};
+            \node[state] (D) [right=1.5of B,fill = black!10] {$q_3$};
+            \node[state] (E) [right=1.5of C,fill = black!10] {$q_4$};
+            
+        \path[->]
+            (A) edge [bend left, left] node {$\begin{array}{c} a,\epsilon,A \\ b,\epsilon,\epsilon \end{array}$} (B)
+            (A) edge [bend right, left] node {$\begin{array}{c} a,\epsilon,\epsilon\\ b,\epsilon,B \end{array}$} (C)
+            (B) edge [above] node {$\begin{array}{c}  \#,\epsilon,\epsilon \end{array}$} (D)
+            (C) edge [below] node {$\begin{array}{c} \#,\epsilon,\epsilon  \end{array}$} (E)
+            (B) edge [loop above, above] node {$\begin{array}{c} a,\epsilon,A\\ b,\epsilon,\epsilon\end{array}$} (B)
+            (C) edge [loop above, above] node {$\begin{array}{c} a,\epsilon,\epsilon\\ b,\epsilon,B\end{array}$} (C)          
+            (D) edge [loop above, above] node {$\begin{array}{c} b,\epsilon,\epsilon\\ a,AA,\epsilon \end{array}$} (D)
+            (E) edge [loop above, above] node {$\begin{array}{c} a,\epsilon,\epsilon \\ b,BB,\epsilon \end{array}$} (E) 
+            ;
+        \end{tikzpicture}
+        \end{center}
+
+        Terminata la lettura della parola, la pila deve essere vuota:
+
+        \begin{center}
+    	\begin{tikzpicture}
+    		\node[state, initial, initial text=, fill = black!10] (A) {$q_0$};
+    		\node[state] (B) [above right=1.1of A,fill = black!10] {$q_1$};
+            \node[state] (C) [below right=1.1of A,fill = black!10] {$q_2$};
+            \node[state] (D) [right=1.1of B,fill = black!10] {$q_3$};
+            \node[state] (E) [right=1.1of C,fill = black!10] {$q_4$};
+            \node[state] (F) [right=3.9of A,fill = black!10, accepting] {$q_5$};
+            
+        \path[->]
+            (A) edge [bend left, left] node {$\begin{array}{c} a,\epsilon,A \\ b,\epsilon,\epsilon \end{array}$} (B)
+            (A) edge [bend right, left] node {$\begin{array}{c} a,\epsilon,\epsilon\\ b,\epsilon,B \end{array}$} (C)
+            (B) edge [above] node {$\begin{array}{c}  \#,\epsilon,\epsilon \end{array}$} (D)
+            (C) edge [below] node {$\begin{array}{c} \#,\epsilon,\epsilon  \end{array}$} (E)
+            (B) edge [loop above, above] node {$\begin{array}{c} a,\epsilon,A\\ b,\epsilon,\epsilon\end{array}$} (B)
+            (C) edge [loop above, above] node {$\begin{array}{c} a,\epsilon,\epsilon\\ b,\epsilon,B\end{array}$} (C)          
+            (D) edge [loop above, above] node {$\begin{array}{c} b,\epsilon,\epsilon\\ a,AA,\epsilon \end{array}$} (D)
+            (E) edge [loop above, above] node {$\begin{array}{c} a,\epsilon,\epsilon \\ b,BB,\epsilon \end{array}$} (E)
+            (D) edge [above, bend left] node {$\begin{array}{c}  \epsilon,\$,\epsilon \end{array}$} (F)
+            (E) edge [below, bend right] node {$\begin{array}{c}  \epsilon,\$,\epsilon \end{array}$} (F)
+            ;
+        \end{tikzpicture}
+        \end{center}
+        
+    \end{osservazioni}
+
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 4.} 
+    %%
+    \item \textbf{Esercizio 4 (Punti 7)}\\
+    Si scriva una macchina di Turing che ha in input sul nastro tre stringhe sull'alfabeto $\{0, 1\}$ separate dal simbolo $\sharp$. La macchina di Turing accetta se le due stringhe hanno uguale lunghezza lasciando sul nastro l'AND logico delle due stringhe (AND dei bit nella medesima posizione nelle due stringhe).
+    
+    \NewPageHeader
+    
+    \begin{osservazioni}
+        \underline{\textit{Soluzione.}}\\
+        La macchina di turing può essere costruita in via più compatta, ma per chiarezza vediamola nella via più semplice possibile: suddividendo la costruzioni in sottoparti specializzate in uno specifico task.
+        \begin{enumerate}
+            \item Dapprima, dobbiamo occuparci del controllo sulla lunghezza delle parole, analogamente a quanto fatto per verificare il linguaggio $a^nb^n$;
+            \item In seguito, ci si occupa dell'AND logico element-wise;
+            \item Infine, si cancella la parola dopo $\#$.
+        \end{enumerate}
+        Si noti che, per semplicità, si assume sia possibile riconoscere l'inizio del nastro, grazie al simbolo $\$$ scritto prima di $w_1$; l'assunzione non è problematica in quanto è sempre possibile inserirla eventualmente, facendo scorrere le parole sul nastro come passo iniziale.\\
+
+        \begin{center}
+    	\begin{tikzpicture}
+            
+            \node[state, initial, initial text=, fill = black!10] (A) {};
+    		\node[state] (B) [fill = black!10, right=1.5of A] {};
+            \node[state] (C) [fill = black!10, right=1.5of B] {};
+            \node[state] (D) [fill = black!10, right=1.5of C] {};
+            \node[state] (E) [fill = black!10, right=1.5of D] {};
+            \node[state] (F) [fill = black!10, below=1.5of D] {};
+            \node[state] (G) [fill = black!10, below=1.5of F] {};
+            \node[state] (H) [fill = black!10, below left=2of G] {};
+
+
+            \path[->]
+            (A) edge [above] node {$\begin{array}{c} 1,I,R \\ 0,O,R \end{array}$} (B)
+            (B) edge [above, loop above] node {$\begin{array}{c} 1,I,R \\ 0,O,R \end{array}$} (B)
+            (B) edge [above] node {$\begin{array}{c} \#,\#,R \end{array}$} (C)
+            (C) edge [above, loop above] node {$\begin{array}{c} I,I,R \\ O,O,R \end{array}$} (C)
+            (C) edge [above] node {$\begin{array}{c} 1,I,L \\ 0,O,L \end{array}$} (D)
+            (D) edge [above, loop above] node {$\begin{array}{c} I,I,R \\ O,O,R \end{array}$} (D)
+            (D) edge [above] node {$\begin{array}{c} \#,\#,R \end{array}$} (E)
+            (E) edge [above, loop above] node {$\begin{array}{c} 1,1,L \\ 0,0,L \end{array}$} (E)
+            %(E) edge [bend left, right] node {$\begin{array}{c} I,I,R\\ O,O,R \end{array}$} (F)
+            (F) edge [below, bend left] node {$\begin{array}{c} 1,I,R \\ 0,O,R \end{array}$} (B)
+            (E) edge [bend left, right] node {$\begin{array}{c} I,I,R\\ O,O,R \end{array}$} (F)
+            (F) edge [left] node {$\begin{array}{c} \#,\#,R \end{array}$} (G)
+            (G) edge [left] node {$\begin{array}{c} \sqcup,\sqcup,L \end{array}$} (H)
+            (G) edge [above, loop right] node {$\begin{array}{c} I,I,R \\ O,O,R \end{array}$} (G);
+            
+        \end{tikzpicture}
+        \end{center}
+
+        A questo punto, possiamo raggiunto l'ultimo stato, possiamo aspettarci che le parole siano state controllate e siano di uguale lunghezza. Possiamo tornare all'inizio e, facendolo, possiamo tornare sostituire i simboli $I$ con $1$ e $O$ con $0$. 
+
+    
+        \begin{center}
+    	\begin{tikzpicture}
+            
+            \node[state] (H) [fill = black!10] {$.$};
+            \node[state] (I) [fill = black!10, below=1.5of H] {$-$};
+
+
+            \path[->]
+            (H) edge [above, loop right] node {$\begin{array}{c} I,1,R \\ O,0,R \\ \#,\#, L \end{array}$} (H)
+            (H) edge [left] node {$\begin{array}{c} \$,\$,R \end{array}$} (I);
+        
+        \end{tikzpicture}
+        \end{center}
+        
+        Infine, è necessario occuparsi della gestione della porzione dell'automa specializzato nella computazione dell'AND logico tra le due parole. Dovremo, chiaramente, distinguere due casi: \begin{itemize}
+            \item Se la prima parola ha l'$i$-esima lettera pari a $0$, allora il risultato di AND sarà 0 indipendentemente dalla $i$-esima lettera di $w_2$;
+            \item Se l'$i$-esima lettera è un $1$ per $w_1$, allora il risultato di AND sarà:
+            \begin{itemize}
+                \item 1, se $w_2$ ha $1$ in $i$-esima posizione;
+                \item 0, se $w_2$ ha $0$ in $i$-esima posizione
+            \end{itemize}
+        \end{itemize}
+    \end{osservazioni}
+    
+    \NewPageHeader
+
+    \begin{osservazioni}
+    
+        \begin{center}
+    	\begin{tikzpicture}
+            
+            \node[state] (I) [fill = black!10] {$-$};
+            \node[state] (L) [fill = black!10, below left=1of I] {}; 
+            \node[state] (M) [fill = black!10, below right=1of I] {};
+            
+            \node[state] (N) [fill = black!10, below=0.5of L] {};
+            \node[state] (O) [fill = black!10, below=0.5of M] {};
+            
+            \node[state] (P) [fill = blue!10, below=1of N] {};
+            \node[state] (Q) [fill = blue!10, below=1of O] {};
+            
+            \node[state] (R) [fill = black!10, below=0.5of P] {};
+            \node[state] (S) [fill = black!10, below=0.5of Q] {};
+
+            %\node[state] (T) [fill = black!10, below=1.5of R];
+            %\node[state] (U) [fill = black!10, below=1.5of S];
+
+            %\node[state] (T) [fill = black!10, below=1.5of R];
+            %\node[state] (U) [fill = black!10, below=1.5of S];
+
+            \node[state] (V) [fill = black!10, below=6of I] {};
+            
+            \path[->]
+            (I) edge [left, bend right] node {$\begin{array}{c} 0,O,R \end{array}$} (L)
+            (I) edge [right, bend left] node {$\begin{array}{c} 1,I,R \end{array}$} (M)
+            
+            (L) edge [left, loop left] node {$\begin{array}{c} 1,1,R\\ 0,0,R \end{array}$} (L)
+            (M) edge [right, loop right] node {$\begin{array}{c} 1,1,R\\ 0,0,R \end{array}$} (M)
+
+            (L) edge [left] node {$\begin{array}{c} \#,\#,R \end{array}$} (N)
+            (M) edge [right] node {$\begin{array}{c} \#,\#,R \end{array}$} (O)
+
+            (N) edge [left] node {$\begin{array}{c} 1,O,L\\ 0,O,L  \end{array}$} (P)
+            (O) edge [right] node {$\begin{array}{c} 1,I,L\\ 0,O,L \end{array}$} (Q)
+
+            (N) edge [loop left, left] node {$\begin{array}{c} I,I,R\\ O,O,R  \end{array}$} (N)
+            (O) edge [loop right, right] node {$\begin{array}{c} O,O,R\\ O,O,R \end{array}$} (O)
+
+            (P) edge [left] node {$\begin{array}{c} \#,\#,L  \end{array}$} (R)
+            (Q) edge [right] node {$\begin{array}{c} \#,\#,L  \end{array}$} (S)
+
+            (P) edge [loop left, left] node {$\begin{array}{c} I,I,L\\ O,O,L  \end{array}$} (P)
+            (Q) edge [loop right, right] node {$\begin{array}{c} I,I,L\\ O,O,L \end{array}$} (Q)
+
+            (R) edge [loop left, left] node {$\begin{array}{c} 1,1,L\\ 0,0,L  \end{array}$} (R)
+            (S) edge [loop right, right] node {$\begin{array}{c} 1,1,L\\ 0,0,L \end{array}$} (S)
+
+            (R) edge [bend right, left] node {$\begin{array}{c} I,I,R\\ O,O,R \end{array}$} (V)
+            (S) edge [bend left, right] node {$\begin{array}{c} I,I,R\\ O,O,R \end{array}$} (V);
+
+        
+        \end{tikzpicture}
+        \end{center}
+    
+        Quindi, il risultato finale è il seguente:
+    \begin{center}
+    	\begin{tikzpicture}
+            
+            \node[state, initial, initial text=, fill = black!10] (A) {};
+    		\node[state] (B) [fill = black!10, right=1.2of A] {};
+            \node[state] (C) [fill = black!10, right=1.2of B] {};
+            \node[state] (D) [fill = black!10, right=1.2of C] {};
+            \node[state] (E) [fill = black!10, right=1.2of D] {};
+            \node[state] (F) [fill = black!10, below=0.5of D] {};
+            \node[state] (G) [fill = black!10, below=0.7of F] {};
+            \node[state] (H) [fill = orange!10, below left=0.5of G] {};
+
+            \path[->]
+            (A) edge [above] node {$\begin{array}{c} 1,I,R \\ 0,O,R \end{array}$} (B)
+            (B) edge [above, loop above] node {$\begin{array}{c} 1,I,R \\ 0,O,R \end{array}$} (B)
+            (B) edge [above] node {$\begin{array}{c} \#,\#,R \end{array}$} (C)
+            (C) edge [above, loop above] node {$\begin{array}{c} I,I,R \\ O,O,R \end{array}$} (C)
+            (C) edge [above] node {$\begin{array}{c} 1,I,L \\ 0,O,L \end{array}$} (D)
+            (D) edge [above, loop above] node {$\begin{array}{c} I,I,R \\ O,O,R \end{array}$} (D)
+            (D) edge [above] node {$\begin{array}{c} \#,\#,R \end{array}$} (E)
+            (E) edge [above, loop above] node {$\begin{array}{c} 1,1,L \\ 0,0,L \end{array}$} (E)
+            %(E) edge [bend left, right] node {$\begin{array}{c} I,I,R\\ O,O,R \end{array}$} (F)
+            (F) edge [below, bend left] node {$\begin{array}{c} 1,I,R \\ 0,O,R \end{array}$} (B)
+            (E) edge [bend left, right] node {$\begin{array}{c} I,I,R\\ O,O,R \end{array}$} (F)
+            (F) edge [right] node {$\begin{array}{c} \#,\#,R \end{array}$} (G)
+            (G) edge [left] node {$\begin{array}{c} \sqcup,\sqcup,L \end{array}$} (H)
+            (G) edge [above, loop right] node {$\begin{array}{c} I,I,R \\ O,O,R \end{array}$} (G);
+
+            \node[state] (I) [fill = orange!10, below=0.5of H] {};
+
+            \path[->]
+            (H) edge [above, loop right] node {$\begin{array}{c} I,1,R \\ O,0,R \\ \#,\#, L \end{array}$} (H)
+            (H) edge [left] node {$\begin{array}{c} \$,\$,R \end{array}$} (I);
+
+            \node[state] (L) [fill = black!10, below left=1of I] {};
+            \node[state] (M) [fill = black!10, below right=1of I] {};
+            
+            \node[state] (N) [fill = black!10, below=0.5of L] {};
+            \node[state] (O) [fill = black!10, below=0.5of M] {};
+            
+            \node[state] (P) [fill = blue!10, below=1of N] {};
+            \node[state] (Q) [fill = blue!10, below=1of O] {};
+            
+            \node[state] (R) [fill = black!10, below=0.5of P] {};
+            \node[state] (S) [fill = black!10, below=0.5of Q] {};
+
+            %\node[state] (T) [fill = black!10, below=1.5of R];
+            %\node[state] (U) [fill = black!10, below=1.5of S];
+
+            %\node[state] (T) [fill = black!10, below=1.5of R];
+            %\node[state] (U) [fill = black!10, below=1.5of S];
+
+            \node[state] (V) [accepting, fill = black!10, below=6of I] {};
+            
+            \path[->]
+            (I) edge [left, bend right] node {$\begin{array}{c} 0,O,R \end{array}$} (L)
+            (I) edge [right, bend left] node {$\begin{array}{c} 1,I,R \end{array}$} (M)
+            
+            (L) edge [left, loop left] node {$\begin{array}{c} 1,1,R\\ 0,0,R \end{array}$} (L)
+            (M) edge [right, loop right] node {$\begin{array}{c} 1,1,R\\ 0,0,R \end{array}$} (M)
+
+            (L) edge [left] node {$\begin{array}{c} \#,\#,R \end{array}$} (N)
+            (M) edge [right] node {$\begin{array}{c} \#,\#,R \end{array}$} (O)
+
+            (N) edge [left] node {$\begin{array}{c} 1,O,L\\ 0,O,L  \end{array}$} (P)
+            (O) edge [right] node {$\begin{array}{c} 1,I,L\\ 0,O,L \end{array}$} (Q)
+
+            (N) edge [loop left, left] node {$\begin{array}{c} I,I,R\\ O,O,R  \end{array}$} (N)
+            (O) edge [loop right, right] node {$\begin{array}{c} O,O,R\\ O,O,R \end{array}$} (O)
+
+            (P) edge [left] node {$\begin{array}{c} \#,\#,L  \end{array}$} (R)
+            (Q) edge [right] node {$\begin{array}{c} \#,\#,L  \end{array}$} (S)
+
+            (P) edge [loop left, left] node {$\begin{array}{c} I,I,L\\ O,O,L  \end{array}$} (P)
+            (Q) edge [loop right, right] node {$\begin{array}{c} I,I,L\\ O,O,L \end{array}$} (Q)
+
+            (R) edge [loop left, left] node {$\begin{array}{c} 1,1,L\\ 0,0,L  \end{array}$} (R)
+            (S) edge [loop right, right] node {$\begin{array}{c} 1,1,L\\ 0,0,L \end{array}$} (S)
+
+            (R) edge [bend right, left] node {$\begin{array}{c} I,I,R\\ O,O,R \end{array}$} (V)
+            (S) edge [bend left, right] node {$\begin{array}{c} I,I,R\\ O,O,R \end{array}$} (V);
+
+            
+        \end{tikzpicture}
+        \end{center}
+    
+    \end{osservazioni}
+    
+    
+    %% INDEX
+    \addcontentsline{toc}{subsection}{Esercizio 5.} 
+    %%
+    %\item \textbf{Esercizio 5 (Punti 4)}\\
+    %Si descriva ad alto livello una macchina di MdT che accetta l'unione di due linguaggi $L_1$ ed $L_2$ accettati da due automi pushdown $P_1$ e $P_2$ rispettivamente.
+
+    %\begin{osservazioni}
+    %    \underline{\textit{Soluzioni.}}\\
+    %\end{osservazioni}
+    
+
+\end{itemize}
+
 \vfill
 \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
 \end{document}
