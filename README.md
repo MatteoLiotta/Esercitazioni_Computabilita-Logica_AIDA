@@ -5,7 +5,6 @@ Repository contenente le i fogli d'esercitazione per il corso di "Computabilità
 
 
 #### Informazioni sulla compilazione
-Impostazioni Overleaf:
 * The LaTeX engine used for compiling: `pdfLaTeX`
 * The version of TeX Live used for compiling: `2025`
  
